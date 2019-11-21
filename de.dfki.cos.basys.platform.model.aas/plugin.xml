@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated aas -->
+      <package
+            uri="http://www.dfki.de/cos/basys/model/aas"
+            class="de.dfki.cos.basys.platform.model.aas.AasPackage"
+            genModel="model/aas.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <!-- @generated aas -->
+      <parser
+            type="aas"
+            class="de.dfki.cos.basys.platform.model.aas.util.AasResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

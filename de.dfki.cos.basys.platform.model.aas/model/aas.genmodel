@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.dfki.cos.basys.platform.model.aas/src" modelPluginID="de.dfki.cos.basys.platform.model.aas"
+    modelName="Aas" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>aas.ecore</foreignModel>
+  <genPackages prefix="Aas" basePackage="de.dfki.cos.basys.platform.model" resource="XMI"
+      disposableProviderFactory="true" ecorePackage="aas.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="aas.ecore#//Kind">
+      <genEnumLiterals ecoreEnumLiteral="aas.ecore#//Kind/Type"/>
+      <genEnumLiterals ecoreEnumLiteral="aas.ecore#//Kind/Instance"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="aas.ecore#//IdentifierType">
+      <genEnumLiterals ecoreEnumLiteral="aas.ecore#//IdentifierType/IRDI"/>
+      <genEnumLiterals ecoreEnumLiteral="aas.ecore#//IdentifierType/URI"/>
+      <genEnumLiterals ecoreEnumLiteral="aas.ecore#//IdentifierType/Custom"/>
+    </genEnums>
+    <genClasses ecoreClass="aas.ecore#//AssetAdministrationShell">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//AssetAdministrationShell/derivedFrom"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//AssetAdministrationShell/security"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//AssetAdministrationShell/asset"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//AssetAdministrationShell/submodel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//AssetAdministrationShell/view"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//HasDataSpecification"/>
+    <genClasses image="false" ecoreClass="aas.ecore#//Identifiable">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/administration"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/identification"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//Asset">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Asset/assetIdentificationModel"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//View">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//View/containedElement"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//HasKind">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//HasKind/kind"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//HasSemantics">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//HasSemantics/semanticId"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//Referable">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/idShort"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/category"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Referable/parent"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//Submodel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//Submodel/qualifier"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//Submodel/submodelElement"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//Qualifiable"/>
+    <genClasses ecoreClass="aas.ecore#//Qualifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Qualifier/qualifierType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Qualifier/qualifierValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Qualifier/qualifierValueId"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//Constraint"/>
+    <genClasses image="false" ecoreClass="aas.ecore#//SubmodelElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//SubmodelElement/qualifier"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//DataElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//DataElement/submodelelement"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//Property">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Property/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Property/valueType"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//File">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//File/mimeType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//File/value"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//Blob">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Blob/mimeType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Blob/value"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//ReferenceElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//ReferenceElement/value"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//SubmodelElementCollection">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//SubmodelElementCollection/allowDuplicates"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//SubmodelElementCollection/ordered"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//SubmodelElementCollection/value"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//RelationshipElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//RelationshipElement/submodelElement"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//RelationshipElement/first"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//RelationshipElement/second"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//OperationVariable">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//OperationVariable/value"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//Operation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Operation/in"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Operation/out"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//Event"/>
+    <genClasses ecoreClass="aas.ecore#//Security"/>
+    <genClasses ecoreClass="aas.ecore#//Reference"/>
+    <genClasses ecoreClass="aas.ecore#//Identifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Identifier/idType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Identifier/id"/>
+    </genClasses>
+    <genClasses ecoreClass="aas.ecore#//AdministrativeInformation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//AdministrativeInformation/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//AdministrativeInformation/revision"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

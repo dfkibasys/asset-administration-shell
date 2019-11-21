@@ -1,7 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: de.dfki.cos.basys.platform.model.aas
-Bundle-SymbolicName: de.dfki.cos.basys.platform.model.aas; singleton:=true
-Bundle-Version: 0.1.0.qualifier
-Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.core.runtime
+Bundle-Name: %pluginName
+Bundle-SymbolicName: de.dfki.cos.basys.platform.model.aas;singleton:=true
+Automatic-Module-Name: de.dfki.cos.basys.platform.model.aas
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: de.dfki.cos.basys.platform.model.aas,
+ de.dfki.cos.basys.platform.model.aas.impl,
+ de.dfki.cos.basys.platform.model.aas.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi;visibility:=reexport
+Bundle-ActivationPolicy: lazy
