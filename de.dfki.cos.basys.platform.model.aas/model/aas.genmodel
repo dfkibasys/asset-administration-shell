@@ -25,8 +25,8 @@
     </genClasses>
     <genClasses image="false" ecoreClass="aas.ecore#//HasDataSpecification"/>
     <genClasses image="false" ecoreClass="aas.ecore#//Identifiable">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/administration"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/identification"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/administration"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/identification"/>
     </genClasses>
     <genClasses ecoreClass="aas.ecore#//Asset">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Asset/assetIdentificationModel"/>
@@ -92,8 +92,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//OperationVariable/value"/>
     </genClasses>
     <genClasses ecoreClass="aas.ecore#//Operation">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Operation/in"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Operation/out"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Operation/in"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Operation/out"/>
     </genClasses>
     <genClasses image="false" ecoreClass="aas.ecore#//Event"/>
     <genClasses ecoreClass="aas.ecore#//Security"/>

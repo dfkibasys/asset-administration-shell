@@ -15,8 +15,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="HasDataSpecification" abstract="true"
       interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Identifiable" abstract="true" interface="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="administration" eType="#//AdministrativeInformation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="identification" eType="#//Identifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="administration" eType="#//AdministrativeInformation"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="identification" eType="#//Identifier"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Asset" eSuperTypes="#//HasDataSpecification #//Identifiable #//HasKind">
     <eStructuralFeatures xsi:type="ecore:EReference" name="assetIdentificationModel"
@@ -89,8 +91,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//SubmodelElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="#//SubmodelElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="in" upperBound="-1" eType="#//OperationVariable"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="out" upperBound="-1" eType="#//OperationVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="in" upperBound="-1" eType="#//OperationVariable"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="out" upperBound="-1" eType="#//OperationVariable"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Event" abstract="true" eSuperTypes="#//SubmodelElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Security"/>
