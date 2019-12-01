@@ -13,9 +13,19 @@
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="aas.ecore#//IdentifierType">
       <genEnumLiterals ecoreEnumLiteral="aas.ecore#//IdentifierType/IRDI"/>
-      <genEnumLiterals ecoreEnumLiteral="aas.ecore#//IdentifierType/URI"/>
+      <genEnumLiterals ecoreEnumLiteral="aas.ecore#//IdentifierType/IRI"/>
       <genEnumLiterals ecoreEnumLiteral="aas.ecore#//IdentifierType/Custom"/>
     </genEnums>
+    <genClasses image="false" ecoreClass="aas.ecore#//Referable">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/idShort"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/category"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/description"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Referable/parent"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="aas.ecore#//Identifiable">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/administration"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/identification"/>
+    </genClasses>
     <genClasses ecoreClass="aas.ecore#//AssetAdministrationShell">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//AssetAdministrationShell/derivedFrom"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//AssetAdministrationShell/security"/>
@@ -24,10 +34,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//AssetAdministrationShell/view"/>
     </genClasses>
     <genClasses image="false" ecoreClass="aas.ecore#//HasDataSpecification"/>
-    <genClasses image="false" ecoreClass="aas.ecore#//Identifiable">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/administration"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Identifiable/identification"/>
-    </genClasses>
     <genClasses ecoreClass="aas.ecore#//Asset">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Asset/assetIdentificationModel"/>
     </genClasses>
@@ -39,12 +45,6 @@
     </genClasses>
     <genClasses image="false" ecoreClass="aas.ecore#//HasSemantics">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//HasSemantics/semanticId"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="aas.ecore#//Referable">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/idShort"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/category"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Referable/description"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Referable/parent"/>
     </genClasses>
     <genClasses ecoreClass="aas.ecore#//Submodel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference aas.ecore#//Submodel/qualifier"/>
@@ -95,9 +95,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Operation/in"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference aas.ecore#//Operation/out"/>
     </genClasses>
+    <genClasses ecoreClass="aas.ecore#//Reference"/>
     <genClasses image="false" ecoreClass="aas.ecore#//Event"/>
     <genClasses ecoreClass="aas.ecore#//Security"/>
-    <genClasses ecoreClass="aas.ecore#//Reference"/>
     <genClasses ecoreClass="aas.ecore#//Identifier">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Identifier/idType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute aas.ecore#//Identifier/id"/>
