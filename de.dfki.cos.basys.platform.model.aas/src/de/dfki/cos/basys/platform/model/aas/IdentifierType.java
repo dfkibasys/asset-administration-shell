@@ -13,7 +13,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * A representation of the literals of the enumeration '<em><b>Identifier Type</b></em>',
  * and utility methods for working with them.
  * <!-- end-user-doc -->
- * @see de.dfki.cos.basys.platform.model.aas.AasPackage#getIdentifierType()
+ * @see de.dfki.cos.basys.platform.model.aas.IAasPackage#getIdentifierType()
  * @model
  * @generated
  */
@@ -29,14 +29,14 @@ public enum IdentifierType implements Enumerator {
 	IRDI(0, "IRDI", "IRDI"),
 
 	/**
-	 * The '<em><b>URI</b></em>' literal object.
+	 * The '<em><b>IRI</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #URI_VALUE
+	 * @see #IRI_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	URI(1, "URI", "URI"),
+	IRI(1, "IRI", "IRI"),
 
 	/**
 	 * The '<em><b>Custom</b></em>' literal object.
@@ -60,15 +60,15 @@ public enum IdentifierType implements Enumerator {
 	public static final int IRDI_VALUE = 0;
 
 	/**
-	 * The '<em><b>URI</b></em>' literal value.
+	 * The '<em><b>IRI</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #URI
+	 * @see #IRI
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int URI_VALUE = 1;
+	public static final int IRI_VALUE = 1;
 
 	/**
 	 * The '<em><b>Custom</b></em>' literal value.
@@ -90,7 +90,7 @@ public enum IdentifierType implements Enumerator {
 	private static final IdentifierType[] VALUES_ARRAY =
 		new IdentifierType[] {
 			IRDI,
-			URI,
+			IRI,
 			CUSTOM,
 		};
 
@@ -149,7 +149,7 @@ public enum IdentifierType implements Enumerator {
 	public static IdentifierType get(int value) {
 		switch (value) {
 			case IRDI_VALUE: return IRDI;
-			case URI_VALUE: return URI;
+			case IRI_VALUE: return IRI;
 			case CUSTOM_VALUE: return CUSTOM;
 		}
 		return null;

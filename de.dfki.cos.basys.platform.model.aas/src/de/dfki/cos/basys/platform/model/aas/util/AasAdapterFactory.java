@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see de.dfki.cos.basys.platform.model.aas.AasPackage
+ * @see de.dfki.cos.basys.platform.model.aas.IAasPackage
  * @generated
  */
 public class AasAdapterFactory extends AdapterFactoryImpl {
@@ -26,7 +26,7 @@ public class AasAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected static AasPackage modelPackage;
+	protected static IAasPackage modelPackage;
 
 	/**
 	 * Creates an instance of the adapter factory.
@@ -36,7 +36,7 @@ public class AasAdapterFactory extends AdapterFactoryImpl {
 	 */
 	public AasAdapterFactory() {
 		if (modelPackage == null) {
-			modelPackage = AasPackage.eINSTANCE;
+			modelPackage = IAasPackage.eINSTANCE;
 		}
 	}
 
@@ -68,112 +68,156 @@ public class AasAdapterFactory extends AdapterFactoryImpl {
 	protected AasSwitch<Adapter> modelSwitch =
 		new AasSwitch<Adapter>() {
 			@Override
-			public Adapter caseAssetAdministrationShell(AssetAdministrationShell object) {
-				return createAssetAdministrationShellAdapter();
-			}
-			@Override
-			public Adapter caseHasDataSpecification(HasDataSpecification object) {
-				return createHasDataSpecificationAdapter();
-			}
-			@Override
-			public Adapter caseIdentifiable(Identifiable object) {
-				return createIdentifiableAdapter();
-			}
-			@Override
-			public Adapter caseAsset(Asset object) {
-				return createAssetAdapter();
-			}
-			@Override
-			public Adapter caseView(View object) {
-				return createViewAdapter();
-			}
-			@Override
-			public Adapter caseHasKind(HasKind object) {
-				return createHasKindAdapter();
-			}
-			@Override
-			public Adapter caseHasSemantics(HasSemantics object) {
-				return createHasSemanticsAdapter();
-			}
-			@Override
-			public Adapter caseReferable(Referable object) {
+			public Adapter caseReferable(IReferable object) {
 				return createReferableAdapter();
 			}
 			@Override
-			public Adapter caseSubmodel(Submodel object) {
-				return createSubmodelAdapter();
+			public Adapter caseIdentifiable(IIdentifiable object) {
+				return createIdentifiableAdapter();
 			}
 			@Override
-			public Adapter caseQualifiable(Qualifiable object) {
-				return createQualifiableAdapter();
-			}
-			@Override
-			public Adapter caseQualifier(Qualifier object) {
-				return createQualifierAdapter();
-			}
-			@Override
-			public Adapter caseConstraint(Constraint object) {
-				return createConstraintAdapter();
-			}
-			@Override
-			public Adapter caseSubmodelElement(SubmodelElement object) {
-				return createSubmodelElementAdapter();
-			}
-			@Override
-			public Adapter caseDataElement(DataElement object) {
-				return createDataElementAdapter();
-			}
-			@Override
-			public Adapter caseProperty(Property object) {
-				return createPropertyAdapter();
-			}
-			@Override
-			public Adapter caseFile(File object) {
-				return createFileAdapter();
-			}
-			@Override
-			public Adapter caseBlob(Blob object) {
-				return createBlobAdapter();
-			}
-			@Override
-			public Adapter caseReferenceElement(ReferenceElement object) {
-				return createReferenceElementAdapter();
-			}
-			@Override
-			public Adapter caseSubmodelElementCollection(SubmodelElementCollection object) {
-				return createSubmodelElementCollectionAdapter();
-			}
-			@Override
-			public Adapter caseRelationshipElement(RelationshipElement object) {
-				return createRelationshipElementAdapter();
-			}
-			@Override
-			public Adapter caseOperationVariable(OperationVariable object) {
-				return createOperationVariableAdapter();
-			}
-			@Override
-			public Adapter caseOperation(Operation object) {
-				return createOperationAdapter();
-			}
-			@Override
-			public Adapter caseEvent(Event object) {
-				return createEventAdapter();
-			}
-			@Override
-			public Adapter caseSecurity(Security object) {
-				return createSecurityAdapter();
-			}
-			@Override
-			public Adapter caseReference(Reference object) {
-				return createReferenceAdapter();
-			}
-			@Override
-			public Adapter caseIdentifier(Identifier object) {
+			public Adapter caseIdentifier(IIdentifier object) {
 				return createIdentifierAdapter();
 			}
 			@Override
-			public Adapter caseAdministrativeInformation(AdministrativeInformation object) {
+			public Adapter caseHasKind(IHasKind object) {
+				return createHasKindAdapter();
+			}
+			@Override
+			public Adapter caseAdministrativeInformation(IAdministrativeInformation object) {
 				return createAdministrativeInformationAdapter();
+			}
+			@Override
+			public Adapter caseHasSemantics(IHasSemantics object) {
+				return createHasSemanticsAdapter();
+			}
+			@Override
+			public Adapter caseQualifiable(IQualifiable object) {
+				return createQualifiableAdapter();
+			}
+			@Override
+			public Adapter caseConstraint(IConstraint object) {
+				return createConstraintAdapter();
+			}
+			@Override
+			public Adapter caseQualifier(IQualifier object) {
+				return createQualifierAdapter();
+			}
+			@Override
+			public Adapter caseFormula(IFormula object) {
+				return createFormulaAdapter();
+			}
+			@Override
+			public Adapter caseHasDataSpecification(IHasDataSpecification object) {
+				return createHasDataSpecificationAdapter();
+			}
+			@Override
+			public Adapter caseAssetAdministrationShell(IAssetAdministrationShell object) {
+				return createAssetAdministrationShellAdapter();
+			}
+			@Override
+			public Adapter caseAsset(IAsset object) {
+				return createAssetAdapter();
+			}
+			@Override
+			public Adapter caseSubmodel(ISubmodel object) {
+				return createSubmodelAdapter();
+			}
+			@Override
+			public Adapter caseSubmodelElement(ISubmodelElement object) {
+				return createSubmodelElementAdapter();
+			}
+			@Override
+			public Adapter caseDataElement(IDataElement object) {
+				return createDataElementAdapter();
+			}
+			@Override
+			public Adapter caseProperty(IProperty object) {
+				return createPropertyAdapter();
+			}
+			@Override
+			public Adapter caseMultiLanguageProperty(IMultiLanguageProperty object) {
+				return createMultiLanguagePropertyAdapter();
+			}
+			@Override
+			public Adapter caseReferenceElement(IReferenceElement object) {
+				return createReferenceElementAdapter();
+			}
+			@Override
+			public Adapter caseRange(IRange object) {
+				return createRangeAdapter();
+			}
+			@Override
+			public Adapter caseBlob(IBlob object) {
+				return createBlobAdapter();
+			}
+			@Override
+			public Adapter caseFile(IFile object) {
+				return createFileAdapter();
+			}
+			@Override
+			public Adapter caseSubmodelElementCollection(ISubmodelElementCollection object) {
+				return createSubmodelElementCollectionAdapter();
+			}
+			@Override
+			public Adapter caseRelationshipElement(IRelationshipElement object) {
+				return createRelationshipElementAdapter();
+			}
+			@Override
+			public Adapter caseAnnotatedRelationshipElement(IAnnotatedRelationshipElement object) {
+				return createAnnotatedRelationshipElementAdapter();
+			}
+			@Override
+			public Adapter caseOperation(IOperation object) {
+				return createOperationAdapter();
+			}
+			@Override
+			public Adapter caseOperationVariable(IOperationVariable object) {
+				return createOperationVariableAdapter();
+			}
+			@Override
+			public Adapter caseCapability(ICapability object) {
+				return createCapabilityAdapter();
+			}
+			@Override
+			public Adapter caseEntity(IEntity object) {
+				return createEntityAdapter();
+			}
+			@Override
+			public Adapter caseEvent(IEvent object) {
+				return createEventAdapter();
+			}
+			@Override
+			public Adapter caseBasicEvent(IBasicEvent object) {
+				return createBasicEventAdapter();
+			}
+			@Override
+			public Adapter caseView(IView object) {
+				return createViewAdapter();
+			}
+			@Override
+			public Adapter caseConceptDictionary(IConceptDictionary object) {
+				return createConceptDictionaryAdapter();
+			}
+			@Override
+			public Adapter caseConceptDescription(IConceptDescription object) {
+				return createConceptDescriptionAdapter();
+			}
+			@Override
+			public Adapter caseReference(IReference object) {
+				return createReferenceAdapter();
+			}
+			@Override
+			public Adapter caseKey(IKey object) {
+				return createKeyAdapter();
+			}
+			@Override
+			public Adapter caseSecurity(ISecurity object) {
+				return createSecurityAdapter();
+			}
+			@Override
+			public Adapter caseAssetAdministrationShellBundle(IAssetAdministrationShellBundle object) {
+				return createAssetAdministrationShellBundleAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -196,111 +240,13 @@ public class AasAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.AssetAdministrationShell <em>Asset Administration Shell</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IReferable <em>Referable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.AssetAdministrationShell
-	 * @generated
-	 */
-	public Adapter createAssetAdministrationShellAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.HasDataSpecification <em>Has Data Specification</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.HasDataSpecification
-	 * @generated
-	 */
-	public Adapter createHasDataSpecificationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Identifiable <em>Identifiable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Identifiable
-	 * @generated
-	 */
-	public Adapter createIdentifiableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Asset <em>Asset</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Asset
-	 * @generated
-	 */
-	public Adapter createAssetAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.View <em>View</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.View
-	 * @generated
-	 */
-	public Adapter createViewAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.HasKind <em>Has Kind</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.HasKind
-	 * @generated
-	 */
-	public Adapter createHasKindAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.HasSemantics <em>Has Semantics</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.HasSemantics
-	 * @generated
-	 */
-	public Adapter createHasSemanticsAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Referable <em>Referable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Referable
+	 * @see de.dfki.cos.basys.platform.model.aas.IReferable
 	 * @generated
 	 */
 	public Adapter createReferableAdapter() {
@@ -308,251 +254,27 @@ public class AasAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Submodel <em>Submodel</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IIdentifiable <em>Identifiable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Submodel
+	 * @see de.dfki.cos.basys.platform.model.aas.IIdentifiable
 	 * @generated
 	 */
-	public Adapter createSubmodelAdapter() {
+	public Adapter createIdentifiableAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Qualifiable <em>Qualifiable</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IIdentifier <em>Identifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Qualifiable
-	 * @generated
-	 */
-	public Adapter createQualifiableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Qualifier <em>Qualifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Qualifier
-	 * @generated
-	 */
-	public Adapter createQualifierAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Constraint <em>Constraint</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Constraint
-	 * @generated
-	 */
-	public Adapter createConstraintAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.SubmodelElement <em>Submodel Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.SubmodelElement
-	 * @generated
-	 */
-	public Adapter createSubmodelElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.DataElement <em>Data Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.DataElement
-	 * @generated
-	 */
-	public Adapter createDataElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Property <em>Property</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Property
-	 * @generated
-	 */
-	public Adapter createPropertyAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.File <em>File</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.File
-	 * @generated
-	 */
-	public Adapter createFileAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Blob <em>Blob</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Blob
-	 * @generated
-	 */
-	public Adapter createBlobAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.ReferenceElement <em>Reference Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.ReferenceElement
-	 * @generated
-	 */
-	public Adapter createReferenceElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.SubmodelElementCollection <em>Submodel Element Collection</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.SubmodelElementCollection
-	 * @generated
-	 */
-	public Adapter createSubmodelElementCollectionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.RelationshipElement <em>Relationship Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.RelationshipElement
-	 * @generated
-	 */
-	public Adapter createRelationshipElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.OperationVariable <em>Operation Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.OperationVariable
-	 * @generated
-	 */
-	public Adapter createOperationVariableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Operation <em>Operation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Operation
-	 * @generated
-	 */
-	public Adapter createOperationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Event <em>Event</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Event
-	 * @generated
-	 */
-	public Adapter createEventAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Security <em>Security</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Security
-	 * @generated
-	 */
-	public Adapter createSecurityAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Reference <em>Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Reference
-	 * @generated
-	 */
-	public Adapter createReferenceAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.Identifier <em>Identifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.Identifier
+	 * @see de.dfki.cos.basys.platform.model.aas.IIdentifier
 	 * @generated
 	 */
 	public Adapter createIdentifierAdapter() {
@@ -560,16 +282,492 @@ public class AasAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.AdministrativeInformation <em>Administrative Information</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IHasKind <em>Has Kind</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.dfki.cos.basys.platform.model.aas.AdministrativeInformation
+	 * @see de.dfki.cos.basys.platform.model.aas.IHasKind
+	 * @generated
+	 */
+	public Adapter createHasKindAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IAdministrativeInformation <em>Administrative Information</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IAdministrativeInformation
 	 * @generated
 	 */
 	public Adapter createAdministrativeInformationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IHasSemantics <em>Has Semantics</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IHasSemantics
+	 * @generated
+	 */
+	public Adapter createHasSemanticsAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IQualifiable <em>Qualifiable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IQualifiable
+	 * @generated
+	 */
+	public Adapter createQualifiableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IConstraint <em>Constraint</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IConstraint
+	 * @generated
+	 */
+	public Adapter createConstraintAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IQualifier <em>Qualifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IQualifier
+	 * @generated
+	 */
+	public Adapter createQualifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IFormula <em>Formula</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IFormula
+	 * @generated
+	 */
+	public Adapter createFormulaAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IHasDataSpecification <em>Has Data Specification</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IHasDataSpecification
+	 * @generated
+	 */
+	public Adapter createHasDataSpecificationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IAssetAdministrationShell <em>Asset Administration Shell</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IAssetAdministrationShell
+	 * @generated
+	 */
+	public Adapter createAssetAdministrationShellAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IAsset <em>Asset</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IAsset
+	 * @generated
+	 */
+	public Adapter createAssetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.ISubmodel <em>Submodel</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.ISubmodel
+	 * @generated
+	 */
+	public Adapter createSubmodelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.ISubmodelElement <em>Submodel Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.ISubmodelElement
+	 * @generated
+	 */
+	public Adapter createSubmodelElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IDataElement <em>Data Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IDataElement
+	 * @generated
+	 */
+	public Adapter createDataElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IProperty <em>Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IProperty
+	 * @generated
+	 */
+	public Adapter createPropertyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IMultiLanguageProperty <em>Multi Language Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IMultiLanguageProperty
+	 * @generated
+	 */
+	public Adapter createMultiLanguagePropertyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IReferenceElement <em>Reference Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IReferenceElement
+	 * @generated
+	 */
+	public Adapter createReferenceElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IRange <em>Range</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IRange
+	 * @generated
+	 */
+	public Adapter createRangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IBlob <em>Blob</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IBlob
+	 * @generated
+	 */
+	public Adapter createBlobAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IFile <em>File</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IFile
+	 * @generated
+	 */
+	public Adapter createFileAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.ISubmodelElementCollection <em>Submodel Element Collection</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.ISubmodelElementCollection
+	 * @generated
+	 */
+	public Adapter createSubmodelElementCollectionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IRelationshipElement <em>Relationship Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IRelationshipElement
+	 * @generated
+	 */
+	public Adapter createRelationshipElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IAnnotatedRelationshipElement <em>Annotated Relationship Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IAnnotatedRelationshipElement
+	 * @generated
+	 */
+	public Adapter createAnnotatedRelationshipElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IOperation <em>Operation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IOperation
+	 * @generated
+	 */
+	public Adapter createOperationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IOperationVariable <em>Operation Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IOperationVariable
+	 * @generated
+	 */
+	public Adapter createOperationVariableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.ICapability <em>Capability</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.ICapability
+	 * @generated
+	 */
+	public Adapter createCapabilityAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IEntity <em>Entity</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IEntity
+	 * @generated
+	 */
+	public Adapter createEntityAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IEvent <em>Event</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IEvent
+	 * @generated
+	 */
+	public Adapter createEventAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IBasicEvent <em>Basic Event</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IBasicEvent
+	 * @generated
+	 */
+	public Adapter createBasicEventAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IView <em>View</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IView
+	 * @generated
+	 */
+	public Adapter createViewAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IConceptDictionary <em>Concept Dictionary</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IConceptDictionary
+	 * @generated
+	 */
+	public Adapter createConceptDictionaryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IConceptDescription <em>Concept Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IConceptDescription
+	 * @generated
+	 */
+	public Adapter createConceptDescriptionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IReference <em>Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IReference
+	 * @generated
+	 */
+	public Adapter createReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IKey <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IKey
+	 * @generated
+	 */
+	public Adapter createKeyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.ISecurity <em>Security</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.ISecurity
+	 * @generated
+	 */
+	public Adapter createSecurityAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.dfki.cos.basys.platform.model.aas.IAssetAdministrationShellBundle <em>Asset Administration Shell Bundle</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.dfki.cos.basys.platform.model.aas.IAssetAdministrationShellBundle
+	 * @generated
+	 */
+	public Adapter createAssetAdministrationShellBundleAdapter() {
 		return null;
 	}
 

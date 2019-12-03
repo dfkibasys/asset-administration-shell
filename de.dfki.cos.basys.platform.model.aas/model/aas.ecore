@@ -69,7 +69,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="asset" lowerBound="1" eType="#//Asset"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="submodel" upperBound="-1"
-        eType="#//Submodel" containment="true"/>
+        eType="#//Submodel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="view" upperBound="-1" eType="#//View"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="conceptDictionary" upperBound="-1"
@@ -96,7 +96,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="#//DataElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueType" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//AnySimpleType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="valueId" eType="#//Reference"
         containment="true"/>
   </eClassifiers>
@@ -224,4 +224,14 @@
     <eLiterals name="FragmentId" value="4"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Security"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AssetAdministrationShellBundle">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="administrationShells" upperBound="-1"
+        eType="#//AssetAdministrationShell" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="submodels" upperBound="-1"
+        eType="#//Submodel" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assets" upperBound="-1"
+        eType="#//Asset" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conceptDescriptions" upperBound="-1"
+        eType="#//ConceptDescription" containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

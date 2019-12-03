@@ -10,15 +10,8 @@
       <!-- @generated aas -->
       <package
             uri="http://www.dfki.de/cos/basys/model/aas"
-            class="de.dfki.cos.basys.platform.model.aas.AasPackage"
+            class="de.dfki.cos.basys.platform.model.aas.IAasPackage"
             genModel="model/aas.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.extension_parser">
-      <!-- @generated aas -->
-      <parser
-            type="aas"
-            class="de.dfki.cos.basys.platform.model.aas.util.AasResourceFactoryImpl"/>
    </extension>
 
 </plugin>
