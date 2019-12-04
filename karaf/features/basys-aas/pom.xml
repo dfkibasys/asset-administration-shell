@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>de.dfki.cos.basys.aas.karaf</groupId>
+		<artifactId>features</artifactId>
+		<version>0.2.7-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>basys-aas</artifactId>
+
+	<name>BaSys 4.2 Asset Administration Shell - Karaf Feature</name>
+	<description>BaSys 4.2 Asset Administration Shell Karaf Feature</description>
+
+	<packaging>kar</packaging>
+
+	<dependencies>
+		<!--
+		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.component</artifactId>
+			<version>${project.version}</version>
+			<type>bundle</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.emf</artifactId>
+			<version>${project.version}</version>
+			<type>bundle</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.emf.jaxrs</artifactId>
+			<version>${project.version}</version>
+			<type>bundle</type>
+		</dependency>
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.emf.json</artifactId>
+			<version>${project.version}</version>
+			<type>bundle</type>
+		</dependency>
+-->
+		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.jrosbridge</artifactId>
+			<version>${project.version}</version>
+			<type>bundle</type>
+		</dependency>
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.scxml</artifactId>
+			<version>${project.version}</version>
+			<type>bundle</type>
+		</dependency>		
+
+	</dependencies>
+
+</project>

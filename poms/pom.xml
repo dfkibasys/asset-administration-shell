@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>de.dfki.cos.basys.pom</groupId>
+		<artifactId>shared-plugin-settings</artifactId>
+		<version>0.2.7-SNAPSHOT</version>
+		<relativePath />
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.dfki.cos.basys.aas</groupId>
+	<artifactId>shared-plugin-settings</artifactId>
+
+	<name>BaSys 4.2 Asset Administration Shell - Plugin Configuration</name>
+
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>wrappers</module>
+		<module>compiled</module>
+	</modules>
+</project>

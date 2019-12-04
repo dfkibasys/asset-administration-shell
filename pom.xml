@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>de.dfki.cos.basys</groupId>
+		<artifactId>pom</artifactId>
+		<version>0.2.7-SNAPSHOT</version>
+		<relativePath />
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.dfki.cos.basys</groupId>
+	<artifactId>aas</artifactId>
+
+	<name>BaSys 4.2 Asset Administration Shell</name>
+
+	<description>A BaSys 4.2 Asset Administration Shell Implementation</description>
+
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>poms</module>
+		<module>provision</module>
+		<module>modules/de.dfki.cos.basys.aas.model</module>
+		<module>modules/de.dfki.cos.basys.aas.registry.rest.api</module>
+		<module>modules/de.dfki.cos.basys.aas.registry.rest.client</module>
+		<module>modules/de.dfki.cos.basys.aas.registry.rest.zookeeper</module>
+		<module>karaf</module>	
+	</modules>
+
+	<scm>
+		<url>https://github.com/BaSys-PC1</url>
+		<connection>${gitUrl}/asset-administation-shell.git</connection>
+		<developerConnection>${gitUrl}/asset-administation-shell.git</developerConnection>
+		<tag>v0.2.5</tag>
+	</scm>
+</project>

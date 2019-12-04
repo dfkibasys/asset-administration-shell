@@ -1,0 +1,19 @@
+#-----------------------------------------------------------------
+# Use this file to add customized Bnd instructions for the bundle
+#-----------------------------------------------------------------
+
+Bundle-SymbolicName: ${bundle.symbolicName};singleton:=true
+#Require-Bundle: org.eclipse.core.runtime;resolution:=optional, org.eclipse.emf.ecore;visibility:=reexport
+Export-Package: \
+	de.dfki.cos.basys.platform.model.base,\
+	de.dfki.cos.basys.platform.model.base.computation,\
+	de.dfki.cos.basys.platform.model.base.datatypes,\
+	de.dfki.cos.basys.platform.model.base.impl,\
+	de.dfki.cos.basys.platform.model.base.util,\
+	de.dfki.cos.basys.platform.model.pattern,\
+	de.dfki.cos.basys.platform.model.pattern.impl,\
+	de.dfki.cos.basys.platform.model.pattern.util,\
+	de.dfki.cos.basys.platform.model.data,\
+	de.dfki.cos.basys.platform.model.data.impl,\
+	de.dfki.cos.basys.platform.model.data.util,\
+	de.dfki.cos.basys.platform.model.util
