@@ -11,7 +11,7 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>BaSys 4.2 AAS Registry JAX-RS REST service</bundle.symbolicName>
+		<bundle.symbolicName>de.dfki.cos.basys.aas.registry.rest.zookeeper</bundle.symbolicName>
 		<bundle.namespace>de.dfki.cos.basys.aas.registry.rest.zookeeper</bundle.namespace>
 	</properties>
 
@@ -22,21 +22,26 @@
 
 	<packaging>bundle</packaging>
 
-	<dependencies>	
-	
+	<dependencies>
+
 		<dependency>
 			<groupId>de.dfki.cos.basys.aas</groupId>
 			<artifactId>de.dfki.cos.basys.aas.registry.rest.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-<!-- 
+
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<version>${curator.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet-core</artifactId>
 			<version>${jersey-version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
@@ -48,30 +53,30 @@
 			<artifactId>jersey-common</artifactId>
 			<version>${jersey-version}</version>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.glassfish.jersey.inject</groupId>
 			<artifactId>jersey-hk2</artifactId>
 			<version>${jersey-version}</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.glassfish.jersey.core</groupId>
-		    <artifactId>jersey-client</artifactId>
-		    <version>${jersey-version}</version>		
-		</dependency>	
-				
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${jersey-version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
-		</dependency> -->
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
@@ -89,17 +94,9 @@
 		</dependency>
 	</dependencies>
 
-<!-- 	<build>
-		<finalName>basys-platform-webapp</finalName>
-
-		<plugins>
-			<! - - https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin - - >
-			<! - - https://www.eclipse.org/jetty/documentation/9.4.x/jetty-maven-plugin.html - - >
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.4.22.v20191022</version>
-			</plugin>
-		</plugins>
-	</build> -->
+	<!-- <build> <finalName>basys-platform-webapp</finalName> <plugins> <! - 
+		- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin 
+		- - > <! - - https://www.eclipse.org/jetty/documentation/9.4.x/jetty-maven-plugin.html 
+		- - > <plugin> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-maven-plugin</artifactId> 
+		<version>9.4.22.v20191022</version> </plugin> </plugins> </build> -->
 </project>
