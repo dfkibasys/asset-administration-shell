@@ -20,7 +20,7 @@
 
 	<name>BaSys 4.2 AAS Registry JAX-RS REST service</name>
 
-	<packaging>bundle</packaging>
+	<packaging>war</packaging>
 
 	<dependencies>
 
@@ -94,9 +94,17 @@
 		</dependency>
 	</dependencies>
 
-	<!-- <build> <finalName>basys-platform-webapp</finalName> <plugins> <! - 
-		- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin 
-		- - > <! - - https://www.eclipse.org/jetty/documentation/9.4.x/jetty-maven-plugin.html 
-		- - > <plugin> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-maven-plugin</artifactId> 
-		<version>9.4.22.v20191022</version> </plugin> </plugins> </build> -->
+	<build>
+		<finalName>basys-aas-registry</finalName>
+
+		<plugins>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
+			<!-- https://www.eclipse.org/jetty/documentation/9.4.x/jetty-maven-plugin.html -->
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.22.v20191022</version>
+			</plugin>
+		</plugins>
+	</build>
 </project>
