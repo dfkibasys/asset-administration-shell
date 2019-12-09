@@ -265,25 +265,25 @@ public class SubmodelItemProvider
 	 * This returns Submodel.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Submodel"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Submodel.png"));
 	}
 
 	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		String label = ((ISubmodel)object).getIdShort();
 		return label == null || label.length() == 0 ?
-			getString("_UI_Submodel_type") :
-			getString("_UI_Submodel_type") + " " + label;
+			getString("_UI_Submodel_type") : label;
+			//getString("_UI_Submodel_type") + " " + label;
 	}
 
 

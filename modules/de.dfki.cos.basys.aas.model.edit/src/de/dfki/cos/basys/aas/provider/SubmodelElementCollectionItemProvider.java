@@ -309,25 +309,25 @@ public class SubmodelElementCollectionItemProvider
 	 * This returns SubmodelElementCollection.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/SubmodelElementCollection"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/SubmodelElementCollection.png"));
 	}
 
 	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		String label = ((ISubmodelElementCollection)object).getIdShort();
 		return label == null || label.length() == 0 ?
-			getString("_UI_SubmodelElementCollection_type") :
-			getString("_UI_SubmodelElementCollection_type") + " " + label;
+			getString("_UI_SubmodelElementCollection_type") : label;
+			//getString("_UI_SubmodelElementCollection_type") + " " + label;
 	}
 
 
