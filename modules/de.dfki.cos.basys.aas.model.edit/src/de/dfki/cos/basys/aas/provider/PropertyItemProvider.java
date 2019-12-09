@@ -325,6 +325,12 @@ public class PropertyItemProvider
 	@Override
 	public String getText(Object object) {
 		String label = ((IProperty)object).getIdShort();
+		String desc = ((IProperty)object).getDescription();
+		
+		if (label != null && label.length() > 0 &&desc != null && desc.length() > 0) {
+			label = label + " (" + desc + ")";
+		}			
+			
 		return label == null || label.length() == 0 ?
 			getString("_UI_Property_type") : label;
 			//getString("_UI_Property_type") + " " + label;

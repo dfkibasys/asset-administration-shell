@@ -6,6 +6,7 @@ package de.dfki.cos.basys.aas.provider;
 import de.dfki.cos.basys.aas.IAasFactory;
 import de.dfki.cos.basys.aas.IAasPackage;
 import de.dfki.cos.basys.aas.ISubmodel;
+import de.dfki.cos.basys.aas.ISubmodelElementCollection;
 
 import java.util.Collection;
 import java.util.List;
@@ -280,7 +281,13 @@ public class SubmodelItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((ISubmodel)object).getIdShort();
+		String label = ((ISubmodel)object).getIdShort();		
+		String desc = ((ISubmodel)object).getDescription();
+		
+		if (label != null && label.length() > 0 &&desc != null && desc.length() > 0) {
+			label = label + " (" + desc + ")";
+		}						
+		
 		return label == null || label.length() == 0 ?
 			getString("_UI_Submodel_type") : label;
 			//getString("_UI_Submodel_type") + " " + label;
