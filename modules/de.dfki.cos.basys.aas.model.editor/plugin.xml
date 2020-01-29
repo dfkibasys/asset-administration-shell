@@ -9,13 +9,13 @@
    <extension point="org.eclipse.ui.newWizards">
       <!-- @generated aas -->
       <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            id="de.dfki.cos.basys.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
       <wizard
             id="de.dfki.cos.basys.aas.presentation.AasModelWizardID"
             name="%_UI_AasModelWizard_label"
             class="de.dfki.cos.basys.aas.presentation.AasModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            category="de.dfki.cos.basys.Wizard.category.ID"
             icon="icons/full/obj16/AasModelFile.gif">
          <description>%_UI_AasModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>

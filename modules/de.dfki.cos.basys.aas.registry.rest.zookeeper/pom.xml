@@ -104,6 +104,13 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.4.22.v20191022</version>
+				<configuration>
+				    <!-- https://stackoverflow.com/questions/25644036/how-to-set-server-port-with-org-eclipse-jettyjetty-maven-plugin -->
+					<httpConnector>
+						<!--host>localhost</host -->
+						<port>4999</port>
+					</httpConnector>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
