@@ -1,13 +1,15 @@
 package de.dfki.cos.basys.aas.registry.rest.api.dto;
 
 import org.eclipse.basyx.submodel.metamodel.api.reference.IKey;
+import org.eclipse.basyx.submodel.metamodel.api.reference.enums.KeyElements;
+import org.eclipse.basyx.submodel.metamodel.api.reference.enums.KeyType;
 
 public class Key implements IKey {
 
-	String type;
+	KeyElements type;
 	boolean local;
 	String value;
-	String idType;
+	KeyType idType;
 
 	public Key() {
 	}
@@ -16,14 +18,15 @@ public class Key implements IKey {
 		this.type = key.getType();
 		this.local = key.isLocal();
 		this.value = key.getValue();
-		this.idType = key.getidType();
+		this.idType = key.getIdType();
 	}
 
-	public String getIdType() {
+	@Override
+	public KeyType getIdType() {
 		return idType;
 	}
 
-	public String getType() {
+	public KeyElements getType() {
 		return type;
 	}
 
@@ -35,7 +38,7 @@ public class Key implements IKey {
 		return local;
 	}
 
-	public void setIdType(String idType) {
+	public void setIdType(KeyType idType) {
 		this.idType = idType;
 	}
 
@@ -43,7 +46,7 @@ public class Key implements IKey {
 		this.local = local;
 	}
 
-	public void setType(String type) {
+	public void setType(KeyElements type) {
 		this.type = type;
 	}
 
@@ -51,8 +54,4 @@ public class Key implements IKey {
 		this.value = value;
 	}
 
-	@Override
-	public String getidType() {
-		return idType;
-	}
 }

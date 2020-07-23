@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Collections;
 
-import org.eclipse.basyx.submodel.metamodel.map.identifier.IdentifierType;
+import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,17 +32,17 @@ public class ZookeeperAasRegistryTest {
 		
 		aas = new AasDescriptor();
 		aas.setIdShort("myAas2aasd");
-		aas.setIdentification(new Identifier(IdentifierType.Custom, "myAasasd"));
+		aas.setIdentification(new Identifier(IdentifierType.CUSTOM, "myAasasd"));
 		aas.setEndpoints(Collections.singletonList(new Endpoint("http", "http://localhost")));
 
 		sm1 = new SubmodelDescriptor();
 		sm1.setIdShort("mySubmodel1");
-		sm1.setIdentification(new Identifier(IdentifierType.Custom, "mySubmodel1asdasd"));
+		sm1.setIdentification(new Identifier(IdentifierType.CUSTOM, "mySubmodel1asdasd"));
 		sm1.setEndpoints(Collections.singletonList(new Endpoint("http", "http://localhost/sm1")));
 
 		sm2 = new SubmodelDescriptor();
 		sm2.setIdShort("mySubmodel2");
-		sm2.setIdentification(new Identifier(IdentifierType.Custom, "mySubmodeasdasdl2"));
+		sm2.setIdentification(new Identifier(IdentifierType.CUSTOM, "mySubmodeasdasdl2"));
 		sm2.setEndpoints(Collections.singletonList(new Endpoint("http", "http://localhost/sm2")));
 		
 		aas.getSubmodels().add(sm1);	

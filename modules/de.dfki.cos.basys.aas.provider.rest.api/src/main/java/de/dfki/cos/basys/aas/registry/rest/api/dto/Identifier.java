@@ -1,16 +1,17 @@
 package de.dfki.cos.basys.aas.registry.rest.api.dto;
 
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IIdentifier;
+import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
 
 public class Identifier implements IIdentifier {
 
-	String idType;
+	IdentifierType idType;
 	String id;
 
 	public Identifier() {
 	}
 
-	public Identifier(String idType, String id) {
+	public Identifier(IdentifierType idType, String id) {
 		this.idType = idType;
 		this.id = id;
 	}
@@ -21,11 +22,11 @@ public class Identifier implements IIdentifier {
 	}
 
 	@Override
-	public String getIdType() {
+	public IdentifierType getIdType() {
 		return idType;
 	}
 
-	public void setIdType(String idType) {
+	public void setIdType(IdentifierType idType) {
 		this.idType = idType;
 	}
 
