@@ -16,16 +16,25 @@ stages:
 
 build:
   stage: build
+  tags:
+    - basys
+    - maven
   script:
     - mvn -V $MAVEN_CLI_OPTS compile
 
 test:
   stage: test
+  tags:
+    - basys
+    - maven
   script:
     - mvn $MAVEN_CLI_OPTS test
 
 deploy:
   stage: deploy
+  tags:
+    - basys
+    - maven
   script:
     - mvn $MAVEN_CLI_OPTS deploy
   only:
