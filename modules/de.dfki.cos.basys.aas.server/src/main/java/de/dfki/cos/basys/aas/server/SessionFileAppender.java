@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.aas.registry.zookeeper;
+package de.dfki.cos.basys.aas.server;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
