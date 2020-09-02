@@ -1,6 +1,7 @@
 package de.dfki.cos.basys.aas.registry.zookeeper;
 
 
+import java.util.LinkedList;
 import java.util.List;
 
 //import javax.inject.Singleton;
@@ -71,9 +72,9 @@ public class ZookeeperClient/* implements ServiceConnection */{
 	public void createPath(String path, String content) {
 		try {
 			curator.create()
-				.creatingParentsIfNeeded()
+				.creatingParentContainersIfNeeded()
 				.withMode(CreateMode.PERSISTENT)
-				.withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)
+				.withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)				
 				.forPath(path, content.getBytes(Charsets.UTF_8));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,5 +127,22 @@ public class ZookeeperClient/* implements ServiceConnection */{
 			return null;
 		}
 	}
+	
+	public List<String> getAllChildren(String path) {
+		List<String> result = new LinkedList<String>();
+		collectAllChildren("", path, result);
+		return result;
+	}
+	
+	private void collectAllChildren(String prefix, String path, List<String> accu)
+	{		
+		List<String> children = getChildren(path);
+		for (String child : children) {
+			accu.add(prefix + child);
+			collectAllChildren(child + "/", path + "/" + child, accu);
+		}
+		
+	}
+	
 	
 }

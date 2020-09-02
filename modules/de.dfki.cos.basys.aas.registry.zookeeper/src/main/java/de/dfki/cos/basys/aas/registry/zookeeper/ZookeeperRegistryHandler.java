@@ -2,6 +2,7 @@ package de.dfki.cos.basys.aas.registry.zookeeper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.basyx.aas.metamodel.api.parts.asset.IAsset;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.netty.handler.codec.string.LineSeparator;
 
 public class ZookeeperRegistryHandler implements IRegistryHandler {
 	public final Logger LOGGER;
@@ -136,21 +139,23 @@ public class ZookeeperRegistryHandler implements IRegistryHandler {
 	public List<AASDescriptor> getAll() {
 		String path = getPath();
 		
-		List<String> aasIds = client.getChildren(path);
+		List<String> aasIds = client.getAllChildren(path);
 		
-		List<AASDescriptor> aasDescriptors = new ArrayList<>(aasIds.size());
+		HashMap<String, AASDescriptor> aasDescriptors = new HashMap<>();
 		
 		for (String aasId : aasIds) {
-			String content = client.getData(getPath(aasId));			 
-			try {
-				AASDescriptor aasDescriptor = mapper.readValue(content, AASDescriptor.class);
-				aasDescriptors.add(aasDescriptor);	
-			} catch (IOException e) {
-				e.printStackTrace();
-			}					
+			String content = client.getData(getPath(aasId));			
+			if (content != null && !"".equals(content)) {
+				try {
+					AASDescriptor aasDescriptor = mapper.readValue(content, AASDescriptor.class);
+					aasDescriptors.put(aasDescriptor.getIdentifier().getId(), aasDescriptor);	
+				} catch (IOException e) {
+					e.printStackTrace();
+				}					
+			}
 		}		
 		
-		return aasDescriptors;
+		return new ArrayList<>(aasDescriptors.values());
 	}
 	
 
