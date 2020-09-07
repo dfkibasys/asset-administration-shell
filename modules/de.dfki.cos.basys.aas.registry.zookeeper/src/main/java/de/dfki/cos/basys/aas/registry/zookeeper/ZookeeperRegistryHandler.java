@@ -137,23 +137,24 @@ public class ZookeeperRegistryHandler implements IRegistryHandler {
 
 	@Override
 	public List<AASDescriptor> getAll() {
-		String path = getPath();
-		
-		List<String> aasIds = client.getAllChildren(path);
-		
+
 		HashMap<String, AASDescriptor> aasDescriptors = new HashMap<>();
 		
-		for (String aasId : aasIds) {
-			String content = client.getData(getPath(aasId));			
-			if (content != null && !"".equals(content)) {
-				try {
-					AASDescriptor aasDescriptor = mapper.readValue(content, AASDescriptor.class);
-					aasDescriptors.put(aasDescriptor.getIdentifier().getId(), aasDescriptor);	
-				} catch (IOException e) {
-					e.printStackTrace();
-				}					
-			}
-		}		
+		String path = getPath();		
+		if (client.existsPath(path)) {
+			List<String> aasIds = client.getAllChildren(path);
+			for (String aasId : aasIds) {
+				String content = client.getData(getPath(aasId));			
+				if (content != null && !"".equals(content)) {
+					try {
+						AASDescriptor aasDescriptor = mapper.readValue(content, AASDescriptor.class);
+						aasDescriptors.put(aasDescriptor.getIdentifier().getId(), aasDescriptor);	
+					} catch (IOException e) {
+						e.printStackTrace();
+					}					
+				}
+			}		
+		}
 		
 		return new ArrayList<>(aasDescriptors.values());
 	}

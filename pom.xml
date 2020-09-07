@@ -21,8 +21,8 @@
 	<modules>
 		<module>poms</module>
 		<module>provision</module>
-		<module>modules/de.dfki.cos.basys.aas.model</module>
 		<!--
+		<module>modules/de.dfki.cos.basys.aas.model</module>
 		<module>modules/de.dfki.cos.basys.aas.provider.rest.api</module>
 		<module>modules/de.dfki.cos.basys.aas.registry.rest.api</module>
 		<module>modules/de.dfki.cos.basys.aas.registry.rest.client</module>

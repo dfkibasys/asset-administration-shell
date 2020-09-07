@@ -1,15 +1,7 @@
-/*
- * Copyright (c) 2019 the Eclipse Milo Authors
- *
- * This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License 2.0
- * which is available at https://www.eclipse.org/legal/epl-2.0/
- *
- * SPDX-License-Identifier: EPL-2.0
- */
-
 package de.dfki.cos.basys.aas.registry.zookeeper;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.cli.CommandLine;
@@ -44,12 +36,30 @@ public class Main {
 	private static String hostString = "localhost";
 	private static String portString = "8080";
 	
-	public static void main(String[] args) throws Exception {		
-		Options options = new Options();
+	protected static void printClassPath() {
+		ClassLoader cl = ClassLoader.getSystemClassLoader();
 
+        URL[] urls = ((URLClassLoader)cl).getURLs();
+
+        System.out.println("####################################################");
+        System.out.println("");
+        for(URL url: urls){
+        	System.out.println(url.getFile());
+        }
+        System.out.println("");
+        System.out.println("####################################################");
+	}
+	
+	public static void main(String[] args) throws Exception {
+				
+		Options options = new Options();
+		
+		Option helpOption = new Option("x", "help", false, "print class path");
+		helpOption.setRequired(false);
+		options.addOption(helpOption);
 
 		Option zkOption = new Option("zk", "zookeeper", true, "the Zookeeper connection string, default " + zkString);
-		zkOption.setRequired(false);
+		zkOption.setRequired(false);		
 		options.addOption(zkOption);
 		
 		Option hostOption = new Option("h", "host", true, "the host's name or IP address, default " + hostString);
@@ -66,6 +76,12 @@ public class Main {
 		
 		try {
 			cmd = parser.parse(options, args);
+			
+			if (cmd.hasOption("x")) {
+				printClassPath();
+				System.exit(0);
+			}
+			
 			if (cmd.hasOption("zk")) {
 				zkString = cmd.getOptionValue("zk");
 			}
