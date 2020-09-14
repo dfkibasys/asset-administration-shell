@@ -2,8 +2,6 @@ package de.dfki.cos.basys.aas.registry.zookeeper;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.concurrent.ExecutionException;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -16,11 +14,6 @@ import org.eclipse.basyx.aas.registration.restapi.DirectoryModelProvider;
 import org.eclipse.basyx.vab.protocol.http.server.AASHTTPServer;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxContext;
 import org.eclipse.basyx.vab.protocol.http.server.VABHTTPInterface;
-import org.slf4j.LoggerFactory;
-
-import de.dfki.cos.basys.common.component.ComponentContext;
-import de.dfki.cos.basys.common.component.ComponentException;
-import de.dfki.cos.basys.common.component.manager.impl.ComponentManagerImpl;
 
 public class Main {
 

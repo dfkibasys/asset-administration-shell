@@ -47,6 +47,9 @@ public class ZookeeperRegistryHandler implements IRegistryHandler {
 		return client.isConnected();
 	}
 	
+	public void clean() {
+		client.deletePath(PREFIX);
+	}
 	
 	/*
 	 * IRegistryHandler implementation

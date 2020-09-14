@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.aas.server;
+package de.dfki.cos.basys.aas.services;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
