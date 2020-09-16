@@ -7,7 +7,10 @@ RUN mvn -s settings_basys.xml clean package -DskipTests
 # Step : Build image
 FROM openjdk:8-jre-alpine
 LABEL maintainer="basys-support@dfki.de"
-EXPOSE 8080
-COPY --from=builder /build/modules/de.dfki.cos.basys.aas.registry.zookeeper/target/*jar-with-dependencies.jar /app/aas-registry.jar
+EXPOSE 4999 5080 5081
+COPY --from=builder /build/modules/de.dfki.cos.basys.aas.services/target/*jar-with-dependencies.jar /app/aas-services.jar
+COPY --from=builder /build/modules/de.dfki.cos.basys.aas.services/components /app/components
+COPY --from=builder /build/modules/de.dfki.cos.basys.aas.services/config /app/config
 WORKDIR /app
-ENTRYPOINT ["java","-jar","./aas-registry.jar"]
+#ENV JAVA_OPTS="-Dlog4j.configuration=file:///app/config/log4j.properties"
+ENTRYPOINT ["java", "-Dlog4j.configuration=file:///app/config/log4j.properties", "-jar","./aas-services.jar"]
