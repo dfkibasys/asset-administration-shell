@@ -43,6 +43,8 @@ public class Main {
 	private static String aasRegistryEndpoint = "http://localhost:4999";
 	
 	private static AasComponentContext context = AasComponentContext.getStaticContext();
+	
+	private static String configFolderPath = "config/";
 			
 	protected static void printClassPath() {
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
@@ -108,46 +110,54 @@ public class Main {
 			}
 			
 			if (cmd.hasOption("c")) {
-				String configFolderPath = cmd.getOptionValue("c");
-
-//				Path componentRegistryConfigPath = Paths.get(configFolderPath, "component-registry.properties");
-//				if (componentRegistryConfigPath.toFile().exists()) {
-//					componentRegistryConfig.load(new FileInputStream(componentRegistryConfigPath.toFile()));
-//				} else {
-//					LOGGER.warn("component-registry.properties not found");
-//				}
-
-				Path componentManagerConfigPath = Paths.get(configFolderPath, "component-manager.properties");
-				if (componentManagerConfigPath.toFile().exists()) {
-					componentManagerConfig.load(new FileInputStream(componentManagerConfigPath.toFile()));		
-				} else {
-					LOGGER.warn("component-manager.properties not found");
-				}
-
-				Path aasRegistryConfigPath = Paths.get(configFolderPath, "aas-registry.properties");
-				if (aasRegistryConfigPath.toFile().exists()) {
-					aasRegistryConfig.load(new FileInputStream(aasRegistryConfigPath.toFile()));		
-				} else {
-					LOGGER.warn("aas-registry.properties not found");
-				}
-
-				Path aasAggregatorConfigPath = Paths.get(configFolderPath, "aas-aggregator.properties");
-				if (aasAggregatorConfigPath.toFile().exists()) {
-					aasAggregatorConfig.load(new FileInputStream(aasAggregatorConfigPath.toFile()));		
-				} else {
-					LOGGER.warn("aas-aggregator.properties not found");
-				}
-				
-				Path servletContainerConfigPath = Paths.get(configFolderPath, "servlet-container.properties");
-				if (servletContainerConfigPath.toFile().exists()) {
-					servletContainerConfig.load(new FileInputStream(servletContainerConfigPath.toFile()));
-				} else {
-					LOGGER.warn("servlet-container.properties not found");
-				}
+				configFolderPath = cmd.getOptionValue("c");
 			}
+			
+//			Path componentRegistryConfigPath = Paths.get(configFolderPath, "component-registry.properties");
+//			if (componentRegistryConfigPath.toFile().exists()) {
+//				componentRegistryConfig.load(new FileInputStream(componentRegistryConfigPath.toFile()));
+//			} else {
+//				LOGGER.warn("component-registry.properties not found in " + componentRegistryConfigPath.toFile() + " Using defaults.");
+//			}
+
+			Path componentManagerConfigPath = Paths.get(configFolderPath, "component-manager.properties");
+			if (componentManagerConfigPath.toFile().exists()) {
+				componentManagerConfig.load(new FileInputStream(componentManagerConfigPath.toFile()));		
+				LOGGER.info("component-manager.properties loaded: " + componentManagerConfigPath.toFile());
+			} else {
+				LOGGER.warn("component-manager.properties not found in " + componentManagerConfigPath.toFile() + " Using defaults.");
+			}
+
+			Path aasRegistryConfigPath = Paths.get(configFolderPath, "aas-registry.properties");
+			if (aasRegistryConfigPath.toFile().exists()) {
+				aasRegistryConfig.load(new FileInputStream(aasRegistryConfigPath.toFile()));		
+				LOGGER.info("aas-registry.properties loaded: " + aasRegistryConfigPath.toFile());
+			} else {
+				LOGGER.warn("aas-registry.properties not found in " + aasRegistryConfigPath.toFile() + " Using defaults.");
+			}
+
+			Path aasAggregatorConfigPath = Paths.get(configFolderPath, "aas-aggregator.properties");
+			if (aasAggregatorConfigPath.toFile().exists()) {
+				aasAggregatorConfig.load(new FileInputStream(aasAggregatorConfigPath.toFile()));	
+				LOGGER.info("aas-aggregator.properties loaded: " + aasAggregatorConfigPath.toFile());	
+			} else {
+				LOGGER.warn("aas-aggregator.properties not found in " + aasAggregatorConfigPath.toFile() + " Using defaults.");
+			}
+			
+			Path servletContainerConfigPath = Paths.get(configFolderPath, "servlet-container.properties");
+			if (servletContainerConfigPath.toFile().exists()) {
+				servletContainerConfig.load(new FileInputStream(servletContainerConfigPath.toFile()));
+				LOGGER.info("servlet-container.properties loaded: " + servletContainerConfigPath.toFile());
+			} else {
+				LOGGER.warn("servlet-container.properties not found in " + servletContainerConfigPath.toFile() + " Using defaults.");
+			}
+			
+			
 
 			if (cmd.hasOption("cf")) {
 				componentManagerConfig.setProperty(StringConstants.serviceConnectionString, cmd.getOptionValue("cf"));
+			} else {
+				componentManagerConfig.setProperty(StringConstants.serviceConnectionString, "components/");
 			}
 
 			if (cmd.hasOption("zk")) {
@@ -164,6 +174,7 @@ public class Main {
 
 			System.exit(1);
 		}		
+		
 		
 		// 0. create AAS registry client
 		IAASRegistryService aasRegistry = new AASRegistryProxy(aasRegistryEndpoint);

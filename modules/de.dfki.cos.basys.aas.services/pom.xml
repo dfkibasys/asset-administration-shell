@@ -75,6 +75,11 @@
 			<version>${version.basys.common}</version>
 		</dependency>
 		<dependency>
+			<groupId>de.dfki.cos.basys.common</groupId>
+			<artifactId>de.dfki.cos.basys.common.logging</artifactId>
+			<version>${version.basys.common}</version>
+		</dependency>
+		<dependency>
 			<groupId>de.dfki.cos.basys.aas</groupId>
 			<artifactId>de.dfki.cos.basys.aas.registry.zookeeper</artifactId>
 			<version>${project.version}</version>

@@ -192,7 +192,7 @@ public class ServletContainerComponent extends BaseComponent {
 	public static Properties getDefaultConfig() {
     	Properties defaultConfig = new Properties();
         defaultConfig.setProperty("hostname", "0.0.0.0");
-        defaultConfig.setProperty("port", "5080");
+        defaultConfig.setProperty("port", "5081");
         defaultConfig.setProperty("path", "");
         defaultConfig.setProperty("docBasePath", "");
     	return defaultConfig;
