@@ -10,4 +10,4 @@ This repository contains AAS-related models, software modules and docker images.
   
 ## Usage ##
 
-The AAS services can be used via [Docker](https://hub.docker.com/repository/docker/dfkibasys/aas-services) and are already included in DFKI's back-end [runtime Docker stack](https://github.com/BaSys-PC1/docker).
+The AAS services can be used via [Docker](https://hub.docker.com/r/dfkibasys/aas-services) and are already included in DFKI's back-end [runtime Docker stack](https://github.com/BaSys-PC1/docker).
