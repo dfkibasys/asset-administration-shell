@@ -19,6 +19,7 @@ import org.eclipse.basyx.aas.registration.proxy.AASRegistryProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.dfki.cos.basys.aas.component.AasComponentContext;
 import de.dfki.cos.basys.common.component.ComponentException;
 import de.dfki.cos.basys.common.component.StringConstants;
 import de.dfki.cos.basys.common.component.manager.impl.ComponentManagerImpl;
@@ -117,7 +118,7 @@ public class Main {
 //			if (componentRegistryConfigPath.toFile().exists()) {
 //				componentRegistryConfig.load(new FileInputStream(componentRegistryConfigPath.toFile()));
 //			} else {
-//				LOGGER.warn("component-registry.properties not found in " + componentRegistryConfigPath.toFile() + " Using defaults.");
+//				LOGGER.warn("component-registry.properties not found in " + componentRegistryConfigPath.toFile() + ". Using defaults.");
 //			}
 
 			Path componentManagerConfigPath = Paths.get(configFolderPath, "component-manager.properties");
@@ -125,7 +126,7 @@ public class Main {
 				componentManagerConfig.load(new FileInputStream(componentManagerConfigPath.toFile()));		
 				LOGGER.info("component-manager.properties loaded: " + componentManagerConfigPath.toFile());
 			} else {
-				LOGGER.warn("component-manager.properties not found in " + componentManagerConfigPath.toFile() + " Using defaults.");
+				LOGGER.warn("component-manager.properties not found in " + componentManagerConfigPath.toFile() + ". Using defaults.");
 			}
 
 			Path aasRegistryConfigPath = Paths.get(configFolderPath, "aas-registry.properties");
@@ -133,7 +134,7 @@ public class Main {
 				aasRegistryConfig.load(new FileInputStream(aasRegistryConfigPath.toFile()));		
 				LOGGER.info("aas-registry.properties loaded: " + aasRegistryConfigPath.toFile());
 			} else {
-				LOGGER.warn("aas-registry.properties not found in " + aasRegistryConfigPath.toFile() + " Using defaults.");
+				LOGGER.warn("aas-registry.properties not found in " + aasRegistryConfigPath.toFile() + ". Using defaults.");
 			}
 
 			Path aasAggregatorConfigPath = Paths.get(configFolderPath, "aas-aggregator.properties");
@@ -141,7 +142,7 @@ public class Main {
 				aasAggregatorConfig.load(new FileInputStream(aasAggregatorConfigPath.toFile()));	
 				LOGGER.info("aas-aggregator.properties loaded: " + aasAggregatorConfigPath.toFile());	
 			} else {
-				LOGGER.warn("aas-aggregator.properties not found in " + aasAggregatorConfigPath.toFile() + " Using defaults.");
+				LOGGER.warn("aas-aggregator.properties not found in " + aasAggregatorConfigPath.toFile() + ". Using defaults.");
 			}
 			
 			Path servletContainerConfigPath = Paths.get(configFolderPath, "servlet-container.properties");
@@ -149,7 +150,7 @@ public class Main {
 				servletContainerConfig.load(new FileInputStream(servletContainerConfigPath.toFile()));
 				LOGGER.info("servlet-container.properties loaded: " + servletContainerConfigPath.toFile());
 			} else {
-				LOGGER.warn("servlet-container.properties not found in " + servletContainerConfigPath.toFile() + " Using defaults.");
+				LOGGER.warn("servlet-container.properties not found in " + servletContainerConfigPath.toFile() + ". Using defaults.");
 			}
 			
 			

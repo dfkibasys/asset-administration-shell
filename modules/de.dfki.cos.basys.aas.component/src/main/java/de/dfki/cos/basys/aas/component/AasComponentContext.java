@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.aas.services;
+package de.dfki.cos.basys.aas.component;
 
 import org.eclipse.basyx.aas.registration.api.IAASRegistryService;
 

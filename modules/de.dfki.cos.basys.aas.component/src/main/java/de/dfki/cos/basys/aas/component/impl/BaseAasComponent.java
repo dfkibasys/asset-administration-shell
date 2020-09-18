@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.aas.services;
+package de.dfki.cos.basys.aas.component.impl;
 
 import java.util.Properties;
 
@@ -11,19 +11,22 @@ import org.eclipse.basyx.aas.metamodel.map.parts.Asset;
 import org.eclipse.basyx.aas.restapi.AASModelProvider;
 import org.eclipse.basyx.aas.restapi.VABMultiSubmodelProvider;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
+import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
 
+import de.dfki.cos.basys.aas.component.AasComponent;
+import de.dfki.cos.basys.aas.component.ModelProviderComponent;
 import de.dfki.cos.basys.common.component.ComponentException;
 import de.dfki.cos.basys.common.component.impl.BaseComponent;
 
-public class AasComponent extends BaseComponent implements ModelProviderComponent {
+public class BaseAasComponent extends BaseComponent implements AasComponent {
 	
 	//protected AASDescriptor descriptor = null;
 	protected AssetAdministrationShell aas = null;
 	protected VABMultiSubmodelProvider provider = null;
 	//protected String endpoint = null;
 	
-	public AasComponent(Properties config) {
+	public BaseAasComponent(Properties config) {
 		super(config);
 		// TODO Auto-generated constructor stub
 	}
@@ -58,8 +61,18 @@ public class AasComponent extends BaseComponent implements ModelProviderComponen
 //	
 
 	@Override
-	public ModelDescriptor getModelDescriptor(String endpoint) {		
-		return new AASDescriptor(aas, endpoint + "/" + aas.getIdShort());
+	public Identifier getAssetId() {
+		return new Identifier(IdentifierType.IRI,config.getProperty("asset.id", ""));
+	}
+	
+	@Override
+	public Identifier getAasId() {
+		return new Identifier(IdentifierType.IRI,config.getProperty("aas.id", ""));
+	}
+	
+	@Override
+	public AASDescriptor getModelDescriptor(String endpoint) {		
+		return new AASDescriptor(aas, endpoint + "/" + aas.getIdShort() + "/aas");
 	}
 
 	@Override

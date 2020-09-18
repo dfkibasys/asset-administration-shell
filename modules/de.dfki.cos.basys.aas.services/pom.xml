@@ -71,13 +71,13 @@
 	
 		<dependency>
 			<groupId>de.dfki.cos.basys.common</groupId>
-			<artifactId>de.dfki.cos.basys.common.component</artifactId>
+			<artifactId>de.dfki.cos.basys.common.logging</artifactId>
 			<version>${version.basys.common}</version>
 		</dependency>
 		<dependency>
-			<groupId>de.dfki.cos.basys.common</groupId>
-			<artifactId>de.dfki.cos.basys.common.logging</artifactId>
-			<version>${version.basys.common}</version>
+			<groupId>de.dfki.cos.basys.aas</groupId>
+			<artifactId>de.dfki.cos.basys.aas.component</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.dfki.cos.basys.aas</groupId>
@@ -92,12 +92,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>org.eclipse.basyx</groupId>
-			<artifactId>basyx.sdk</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
 		<dependency>
 			<groupId>commons-cli</groupId>

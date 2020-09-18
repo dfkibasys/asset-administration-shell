@@ -48,7 +48,8 @@ public class ZookeeperRegistryHandler implements IRegistryHandler {
 	}
 	
 	public void clean() {
-		client.deletePath(PREFIX);
+		if (client.existsPath(PREFIX))
+			client.deletePath(PREFIX);
 	}
 	
 	/*

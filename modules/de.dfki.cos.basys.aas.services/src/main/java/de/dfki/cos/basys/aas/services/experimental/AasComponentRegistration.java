@@ -8,7 +8,7 @@ import org.eclipse.basyx.aas.registration.api.IAASRegistryService;
 import org.eclipse.basyx.submodel.metamodel.api.ISubModel;
 import org.eclipse.basyx.submodel.metamodel.map.SubModel;
 
-import de.dfki.cos.basys.aas.services.AasComponent;
+import de.dfki.cos.basys.aas.component.impl.BaseAasComponent;
 import de.dfki.cos.basys.common.component.Component;
 import de.dfki.cos.basys.common.component.ComponentInfo;
 import de.dfki.cos.basys.common.component.registry.ComponentRegistration;
@@ -16,12 +16,12 @@ import de.dfki.cos.basys.common.component.registry.ComponentRegistrationExceptio
 
 public class AasComponentRegistration implements ComponentRegistration {
 
-	private final AasComponent component;
+	private final BaseAasComponent component;
 	private AASDescriptor descriptor; 
 	private IAASRegistryService service;
 	
 	public AasComponentRegistration(Component component, IAASRegistryService service) {
-		this.component = (AasComponent)component;
+		this.component = (BaseAasComponent)component;
 		this.service = service;
 	}
 	

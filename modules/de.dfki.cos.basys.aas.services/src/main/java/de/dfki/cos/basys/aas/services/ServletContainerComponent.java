@@ -37,6 +37,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
 
+import de.dfki.cos.basys.aas.component.AasComponent;
+import de.dfki.cos.basys.aas.component.AasComponentContext;
+import de.dfki.cos.basys.aas.component.SubmodelComponent;
+import de.dfki.cos.basys.aas.component.impl.BaseAasComponent;
 import de.dfki.cos.basys.common.component.Component;
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ComponentException;
@@ -127,65 +131,58 @@ public class ServletContainerComponent extends BaseComponent {
 		}
 	}
 
-//	public String addServlet(Servlet servlet, String path) {
-//		String prefix = "";
-//		String endpoint = prefix + path;
-//		
-//		Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);
-//		rootCtx.addServletMappingDecoded(path + "/*", String.valueOf(servlet.hashCode()));
-//		
-//		return endpoint;
-//	}
-//	
-//	public String addModelProvider(IModelProvider provider, String path) {
-//		String prefix = "/";
-//		String endpoint = prefix + path;
-//		
-//		HttpServlet servlet = new VABHTTPInterface<IModelProvider>(provider);		
-//		Wrapper wrapper = Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);
-//		rootCtx.addServletMappingDecoded(endpoint + "/*", String.valueOf(servlet.hashCode()));
-//		
-//		return advertisedEndpoint + endpoint;
-//	}
-//	
-//	public void removeServletMapping(String id) {
-//		rootCtx.removeServletMapping("/" + id + "/*");		
-//	}
-
 	@Subscribe
 	public void onComponentManagerEvent(ComponentManagerEvent ev) {		
 		if (ev.getType() == Type.COMPONENT_ADDED) {
 			Component component = ev.getComponent();
 			if (component instanceof AasComponent) {				
 				AasComponent aasComponent = (AasComponent)component;
+				AASDescriptor desc = aasComponent.getModelDescriptor(advertisedEndpoint);
 				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(aasComponent.getModelProvider());
-				AASDescriptor desc = (AASDescriptor)aasComponent.getModelDescriptor(advertisedEndpoint);
-				// Add new Servlet and Mapping to tomcat environment
+				
+				// add new servlet and mapping to tomcat environment
 				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				
 				rootCtx.addServletMappingDecoded("/" + desc.getIdShort() + "/*", String.valueOf(servlet.hashCode()));
-				// Register AAS at AAS registry
+				
+				// register AAS
 				((AasComponentContext) context).getAasRegistry().register(desc);	
 			}
-//			else if (component instanceof SubmodelComponent) {
-//				SubModelProvider subProvider =  new SubModelProvider(component.getSubmodel());
-//				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(subProvider);
-//				//servletMapping.put(component.getId(), servlet);
-//				// Add new Servlet and Mapping to tomcat environment
-//				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);
-//				rootCtx.addServletMappingDecoded("/" + component.getId() + "/*", String.valueOf(servlet.hashCode()));
-//			} 
+			else if (component instanceof SubmodelComponent) {
+				SubmodelComponent smComponent = (SubmodelComponent)component;
+				SubmodelDescriptor desc = smComponent.getModelDescriptor(advertisedEndpoint);
+				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(smComponent.getModelProvider());
+				
+				// add new servlet and mapping to tomcat environment
+				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				
+				rootCtx.addServletMappingDecoded("/" + desc.getIdShort() + "/*", String.valueOf(servlet.hashCode()));
+
+				// register submodel
+				((AasComponentContext) context).getAasRegistry().register(smComponent.getAasId(), desc);
+			} 
 		}
 		else if (ev.getType() == Type.COMPONENT_DELETED) {		
 			Component component = ev.getComponent();
 			if (component instanceof AasComponent) {	
 				AasComponent aasComponent = (AasComponent)component;
-				AASDescriptor desc = (AASDescriptor)aasComponent.getModelDescriptor(advertisedEndpoint);				
+				AASDescriptor desc = aasComponent.getModelDescriptor(advertisedEndpoint);				
+				
+				// remove servlet
 				rootCtx.removeServletMapping("/" + desc.getIdShort() + "/*");
-				// Unregister AAS at AAS registry
+				
+				// unregister submodel
 				((AasComponentContext) context).getAasRegistry().delete(desc.getIdentifier());				
 			}			
-//			else if (component instanceof SubmodelComponent) {
-//			}
+			else if (component instanceof SubmodelComponent) {
+				SubmodelComponent smComponent = (SubmodelComponent)component;
+				SubmodelDescriptor desc = smComponent.getModelDescriptor(advertisedEndpoint);
+				
+				// remove servlet
+				rootCtx.removeServletMapping("/" + desc.getIdShort() + "/*");
+
+				// unregister submodel
+				((AasComponentContext) context).getAasRegistry().delete(smComponent.getAasId(), desc.getIdentifier());		
+				
+			}
 		}
 	}
 	
