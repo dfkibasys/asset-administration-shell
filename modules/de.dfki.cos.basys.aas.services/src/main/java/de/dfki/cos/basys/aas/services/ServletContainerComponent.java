@@ -55,7 +55,7 @@ public class ServletContainerComponent extends BaseComponent {
 	  
 	private Map<String, HttpServlet> servletMapping = new HashMap<>();
 	private Context rootCtx = null;
-	private String advertisedEndpoint = "http://localhost:5081";
+	private String accessibleEndpoint = null;
 	/**
 	 * Constructor
 	 * 
@@ -66,6 +66,13 @@ public class ServletContainerComponent extends BaseComponent {
 	 */
 	public ServletContainerComponent(Properties config) {
 		super(config);
+				
+		accessibleEndpoint = config.getProperty("accessibleEndpoint",getDefaultConfig().getProperty("accessibleEndpoint"));
+		if (System.getenv("AAS_HOST_ACCESSIBLE_ENDPOINT") != null) {
+			LOGGER.info("Using environment variable AAS_HOST_ACCESSIBLE_ENDPOINT");			
+			accessibleEndpoint = System.getenv("AAS_HOST_ACCESSIBLE_ENDPOINT");			
+		}
+		LOGGER.info("advertisedEndpoint = " + accessibleEndpoint);
 		
 		// Instantiate and setup Tomcat server
 		tomcat = new Tomcat();
@@ -137,7 +144,7 @@ public class ServletContainerComponent extends BaseComponent {
 			Component component = ev.getComponent();
 			if (component instanceof AasComponent) {				
 				AasComponent aasComponent = (AasComponent)component;
-				AASDescriptor desc = aasComponent.getModelDescriptor(advertisedEndpoint);
+				AASDescriptor desc = aasComponent.getModelDescriptor(accessibleEndpoint);
 				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(aasComponent.getModelProvider());
 				
 				// add new servlet and mapping to tomcat environment
@@ -149,7 +156,7 @@ public class ServletContainerComponent extends BaseComponent {
 			}
 			else if (component instanceof SubmodelComponent) {
 				SubmodelComponent smComponent = (SubmodelComponent)component;
-				SubmodelDescriptor desc = smComponent.getModelDescriptor(advertisedEndpoint);
+				SubmodelDescriptor desc = smComponent.getModelDescriptor(accessibleEndpoint);
 				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(smComponent.getModelProvider());
 				
 				// add new servlet and mapping to tomcat environment
@@ -164,7 +171,7 @@ public class ServletContainerComponent extends BaseComponent {
 			Component component = ev.getComponent();
 			if (component instanceof AasComponent) {	
 				AasComponent aasComponent = (AasComponent)component;
-				AASDescriptor desc = aasComponent.getModelDescriptor(advertisedEndpoint);				
+				AASDescriptor desc = aasComponent.getModelDescriptor(accessibleEndpoint);				
 				
 				// remove servlet
 				rootCtx.removeServletMapping("/" + desc.getIdShort() + "/*");
@@ -174,7 +181,7 @@ public class ServletContainerComponent extends BaseComponent {
 			}			
 			else if (component instanceof SubmodelComponent) {
 				SubmodelComponent smComponent = (SubmodelComponent)component;
-				SubmodelDescriptor desc = smComponent.getModelDescriptor(advertisedEndpoint);
+				SubmodelDescriptor desc = smComponent.getModelDescriptor(accessibleEndpoint);
 				
 				// remove servlet
 				rootCtx.removeServletMapping("/" + desc.getIdShort() + "/*");
@@ -192,6 +199,7 @@ public class ServletContainerComponent extends BaseComponent {
         defaultConfig.setProperty("port", "5081");
         defaultConfig.setProperty("path", "");
         defaultConfig.setProperty("docBasePath", "");
+        defaultConfig.setProperty("accessibleEndpoint", "http://localhost:5081");
     	return defaultConfig;
 	}
 
