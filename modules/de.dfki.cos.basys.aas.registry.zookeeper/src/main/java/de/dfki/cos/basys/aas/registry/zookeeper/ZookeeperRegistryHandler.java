@@ -18,8 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.handler.codec.string.LineSeparator;
 
 public class ZookeeperRegistryHandler implements IRegistryHandler {
-	public final Logger LOGGER;
-	public static final String PREFIX = "/basys/aas-registry";
+	private final Logger LOGGER;
+	private String PREFIX = "/basys/aas-registry";
 
 	private ObjectMapper mapper = new ObjectMapper();
 	
@@ -33,7 +33,13 @@ public class ZookeeperRegistryHandler implements IRegistryHandler {
 	public ZookeeperRegistryHandler(String connectionString) {
 		LOGGER = LoggerFactory.getLogger(getClass().getName());
 		client = new ZookeeperClient(connectionString);
-	}		
+	}	
+	
+	public ZookeeperRegistryHandler(String connectionString, String prefix) {
+		LOGGER = LoggerFactory.getLogger(getClass().getName());
+		client = new ZookeeperClient(connectionString);
+		PREFIX = prefix;
+	}	
 		
 	public boolean connect(String connectionString) {
 		return client.connect(connectionString);
