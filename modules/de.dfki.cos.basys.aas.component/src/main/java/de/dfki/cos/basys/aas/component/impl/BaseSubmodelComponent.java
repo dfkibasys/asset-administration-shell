@@ -12,6 +12,7 @@ import org.eclipse.basyx.aas.metamodel.map.parts.Asset;
 import org.eclipse.basyx.aas.restapi.AASModelProvider;
 import org.eclipse.basyx.aas.restapi.VABMultiSubmodelProvider;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
+import org.eclipse.basyx.submodel.metamodel.api.qualifier.haskind.ModelingKind;
 import org.eclipse.basyx.submodel.metamodel.api.reference.enums.KeyElements;
 import org.eclipse.basyx.submodel.metamodel.map.SubModel;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
@@ -102,9 +103,10 @@ public class BaseSubmodelComponent extends BaseComponent implements SubmodelComp
 	}
 	
 	protected SubModel createfromProperties(Properties properties) {
-		SubModel sm = new SubModel();
-		sm.setIdentification(IdentifierType.IRI, config.getProperty("submodel.id", ""));
+		SubModel sm = new SubModel();		
 		sm.setIdShort(properties.getProperty("submodel.idshort"));
+		sm.setIdentification(IdentifierType.IRI, config.getProperty("submodel.id", ""));
+		sm.setModelingKind(ModelingKind.INSTANCE);
 		sm.setSemanticId(new Reference(new Key(KeyElements.CONCEPTDESCRIPTION, false, properties.getProperty("submodel.semanticid"), IdentifierType.CUSTOM)));
 		
 		String[] elements = properties.getProperty("submodel.properties").split("\\s*,\\s*");
