@@ -13,7 +13,6 @@ import org.eclipse.basyx.aas.restapi.VABMultiSubmodelProvider;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
-
 import de.dfki.cos.basys.aas.component.AasComponent;
 import de.dfki.cos.basys.aas.component.ModelProviderComponent;
 import de.dfki.cos.basys.common.component.ComponentException;
@@ -71,13 +70,18 @@ public class BaseAasComponent extends BaseComponent implements AasComponent {
 	}
 	
 	@Override
-	public AASDescriptor getModelDescriptor(String endpoint) {		
-		return new AASDescriptor(aas, endpoint + "/" + aas.getIdShort() + "/aas");
+	public AASDescriptor getModelDescriptor(String endpoint) {
+		return new AASDescriptor(aas, endpoint + "/" + aas.getIdentification().getId() + "/aas");
 	}
 
 	@Override
 	public IModelProvider getModelProvider() {
 		return provider;
+	}
+	
+	@Override
+	public AssetAdministrationShell getAas() {		
+		return aas;
 	}
 	
 	protected AssetAdministrationShell createfromProperties(Properties properties) {

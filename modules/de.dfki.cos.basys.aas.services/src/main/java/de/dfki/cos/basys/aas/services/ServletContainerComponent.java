@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +27,9 @@ import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
 import org.eclipse.basyx.aas.restapi.AASModelProvider;
 import org.eclipse.basyx.submodel.metamodel.api.ISubModel;
 import org.eclipse.basyx.submodel.metamodel.map.SubModel;
+import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.submodel.restapi.SubModelProvider;
+import org.eclipse.basyx.vab.exception.provider.ProviderException;
 import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
 import org.eclipse.basyx.vab.protocol.http.server.AASHTTPServer;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxContext;
@@ -142,19 +145,20 @@ public class ServletContainerComponent extends BaseComponent {
 	public void onComponentManagerEvent(ComponentManagerEvent ev) {		
 		if (ev.getType() == Type.COMPONENT_ADDED) {
 			Component component = ev.getComponent();
-			if (component instanceof AasComponent) {				
-				AasComponent aasComponent = (AasComponent)component;
-				AASDescriptor desc = aasComponent.getModelDescriptor(accessibleEndpoint);
-				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(aasComponent.getModelProvider());
-				
-				// add new servlet and mapping to tomcat environment
-				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				
-				rootCtx.addServletMappingDecoded("/" + desc.getIdShort() + "/*", String.valueOf(servlet.hashCode()));
-				
-				// register AAS
-				((AasComponentContext) context).getAasRegistry().register(desc);	
-			}
-			else if (component instanceof SubmodelComponent) {
+//			if (component instanceof AasComponent) {				
+//				AasComponent aasComponent = (AasComponent)component;
+//				AASDescriptor desc = aasComponent.getModelDescriptor(accessibleEndpoint);
+//				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(aasComponent.getModelProvider());
+//				
+//				// add new servlet and mapping to tomcat environment
+//				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				
+//				rootCtx.addServletMappingDecoded("/" + desc.getIdShort() + "/*", String.valueOf(servlet.hashCode()));
+//				
+//				// register AAS
+//				((AasComponentContext) context).getAasRegistry().register(desc);	
+//			}
+//			else 
+			if (component instanceof SubmodelComponent) {
 				SubmodelComponent smComponent = (SubmodelComponent)component;
 				SubmodelDescriptor desc = smComponent.getModelDescriptor(accessibleEndpoint);
 				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(smComponent.getModelProvider());
@@ -162,24 +166,43 @@ public class ServletContainerComponent extends BaseComponent {
 				// add new servlet and mapping to tomcat environment
 				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				
 				rootCtx.addServletMappingDecoded("/" + desc.getIdShort() + "/*", String.valueOf(servlet.hashCode()));
-
+				
+				Identifier aasId = smComponent.getAasId();
+				
+				try {
+					((AasComponentContext) context).getAasRegistry().lookupAAS(aasId);
+				} catch (ProviderException e) {
+					try {
+						TimeUnit.MILLISECONDS.sleep(1000);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
 				// register submodel
-				((AasComponentContext) context).getAasRegistry().register(smComponent.getAasId(), desc);
+				try {
+					((AasComponentContext) context).getAasRegistry().register(aasId, desc);
+				} catch (ProviderException e) {
+					LOGGER.error("AAS with id " + aasId.getId() + " not registered");
+					e.printStackTrace();
+				}				
 			} 
 		}
 		else if (ev.getType() == Type.COMPONENT_DELETED) {		
 			Component component = ev.getComponent();
-			if (component instanceof AasComponent) {	
-				AasComponent aasComponent = (AasComponent)component;
-				AASDescriptor desc = aasComponent.getModelDescriptor(accessibleEndpoint);				
-				
-				// remove servlet
-				rootCtx.removeServletMapping("/" + desc.getIdShort() + "/*");
-				
-				// unregister submodel
-				((AasComponentContext) context).getAasRegistry().delete(desc.getIdentifier());				
-			}			
-			else if (component instanceof SubmodelComponent) {
+//			if (component instanceof AasComponent) {	
+//				AasComponent aasComponent = (AasComponent)component;
+//				AASDescriptor desc = aasComponent.getModelDescriptor(accessibleEndpoint);				
+//				
+//				// remove servlet
+//				rootCtx.removeServletMapping("/" + desc.getIdShort() + "/*");
+//				
+//				// unregister submodel
+//				((AasComponentContext) context).getAasRegistry().delete(desc.getIdentifier());				
+//			}			
+//			else 
+				if (component instanceof SubmodelComponent) {
 				SubmodelComponent smComponent = (SubmodelComponent)component;
 				SubmodelDescriptor desc = smComponent.getModelDescriptor(accessibleEndpoint);
 				
