@@ -49,6 +49,7 @@ public class AasAggregatorComponent extends ServiceComponent<AASAggregator> {
 			LOGGER.info("Using environment variable AAS_AGGREGATOR_ACCESSIBLE_ENDPOINT");			
 			accessibleEndpoint = System.getenv("AAS_AGGREGATOR_ACCESSIBLE_ENDPOINT");			
 		}
+		accessibleEndpoint += "/aasList";
 		LOGGER.info("advertisedEndpoint = " + accessibleEndpoint);
 		
 		ServiceProvider<AASAggregator> serviceProvider =  new ServiceProvider<AASAggregator>() {
@@ -186,7 +187,7 @@ public class AasAggregatorComponent extends ServiceComponent<AASAggregator> {
         defaultConfig.setProperty("port", "5080");
         defaultConfig.setProperty("path", "");
         defaultConfig.setProperty("docBasePath", "");
-        defaultConfig.setProperty("accessibleEndpoint", "http://localhost:5080/aasList");
+        defaultConfig.setProperty("accessibleEndpoint", "http://localhost:5080");
     	return defaultConfig;
 	}
 
