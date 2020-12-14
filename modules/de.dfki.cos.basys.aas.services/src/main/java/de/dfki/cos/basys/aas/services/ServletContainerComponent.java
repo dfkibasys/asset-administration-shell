@@ -161,7 +161,7 @@ public class ServletContainerComponent extends BaseComponent {
 			if (component instanceof SubmodelComponent) {
 				SubmodelComponent smComponent = (SubmodelComponent)component;
 				SubmodelDescriptor desc = smComponent.getModelDescriptor(accessibleEndpoint);
-				HttpServlet servlet = new VABHTTPInterface<IModelProvider>(smComponent.getModelProvider());
+				HttpServlet servlet = new VABHTTPCorsInterface<IModelProvider>(smComponent.getModelProvider());
 				
 				// add new servlet and mapping to tomcat environment
 				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				

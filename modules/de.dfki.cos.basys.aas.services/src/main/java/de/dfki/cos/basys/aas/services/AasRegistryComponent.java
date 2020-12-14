@@ -66,7 +66,7 @@ public class AasRegistryComponent extends ServiceComponent<IAASRegistryService> 
 		super.doActivate();
 				
 		provider = new DirectoryModelProvider(getService());		
-		servlet = new VABHTTPInterface<DirectoryModelProvider>(provider);
+		servlet = new VABHTTPCorsInterface<DirectoryModelProvider>(provider);
 		
 		BaSyxContext context = new BaSyxContext(config.getProperty("path"), config.getProperty("docBasePath"), config.getProperty("hostname"), Integer.parseInt(config.getProperty("port")));
 		context.addServletMapping("/*", servlet);

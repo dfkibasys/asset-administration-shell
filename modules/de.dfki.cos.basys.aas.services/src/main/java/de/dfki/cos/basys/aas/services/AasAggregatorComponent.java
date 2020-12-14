@@ -85,7 +85,7 @@ public class AasAggregatorComponent extends ServiceComponent<AASAggregator> {
 		super.doActivate();
 		
 		provider = new AASAggregatorProvider(getService());		
-		servlet = new VABHTTPInterface<AASAggregatorProvider>(provider);
+		servlet = new VABHTTPCorsInterface<AASAggregatorProvider>(provider);
 		
 		BaSyxContext context = new BaSyxContext(config.getProperty("path"), config.getProperty("docBasePath"), config.getProperty("hostname"), Integer.parseInt(config.getProperty("port")));
 		context.addServletMapping("/*", servlet);
