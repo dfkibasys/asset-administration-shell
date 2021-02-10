@@ -88,6 +88,7 @@ public class BaseAasComponent extends BaseComponent implements AasComponent {
 		Asset asset = new Asset();
 		asset.setIdentification(IdentifierType.IRI, properties.getProperty("asset.id"));
 		asset.setIdShort(properties.getProperty("asset.idshort"));
+		asset.setCategory(properties.getProperty("asset.category","none"));
 		asset.setAssetKind(AssetKind.INSTANCE);
 				
 		AssetAdministrationShell aas = new AssetAdministrationShell();
