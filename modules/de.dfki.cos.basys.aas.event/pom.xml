@@ -11,27 +11,17 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>de.dfki.cos.basys.aas.component</bundle.symbolicName>
-		<bundle.namespace>de.dfki.cos.basys.aas.component</bundle.namespace>
+		<bundle.symbolicName>de.dfki.cos.basys.aas.event</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.aas.event</bundle.namespace>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>de.dfki.cos.basys.aas.component</artifactId>
+	<artifactId>de.dfki.cos.basys.aas.event</artifactId>
 
-	<name>BaSys 4.2 AAS Component Model Integration</name>
+	<name>BaSys 4.2 AAS Extended Event Model</name>
 	<packaging>bundle</packaging>
 	
-	<dependencies>
-		<dependency>
-			<groupId>de.dfki.cos.basys.common</groupId>
-			<artifactId>de.dfki.cos.basys.common.component</artifactId>
-			<version>${version.basys.common}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.dfki.cos.basys.aas</groupId>
-			<artifactId>de.dfki.cos.basys.aas.event</artifactId>
-			<version>${project.version}</version>
-		</dependency>				
+	<dependencies>		
 		<dependency>
 			<groupId>org.eclipse.basyx</groupId>
 			<artifactId>basyx.sdk</artifactId>

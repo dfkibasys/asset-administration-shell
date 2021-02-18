@@ -11,14 +11,14 @@
 	</parent>
 
 	<properties>
-		<bundle.symbolicName>de.dfki.cos.basys.aas.component</bundle.symbolicName>
-		<bundle.namespace>de.dfki.cos.basys.aas.component</bundle.namespace>
+		<bundle.symbolicName>de.dfki.cos.basys.aas.event.mqtt</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.aas.event.mqtt</bundle.namespace>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>de.dfki.cos.basys.aas.component</artifactId>
+	<artifactId>de.dfki.cos.basys.aas.event.mqtt</artifactId>
 
-	<name>BaSys 4.2 AAS Component Model Integration</name>
+	<name>BaSys 4.2 AAS Extended Event Model - MQTT Integration</name>
 	<packaging>bundle</packaging>
 	
 	<dependencies>
@@ -31,11 +31,16 @@
 			<groupId>de.dfki.cos.basys.aas</groupId>
 			<artifactId>de.dfki.cos.basys.aas.event</artifactId>
 			<version>${project.version}</version>
-		</dependency>				
+		</dependency>	
 		<dependency>
-			<groupId>org.eclipse.basyx</groupId>
-			<artifactId>basyx.sdk</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson-version}</version>
+		</dependency>	
+		<dependency>
+			<groupId>org.eclipse.paho</groupId>
+			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+			<version>${paho-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
