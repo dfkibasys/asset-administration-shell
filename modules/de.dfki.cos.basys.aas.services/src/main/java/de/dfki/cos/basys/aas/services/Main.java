@@ -14,7 +14,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.eclipse.basyx.aas.registration.api.IAASRegistryService;
+import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.registration.proxy.AASRegistryProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,7 +178,7 @@ public class Main {
 		
 		
 		// 0. create AAS registry client
-		IAASRegistryService aasRegistry = new AASRegistryProxy(aasRegistryEndpoint);
+		IAASRegistry aasRegistry = new AASRegistryProxy(aasRegistryEndpoint);
 		context.setAasRegistry(aasRegistry);
 		
 		// 1. create component manager

@@ -1,6 +1,6 @@
 package de.dfki.cos.basys.aas.registry.zookeeper;
 
-import org.eclipse.basyx.aas.registration.api.IAASRegistryService;
+import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.registration.memory.AASRegistry;
 import org.eclipse.basyx.testsuite.regression.aas.registration.TestRegistryProviderSuite;
 
@@ -11,11 +11,9 @@ import org.eclipse.basyx.testsuite.regression.aas.registration.TestRegistryProvi
  *
  */
 public class TestZookeeperRegistryProvider extends TestRegistryProviderSuite {
-
-	private AASRegistry registry;
 	
 	@Override
-	protected IAASRegistryService getRegistryService() {
+	protected IAASRegistry getRegistryService() {
 		String zkString = "lns-90165.sb.dfki.de:2181";
 		//String zkString = "localhost:2181";
 		String prefix = "/basys/aas-registry-test";

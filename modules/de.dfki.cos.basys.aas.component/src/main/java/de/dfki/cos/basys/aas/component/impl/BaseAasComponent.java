@@ -5,16 +5,11 @@ import java.util.Properties;
 import org.eclipse.basyx.aas.metamodel.api.parts.asset.AssetKind;
 import org.eclipse.basyx.aas.metamodel.map.AssetAdministrationShell;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
-import org.eclipse.basyx.aas.metamodel.map.descriptor.ModelDescriptor;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.ModelUrn;
 import org.eclipse.basyx.aas.metamodel.map.parts.Asset;
-import org.eclipse.basyx.aas.restapi.AASModelProvider;
-import org.eclipse.basyx.aas.restapi.VABMultiSubmodelProvider;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
-import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
 import de.dfki.cos.basys.aas.component.AasComponent;
-import de.dfki.cos.basys.aas.component.ModelProviderComponent;
 import de.dfki.cos.basys.common.component.ComponentException;
 import de.dfki.cos.basys.common.component.impl.BaseComponent;
 
@@ -22,7 +17,7 @@ public class BaseAasComponent extends BaseComponent implements AasComponent {
 	
 	//protected AASDescriptor descriptor = null;
 	protected AssetAdministrationShell aas = null;
-	protected VABMultiSubmodelProvider provider = null;
+//	protected VABMultiSubmodelProvider provider = null;
 	//protected String endpoint = null;
 	
 	public BaseAasComponent(Properties config) {
@@ -35,7 +30,7 @@ public class BaseAasComponent extends BaseComponent implements AasComponent {
 		super.doActivate();
 		
 		aas = createfromProperties(config);	
-		provider = new VABMultiSubmodelProvider(new AASModelProvider(aas));
+//		provider = new VABMultiSubmodelProvider(new AASModelProvider(aas));
 //		endpoint = ((AasComponentContext)context).getServletContainer().addModelProvider(provider, aas.getIdShort());
 //		descriptor = new AASDescriptor(getAas(), endpoint);
 //		((AasComponentContext)context).getAasRegistry().register(descriptor);
@@ -47,7 +42,7 @@ public class BaseAasComponent extends BaseComponent implements AasComponent {
 		super.doDeactivate();
 //		((AasComponentContext)context).getAasRegistry().delete(descriptor.getIdentifier());
 //		((AasComponentContext)context).getServletContainer().removeServletMapping(aas.getIdShort());
-		provider = null;		
+//		provider = null;		
 		aas = null;
 //		descriptor = null;
 //		endpoint = null;
@@ -74,10 +69,10 @@ public class BaseAasComponent extends BaseComponent implements AasComponent {
 		return new AASDescriptor(aas, endpoint + "/" + aas.getIdentification().getId() + "/aas");
 	}
 
-	@Override
-	public IModelProvider getModelProvider() {
-		return provider;
-	}
+//	@Override
+//	public IModelProvider getModelProvider() {
+//		return provider;
+//	}
 	
 	@Override
 	public AssetAdministrationShell getAas() {		

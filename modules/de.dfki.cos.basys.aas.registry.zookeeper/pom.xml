@@ -72,11 +72,11 @@
 			<artifactId>de.dfki.cos.basys.common.component</artifactId>
 			<version>${version.basys.common}</version>
 		</dependency>
-
+		
 		<dependency>
-			<groupId>org.eclipse.basyx</groupId>
-			<artifactId>basyx.sdk</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>de.dfki.cos.basys.aas</groupId>
+			<artifactId>de.dfki.cos.basys.aas.event</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -110,7 +110,7 @@
 		<dependency>
 			<groupId>org.eclipse.basyx</groupId>
 			<artifactId>basyx.sdk</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${basyx-version}</version>
 			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>

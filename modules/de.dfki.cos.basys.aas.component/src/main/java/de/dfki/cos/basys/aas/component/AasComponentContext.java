@@ -1,14 +1,14 @@
 package de.dfki.cos.basys.aas.component;
 
 import org.eclipse.basyx.aas.aggregator.api.IAASAggregator;
-import org.eclipse.basyx.aas.registration.api.IAASRegistryService;
+import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 
 import de.dfki.cos.basys.common.component.ComponentContext;
 
 public class AasComponentContext  extends ComponentContext {
 
 	//protected ServletContainer servletContainer = null;
-	protected IAASRegistryService aasRegistry = null;
+	protected IAASRegistry aasRegistry = null;
 	protected IAASAggregator aasAggregator = null;
 	
 	private static AasComponentContext staticContext = null;
@@ -41,11 +41,11 @@ public class AasComponentContext  extends ComponentContext {
 //		this.servletContainer = servletContainer;
 //	}
 	
-	public IAASRegistryService getAasRegistry() {
+	public IAASRegistry getAasRegistry() {
 		return aasRegistry;
 	}
 	
-	public void setAasRegistry(IAASRegistryService aasRegistry) {
+	public void setAasRegistry(IAASRegistry aasRegistry) {
 		this.aasRegistry = aasRegistry;
 	}
 	

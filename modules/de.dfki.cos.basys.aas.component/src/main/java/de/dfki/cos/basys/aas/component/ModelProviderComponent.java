@@ -10,6 +10,6 @@ public interface ModelProviderComponent<T extends ModelDescriptor> extends Compo
 
 	Identifier getAssetId();
 	Identifier getAasId();
-	IModelProvider getModelProvider();
+	//IModelProvider getModelProvider();
 	T getModelDescriptor(String endpoint);
 }

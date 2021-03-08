@@ -10,20 +10,20 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.basyx.aas.registration.memory.AASRegistry;
-import org.eclipse.basyx.aas.registration.restapi.DirectoryModelProvider;
-import org.eclipse.basyx.vab.protocol.http.server.AASHTTPServer;
+import org.eclipse.basyx.aas.registration.restapi.AASRegistryModelProvider;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxContext;
+import org.eclipse.basyx.vab.protocol.http.server.BaSyxHTTPServer;
 import org.eclipse.basyx.vab.protocol.http.server.VABHTTPInterface;
 
 public class Main {
 
 	private static ZookeeperRegistryHandler handler;
 	private static AASRegistry registry;
-	private static VABHTTPInterface<DirectoryModelProvider> servlet;	
+	private static VABHTTPInterface<AASRegistryModelProvider> servlet;	
 	//private static Properties registryConfig = new Properties();
 
 	// The server with the servlet that will be created
-	private static AASHTTPServer server;
+	private static BaSyxHTTPServer server;
 
 	private static String zkString = "localhost:2181";
 	private static String hostString = "localhost";
@@ -94,11 +94,11 @@ public class Main {
 
 		handler = new ZookeeperRegistryHandler(zkString);
 		registry = new AASRegistry(handler);
-		servlet = new VABHTTPInterface<DirectoryModelProvider>(new DirectoryModelProvider(registry));
+		servlet = new VABHTTPInterface<AASRegistryModelProvider>(new AASRegistryModelProvider(registry));
 				
 		BaSyxContext context = new BaSyxContext("/","", hostString, Integer.parseInt(portString));
 		context.addServletMapping("/*", servlet);
-		server = new AASHTTPServer(context);		
+		server = new BaSyxHTTPServer(context);		
 
 		//LOGGER.info("Start the server...");
 		server.start();

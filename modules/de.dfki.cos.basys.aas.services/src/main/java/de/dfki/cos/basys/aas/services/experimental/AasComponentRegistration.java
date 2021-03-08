@@ -1,12 +1,7 @@
 package de.dfki.cos.basys.aas.services.experimental;
 
-import org.eclipse.basyx.aas.metamodel.api.IAssetAdministrationShell;
-import org.eclipse.basyx.aas.metamodel.map.AssetAdministrationShell;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
-import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
-import org.eclipse.basyx.aas.registration.api.IAASRegistryService;
-import org.eclipse.basyx.submodel.metamodel.api.ISubModel;
-import org.eclipse.basyx.submodel.metamodel.map.SubModel;
+import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 
 import de.dfki.cos.basys.aas.component.impl.BaseAasComponent;
 import de.dfki.cos.basys.common.component.Component;
@@ -18,9 +13,9 @@ public class AasComponentRegistration implements ComponentRegistration {
 
 	private final BaseAasComponent component;
 	private AASDescriptor descriptor; 
-	private IAASRegistryService service;
+	private IAASRegistry service;
 	
-	public AasComponentRegistration(Component component, IAASRegistryService service) {
+	public AasComponentRegistration(Component component, IAASRegistry service) {
 		this.component = (BaseAasComponent)component;
 		this.service = service;
 	}

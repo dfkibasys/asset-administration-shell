@@ -1,15 +1,11 @@
 package de.dfki.cos.basys.aas.services;
 
 
-import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.catalina.Context;
@@ -17,35 +13,18 @@ import org.apache.catalina.LifecycleEvent;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.LifecycleState;
-import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
-import org.eclipse.basyx.aas.metamodel.api.IAssetAdministrationShell;
-import org.eclipse.basyx.aas.metamodel.map.AssetAdministrationShell;
-import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
-import org.eclipse.basyx.aas.metamodel.map.descriptor.ModelUrn;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
-import org.eclipse.basyx.aas.restapi.AASModelProvider;
-import org.eclipse.basyx.submodel.metamodel.api.ISubModel;
-import org.eclipse.basyx.submodel.metamodel.map.SubModel;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
-import org.eclipse.basyx.submodel.restapi.SubModelProvider;
+import org.eclipse.basyx.submodel.restapi.SubmodelProvider;
 import org.eclipse.basyx.vab.exception.provider.ProviderException;
 import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
-import org.eclipse.basyx.vab.protocol.http.server.AASHTTPServer;
-import org.eclipse.basyx.vab.protocol.http.server.BaSyxContext;
-import org.eclipse.basyx.vab.protocol.http.server.VABHTTPInterface;
-import org.eclipse.milo.opcua.sdk.server.AbstractLifecycle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.Subscribe;
 
-import de.dfki.cos.basys.aas.component.AasComponent;
 import de.dfki.cos.basys.aas.component.AasComponentContext;
 import de.dfki.cos.basys.aas.component.SubmodelComponent;
-import de.dfki.cos.basys.aas.component.impl.BaseAasComponent;
 import de.dfki.cos.basys.common.component.Component;
-import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ComponentException;
 import de.dfki.cos.basys.common.component.impl.BaseComponent;
 import de.dfki.cos.basys.common.component.manager.impl.ComponentManagerEvent;
@@ -161,7 +140,7 @@ public class ServletContainerComponent extends BaseComponent {
 			if (component instanceof SubmodelComponent) {
 				SubmodelComponent smComponent = (SubmodelComponent)component;
 				SubmodelDescriptor desc = smComponent.getModelDescriptor(accessibleEndpoint);
-				HttpServlet servlet = new VABHTTPCorsInterface<IModelProvider>(smComponent.getModelProvider());
+				HttpServlet servlet = new VABHTTPCorsInterface<IModelProvider>(new SubmodelProvider(smComponent.getSubmodel()));
 				
 				// add new servlet and mapping to tomcat environment
 				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				

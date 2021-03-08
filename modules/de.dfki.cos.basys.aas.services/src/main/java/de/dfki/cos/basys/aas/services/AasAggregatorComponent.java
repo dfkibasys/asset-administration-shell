@@ -12,9 +12,9 @@ import org.eclipse.basyx.aas.manager.ConnectedAssetAdministrationShellManager;
 import org.eclipse.basyx.aas.metamodel.api.IAssetAdministrationShell;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
-import org.eclipse.basyx.submodel.metamodel.map.SubModel;
+import org.eclipse.basyx.submodel.metamodel.map.Submodel;
 import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
-import org.eclipse.basyx.vab.protocol.http.server.AASHTTPServer;
+import org.eclipse.basyx.vab.protocol.http.server.BaSyxHTTPServer;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxContext;
 import org.eclipse.basyx.vab.protocol.http.server.VABHTTPInterface;
 
@@ -35,7 +35,7 @@ import de.dfki.cos.basys.common.component.manager.impl.ComponentManagerEvent.Typ
 public class AasAggregatorComponent extends ServiceComponent<AASAggregator> {
 
 	// The server with the servlet that will be created
-	private AASHTTPServer server;
+	private BaSyxHTTPServer server;
 	private VABHTTPInterface<AASAggregatorProvider> servlet;
 	private AASAggregatorProvider provider = null; 
 
@@ -89,7 +89,7 @@ public class AasAggregatorComponent extends ServiceComponent<AASAggregator> {
 		
 		BaSyxContext context = new BaSyxContext(config.getProperty("path"), config.getProperty("docBasePath"), config.getProperty("hostname"), Integer.parseInt(config.getProperty("port")));
 		context.addServletMapping("/*", servlet);
-		server = new AASHTTPServer(context);		
+		server = new BaSyxHTTPServer(context);		
 
 		LOGGER.info("Start the server...");
 		server.start();		

@@ -3,7 +3,7 @@ package de.dfki.cos.basys.common.aas.registry.server;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.inject.Inject;
+import javax.inject.Inject;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;

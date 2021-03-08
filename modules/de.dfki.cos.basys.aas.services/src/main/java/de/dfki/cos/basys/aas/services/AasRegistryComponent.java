@@ -3,10 +3,10 @@ package de.dfki.cos.basys.aas.services;
 
 import java.util.Properties;
 
-import org.eclipse.basyx.aas.registration.api.IAASRegistryService;
+import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.registration.memory.AASRegistry;
-import org.eclipse.basyx.aas.registration.restapi.DirectoryModelProvider;
-import org.eclipse.basyx.vab.protocol.http.server.AASHTTPServer;
+import org.eclipse.basyx.aas.registration.restapi.AASRegistryModelProvider;
+import org.eclipse.basyx.vab.protocol.http.server.BaSyxHTTPServer;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxContext;
 import org.eclipse.basyx.vab.protocol.http.server.VABHTTPInterface;
 import de.dfki.cos.basys.aas.registry.zookeeper.ZookeeperRegistryHandler;
@@ -16,18 +16,18 @@ import de.dfki.cos.basys.common.component.ServiceProvider;
 import de.dfki.cos.basys.common.component.impl.ServiceComponent;
 import de.dfki.cos.basys.common.component.impl.ServiceManagerImpl;
 
-public class AasRegistryComponent extends ServiceComponent<IAASRegistryService> {
+public class AasRegistryComponent extends ServiceComponent<IAASRegistry> {
 
 	// The server with the servlet that will be created
-	private AASHTTPServer server;
-	private VABHTTPInterface<DirectoryModelProvider> servlet;
-	private DirectoryModelProvider provider = null; 
+	private BaSyxHTTPServer server;
+	private VABHTTPInterface<AASRegistryModelProvider> servlet;
+	private AASRegistryModelProvider provider = null; 
 	
 	public AasRegistryComponent(Properties config) {
 		super(config);
 		
-		ServiceProvider<IAASRegistryService> serviceProvider =  new ServiceProvider<IAASRegistryService>() {
-			IAASRegistryService service = null;
+		ServiceProvider<IAASRegistry> serviceProvider =  new ServiceProvider<IAASRegistry>() {
+			IAASRegistry service = null;
 			ZookeeperRegistryHandler handler = null;
 			
 			@Override
@@ -36,7 +36,7 @@ public class AasRegistryComponent extends ServiceComponent<IAASRegistryService> 
 			}
 			
 			@Override
-			public IAASRegistryService getService() {				
+			public IAASRegistry getService() {				
 				return service;
 			}
 			
@@ -58,19 +58,19 @@ public class AasRegistryComponent extends ServiceComponent<IAASRegistryService> 
 			}
 		};
 
-		serviceManager = new ServiceManagerImpl<IAASRegistryService>(config, serviceProvider);	
+		serviceManager = new ServiceManagerImpl<IAASRegistry>(config, serviceProvider);	
 	}
 
 	@Override
 	protected void doActivate() throws ComponentException {
 		super.doActivate();
 				
-		provider = new DirectoryModelProvider(getService());		
-		servlet = new VABHTTPCorsInterface<DirectoryModelProvider>(provider);
+		provider = new AASRegistryModelProvider(getService());		
+		servlet = new VABHTTPCorsInterface<AASRegistryModelProvider>(provider);
 		
 		BaSyxContext context = new BaSyxContext(config.getProperty("path"), config.getProperty("docBasePath"), config.getProperty("hostname"), Integer.parseInt(config.getProperty("port")));
 		context.addServletMapping("/*", servlet);
-		server = new AASHTTPServer(context);		
+		server = new BaSyxHTTPServer(context);		
 
 		LOGGER.info("Start the server...");
 		server.start();		

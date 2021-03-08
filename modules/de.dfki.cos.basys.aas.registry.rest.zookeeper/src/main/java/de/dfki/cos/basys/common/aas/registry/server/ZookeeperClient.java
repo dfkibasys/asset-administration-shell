@@ -2,7 +2,7 @@ package de.dfki.cos.basys.common.aas.registry.server;
 
 import java.util.List;
 
-import jakarta.inject.Singleton;
+import javax.inject.Singleton;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;

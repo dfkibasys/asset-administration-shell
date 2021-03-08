@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.eclipse.basyx.aas.registration.api.IAASRegistryService;
+import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.registration.proxy.AASRegistryProxy;
 
 import de.dfki.cos.basys.common.component.Component;
@@ -21,7 +21,7 @@ import de.dfki.cos.basys.common.component.registry.ComponentRegistrationExceptio
 import de.dfki.cos.basys.common.component.registry.ComponentRegistry;
 import de.dfki.cos.basys.common.component.util.CommUtils;
 
-public class AasComponentRegistry extends ServiceComponent<IAASRegistryService> implements ComponentRegistry {
+public class AasComponentRegistry extends ServiceComponent<IAASRegistry> implements ComponentRegistry {
 
 	public static String defaultConnectionString;
 
@@ -43,8 +43,8 @@ public class AasComponentRegistry extends ServiceComponent<IAASRegistryService> 
 			LOGGER.warn("External connection string not provided. Defaulting to " + defaultConnectionString);
 		}
 				
-		ServiceProvider<IAASRegistryService> serviceProvider =  new ServiceProvider<IAASRegistryService>() {
-			IAASRegistryService service = null;
+		ServiceProvider<IAASRegistry> serviceProvider =  new ServiceProvider<IAASRegistry>() {
+			IAASRegistry service = null;
 			
 			@Override
 			public boolean isConnected() {
@@ -52,7 +52,7 @@ public class AasComponentRegistry extends ServiceComponent<IAASRegistryService> 
 			}
 			
 			@Override
-			public IAASRegistryService getService() {				
+			public IAASRegistry getService() {				
 				return service;
 			}
 			
@@ -68,13 +68,13 @@ public class AasComponentRegistry extends ServiceComponent<IAASRegistryService> 
 			}
 		};
 
-		serviceManager = new ServiceManagerImpl<IAASRegistryService>(config, serviceProvider);	
+		serviceManager = new ServiceManagerImpl<IAASRegistry>(config, serviceProvider);	
 	}
 	
 
 	@Override
 	public ComponentRegistration createRegistration(Component instance) throws ComponentRegistrationException {
-		IAASRegistryService service = getService();		
+		IAASRegistry service = getService();		
 		ComponentRegistration registration = new AasComponentRegistration(instance, service);		
 		return registration;
 	}

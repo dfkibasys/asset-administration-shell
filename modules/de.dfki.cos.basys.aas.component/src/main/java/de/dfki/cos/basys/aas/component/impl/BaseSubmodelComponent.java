@@ -10,11 +10,11 @@ import org.eclipse.basyx.aas.metamodel.map.descriptor.ModelUrn;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
 import org.eclipse.basyx.aas.metamodel.map.parts.Asset;
 import org.eclipse.basyx.aas.restapi.AASModelProvider;
-import org.eclipse.basyx.aas.restapi.VABMultiSubmodelProvider;
+import org.eclipse.basyx.aas.restapi.MultiSubmodelProvider;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
 import org.eclipse.basyx.submodel.metamodel.api.qualifier.haskind.ModelingKind;
 import org.eclipse.basyx.submodel.metamodel.api.reference.enums.KeyElements;
-import org.eclipse.basyx.submodel.metamodel.map.SubModel;
+import org.eclipse.basyx.submodel.metamodel.map.Submodel;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.submodel.metamodel.map.reference.Key;
 import org.eclipse.basyx.submodel.metamodel.map.reference.Reference;
@@ -22,7 +22,7 @@ import org.eclipse.basyx.submodel.metamodel.map.submodelelement.SubmodelElement;
 import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.Blob;
 import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.File;
 import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.property.Property;
-import org.eclipse.basyx.submodel.restapi.SubModelProvider;
+import org.eclipse.basyx.submodel.restapi.SubmodelProvider;
 import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
 
 import de.dfki.cos.basys.aas.component.AasComponent;
@@ -34,8 +34,8 @@ import de.dfki.cos.basys.common.component.impl.BaseComponent;
 public class BaseSubmodelComponent extends BaseComponent implements SubmodelComponent {
 	
 	//protected AASDescriptor descriptor = null;
-	protected SubModel sm = null;
-	protected IModelProvider provider = null;
+	protected Submodel sm = null;
+	//protected IModelProvider provider = null;
 	//protected String endpoint = null;
 	
 	public BaseSubmodelComponent(Properties config) {
@@ -48,7 +48,7 @@ public class BaseSubmodelComponent extends BaseComponent implements SubmodelComp
 		super.doActivate();
 		
 		sm = createfromProperties(config);	
-		provider = new SubModelProvider(sm);
+		//provider = new SubModelProvider(sm);
 //		endpoint = ((AasComponentContext)context).getServletContainer().addModelProvider(provider, aas.getIdShort());
 //		descriptor = new AASDescriptor(getAas(), endpoint);
 //		((AasComponentContext)context).getAasRegistry().register(descriptor);
@@ -92,18 +92,18 @@ public class BaseSubmodelComponent extends BaseComponent implements SubmodelComp
 		return new SubmodelDescriptor(sm, endpoint + "/" + sm.getIdShort() + "/submodel");
 	}
 
-	@Override
-	public IModelProvider getModelProvider() {
-		return provider;
-	}
+//	@Override
+//	public IModelProvider getModelProvider() {
+//		return provider;
+//	}
 	
 	@Override
-	public SubModel getSubmodel() {
+	public Submodel getSubmodel() {
 		return sm;
 	}
 	
-	protected SubModel createfromProperties(Properties properties) {
-		SubModel sm = new SubModel();		
+	protected Submodel createfromProperties(Properties properties) {
+		Submodel sm = new Submodel();		
 		sm.setIdShort(properties.getProperty("submodel.idshort"));
 		sm.setIdentification(IdentifierType.IRI, config.getProperty("submodel.id", ""));
 		sm.setModelingKind(ModelingKind.INSTANCE);
@@ -128,11 +128,11 @@ public class BaseSubmodelComponent extends BaseComponent implements SubmodelComp
 			} 
 			
 			if (semanticId != null) {
-				smElement.setSemanticID(new Reference(new Key(KeyElements.CONCEPTDESCRIPTION, false, semanticId, IdentifierType.CUSTOM)));
+				smElement.setSemanticId(new Reference(new Key(KeyElements.CONCEPTDESCRIPTION, false, semanticId, IdentifierType.CUSTOM)));
 			}
 						
 			smElement.setIdShort(p);
-			sm.addSubModelElement(smElement);
+			sm.addSubmodelElement(smElement);
 			
 		}				
 		
