@@ -84,14 +84,7 @@
 			<artifactId>de.dfki.cos.basys.aas.registry.zookeeper</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<!-- Add explicit AAS Server component dependency -->
-		<dependency>
-			<groupId>org.eclipse.basyx</groupId>
-			<artifactId>basyx.components.AASServer</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		
+				
 		<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
 		<dependency>
 			<groupId>commons-cli</groupId>

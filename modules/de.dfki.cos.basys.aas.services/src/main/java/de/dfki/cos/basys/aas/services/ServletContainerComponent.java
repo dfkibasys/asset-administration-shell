@@ -14,6 +14,8 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.startup.Tomcat;
+import org.eclipse.basyx.aas.metamodel.api.parts.asset.IAsset;
+import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.submodel.restapi.SubmodelProvider;
@@ -147,25 +149,20 @@ public class ServletContainerComponent extends BaseComponent {
 				rootCtx.addServletMappingDecoded("/" + desc.getIdShort() + "/*", String.valueOf(servlet.hashCode()));
 				
 				Identifier aasId = smComponent.getAasId();
-				
-				try {
-					((AasComponentContext) context).getAasRegistry().lookupAAS(aasId);
-				} catch (ProviderException e) {
-					try {
-						TimeUnit.MILLISECONDS.sleep(1000);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+				context.getScheduledExecutorService().schedule(new Runnable() {
+					@Override
+					public void run() {
+						// register submodel delayed
+						try {
+							((AasComponentContext) context).getAasRegistry().register(aasId, desc);
+						} catch (ProviderException e) {
+							LOGGER.error("AAS with id " + aasId.getId() + " not registered");
+							e.printStackTrace();
+						}
+						
 					}
-				}
-				
-				// register submodel
-				try {
-					((AasComponentContext) context).getAasRegistry().register(aasId, desc);
-				} catch (ProviderException e) {
-					LOGGER.error("AAS with id " + aasId.getId() + " not registered");
-					e.printStackTrace();
-				}				
+				}, 3000, TimeUnit.MILLISECONDS);				
+								
 			} 
 		}
 		else if (ev.getType() == Type.COMPONENT_DELETED) {		
@@ -197,7 +194,7 @@ public class ServletContainerComponent extends BaseComponent {
 	
 	public static Properties getDefaultConfig() {
     	Properties defaultConfig = new Properties();
-        defaultConfig.setProperty("hostname", "0.0.0.0");
+        defaultConfig.setProperty("hostname", "localhost");
         defaultConfig.setProperty("port", "5081");
         defaultConfig.setProperty("path", "");
         defaultConfig.setProperty("docBasePath", "");
