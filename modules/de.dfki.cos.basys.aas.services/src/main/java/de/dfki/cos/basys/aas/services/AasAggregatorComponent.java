@@ -2,18 +2,9 @@ package de.dfki.cos.basys.aas.services;
 
 
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
-import javax.servlet.http.HttpServlet;
-
 import org.eclipse.basyx.aas.aggregator.AASAggregator;
 import org.eclipse.basyx.aas.aggregator.restapi.AASAggregatorProvider;
-import org.eclipse.basyx.aas.manager.ConnectedAssetAdministrationShellManager;
-import org.eclipse.basyx.aas.metamodel.api.IAssetAdministrationShell;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
-import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
-import org.eclipse.basyx.submodel.metamodel.map.Submodel;
-import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxHTTPServer;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxContext;
 import org.eclipse.basyx.vab.protocol.http.server.VABHTTPInterface;
@@ -22,7 +13,6 @@ import com.google.common.eventbus.Subscribe;
 
 import de.dfki.cos.basys.aas.component.AasComponent;
 import de.dfki.cos.basys.aas.component.AasComponentContext;
-import de.dfki.cos.basys.aas.component.SubmodelComponent;
 import de.dfki.cos.basys.common.component.Component;
 import de.dfki.cos.basys.common.component.ComponentContext;
 import de.dfki.cos.basys.common.component.ComponentException;
@@ -49,7 +39,7 @@ public class AasAggregatorComponent extends ServiceComponent<AASAggregator> {
 			LOGGER.info("Using environment variable AAS_AGGREGATOR_ACCESSIBLE_ENDPOINT");			
 			accessibleEndpoint = System.getenv("AAS_AGGREGATOR_ACCESSIBLE_ENDPOINT");			
 		}
-		accessibleEndpoint += "/aasList";
+		accessibleEndpoint += "/" + AASAggregatorProvider.PREFIX;
 		LOGGER.info("advertisedEndpoint = " + accessibleEndpoint);
 		
 		ServiceProvider<AASAggregator> serviceProvider =  new ServiceProvider<AASAggregator>() {
@@ -72,7 +62,7 @@ public class AasAggregatorComponent extends ServiceComponent<AASAggregator> {
 			
 			@Override
 			public boolean connect(ComponentContext context, String connectionString) {
-				service = new AASAggregator();
+				service = new AASAggregator(((AasComponentContext)context).getAasRegistry());
 				return service != null;
 			}
 		};
@@ -183,7 +173,7 @@ public class AasAggregatorComponent extends ServiceComponent<AASAggregator> {
 	
 	public static Properties getDefaultConfig() {
     	Properties defaultConfig = new Properties();
-        defaultConfig.setProperty("hostname", "0.0.0.0");
+        defaultConfig.setProperty("hostname", "localhost");
         defaultConfig.setProperty("port", "5080");
         defaultConfig.setProperty("path", "");
         defaultConfig.setProperty("docBasePath", "");

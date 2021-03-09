@@ -1,10 +1,13 @@
 package de.dfki.cos.basys.aas.services;
 
 
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.registration.memory.AASRegistry;
+import org.eclipse.basyx.aas.registration.memory.IRegistryHandler;
+import org.eclipse.basyx.aas.registration.memory.MapRegistryHandler;
 import org.eclipse.basyx.aas.registration.restapi.AASRegistryModelProvider;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxHTTPServer;
 import org.eclipse.basyx.vab.protocol.http.server.BaSyxContext;
@@ -86,7 +89,7 @@ public class AasRegistryComponent extends ServiceComponent<IAASRegistry> {
 
 	public static Properties getDefaultConfig() {
     	Properties defaultConfig = new Properties();
-        defaultConfig.setProperty("hostname", "0.0.0.0");
+        defaultConfig.setProperty("hostname", "localhost");
         defaultConfig.setProperty("port", "4999");
         defaultConfig.setProperty("path", "");
         defaultConfig.setProperty("docBasePath", "");
