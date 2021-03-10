@@ -22,6 +22,7 @@ import org.eclipse.basyx.submodel.metamodel.map.submodelelement.SubmodelElement;
 import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.Blob;
 import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.File;
 import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.property.Property;
+import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.property.valuetype.ValueType;
 import org.eclipse.basyx.submodel.restapi.SubmodelProvider;
 import org.eclipse.basyx.vab.modelprovider.api.IModelProvider;
 
@@ -122,9 +123,18 @@ public class BaseSubmodelComponent extends BaseComponent implements SubmodelComp
 				smElement = new File(value, mimeType);
 			} else if (type.equalsIgnoreCase("blob")) {
 				String mimeType = properties.getProperty(p+".mime");
-				smElement = new Blob(value.getBytes(), mimeType);
+				smElement = new Blob(p, mimeType);
+				smElement.setValue(value);
 			} else if (type.equalsIgnoreCase("property")) {
-				smElement = new Property(value);
+				String valueType = properties.getProperty(p+".valuetype", "string");
+				ValueType v = ValueType.String;
+				try {
+					v = ValueType.fromString(valueType);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				smElement = new Property(p,v);
+				smElement.setValue(value);
 			} 
 			
 			if (semanticId != null) {
