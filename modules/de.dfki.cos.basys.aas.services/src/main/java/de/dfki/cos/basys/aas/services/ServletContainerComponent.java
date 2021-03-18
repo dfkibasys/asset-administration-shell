@@ -161,7 +161,7 @@ public class ServletContainerComponent extends BaseComponent {
 						}
 						
 					}
-				}, 3000, TimeUnit.MILLISECONDS);				
+				}, 5000, TimeUnit.MILLISECONDS);				
 								
 			} 
 		}
