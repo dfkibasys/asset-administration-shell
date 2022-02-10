@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<relativePath>../../poms/compiled/</relativePath>
+		<groupId>de.dfki.cos.basys.aas</groupId>
+		<artifactId>compiled-bundle-settings</artifactId>
+		<version>0.2.7-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<bundle.symbolicName>de.dfki.cos.basys.aas.registry.rest.api</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.aas.registry.rest.api</bundle.namespace>
+	</properties>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>de.dfki.cos.basys.aas.registry.rest.api</artifactId>
+
+	<name>BaSys 4.2 AAS Registry JAX-RS REST API</name>
+	<packaging>bundle</packaging>
+
+	
+	<dependencies>	
+	
+		<dependency>
+			<groupId>org.eclipse.basyx</groupId>
+			<artifactId>basyx.sdk</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		    <version>${jaxrs-version}</version>	
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+	</dependencies>
+
+</project>

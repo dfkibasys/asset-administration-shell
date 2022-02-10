@@ -2,12 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
-		<relativePath>../../poms/compiled/</relativePath>
-		<groupId>de.dfki.cos.basys.aas</groupId>
-		<artifactId>compiled-bundle-settings</artifactId>
-		<version>0.2.7-SNAPSHOT</version>
+		<groupId>de.dfki.cos.basys.pom</groupId>
+		<artifactId>starter-parent</artifactId>
+		<version>0.3.0-SNAPSHOT</version>
+		<relativePath/>
 	</parent>
 
 	<properties>
@@ -15,11 +16,10 @@
 		<bundle.namespace>de.dfki.cos.basys.aas.services</bundle.namespace>
 	</properties>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>de.dfki.cos.basys.aas.services</artifactId>
-
-	<name>BaSys 4.2 AAS Services</name>
+	<groupId>de.dfki.cos.basys.aas</groupId>
+	<artifactId>services</artifactId>
 	<packaging>jar</packaging>
+	<name>BaSys 4.2 AAS Services</name>
 
 	
 	<build>
@@ -70,18 +70,8 @@
 	<dependencies>	
 	
 		<dependency>
-			<groupId>de.dfki.cos.basys.common</groupId>
-			<artifactId>de.dfki.cos.basys.common.logging</artifactId>
-			<version>${version.basys.common}</version>
-		</dependency>
-		<dependency>
 			<groupId>de.dfki.cos.basys.aas</groupId>
-			<artifactId>de.dfki.cos.basys.aas.component</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.dfki.cos.basys.aas</groupId>
-			<artifactId>de.dfki.cos.basys.aas.registry.zookeeper</artifactId>
+			<artifactId>component</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 				
@@ -91,25 +81,6 @@
 			<artifactId>commons-cli</artifactId>
 			<version>${commons-cli.version}</version>
 		</dependency>
-	
-		<!-- comment to remove all imported (non-local) bundles from your compilation 
-			classpath -->
-		<dependency>
-			<type>pom</type>
-			<groupId>${project.parent.groupId}</groupId>
-			<artifactId>provision</artifactId>
-			<version>${project.version}</version>
-			<optional>true</optional>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/junit/junit/4.12 -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
-			<scope>test</scope>
-		</dependency>
-		
 	</dependencies>
 
 </project>

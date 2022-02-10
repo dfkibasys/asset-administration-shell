@@ -37,7 +37,7 @@ public class Main {
 	private static ComponentManagerImpl componentManager;
 
 	private static Properties componentManagerConfig = new Properties();
-	private static Properties aasRegistryConfig = new Properties(AasRegistryComponent.getDefaultConfig());
+	//private static Properties aasRegistryConfig = new Properties(AasRegistryComponent.getDefaultConfig());
 	private static Properties aasAggregatorConfig = new Properties(AasAggregatorComponent.getDefaultConfig());
 	private static Properties servletContainerConfig = new Properties(ServletContainerComponent.getDefaultConfig());
 
@@ -73,9 +73,9 @@ public class Main {
 		serviceOption.setRequired(false);
 		options.addOption(serviceOption);
 		
-		Option zkOption = new Option("zk", "zookeeper", true, "the Zookeeper connection string for the registry service, default 'localhost:2181'");
-		zkOption.setRequired(false);		
-		options.addOption(zkOption);
+		//Option zkOption = new Option("zk", "zookeeper", true, "the Zookeeper connection string for the registry service, default 'localhost:2181'");
+		//zkOption.setRequired(false);		
+		//options.addOption(zkOption);
 
 		Option aarRegistryOption = new Option("r", "aas-registry", true, "the AAS registry rest endpoint for the container service, default '"  + aasRegistryEndpoint + "'");
 		aarRegistryOption.setRequired(false);
@@ -129,13 +129,13 @@ public class Main {
 				LOGGER.warn("component-manager.properties not found in " + componentManagerConfigPath.toFile() + ". Using defaults.");
 			}
 
-			Path aasRegistryConfigPath = Paths.get(configFolderPath, "aas-registry.properties");
-			if (aasRegistryConfigPath.toFile().exists()) {
-				aasRegistryConfig.load(new FileInputStream(aasRegistryConfigPath.toFile()));		
-				LOGGER.info("aas-registry.properties loaded: " + aasRegistryConfigPath.toFile());
-			} else {
-				LOGGER.warn("aas-registry.properties not found in " + aasRegistryConfigPath.toFile() + ". Using defaults.");
-			}
+			//Path aasRegistryConfigPath = Paths.get(configFolderPath, "aas-registry.properties");
+			//if (aasRegistryConfigPath.toFile().exists()) {
+			//	aasRegistryConfig.load(new FileInputStream(aasRegistryConfigPath.toFile()));		
+			//	LOGGER.info("aas-registry.properties loaded: " + aasRegistryConfigPath.toFile());
+			//} else {
+			//	LOGGER.warn("aas-registry.properties not found in " + aasRegistryConfigPath.toFile() + ". Using defaults.");
+			//}
 
 			Path aasAggregatorConfigPath = Paths.get(configFolderPath, "aas-aggregator.properties");
 			if (aasAggregatorConfigPath.toFile().exists()) {
@@ -161,9 +161,9 @@ public class Main {
 				componentManagerConfig.setProperty(StringConstants.serviceConnectionString, "components/");
 			}
 
-			if (cmd.hasOption("zk")) {
-				aasRegistryConfig.setProperty(StringConstants.serviceConnectionString, cmd.getOptionValue("zk"));			
-			}
+			//if (cmd.hasOption("zk")) {
+			//	aasRegistryConfig.setProperty(StringConstants.serviceConnectionString, cmd.getOptionValue("zk"));			
+			//}
 			
 			if (cmd.hasOption("r")) {
 				aasRegistryEndpoint = cmd.getOptionValue("r");
@@ -186,11 +186,11 @@ public class Main {
 		context.setComponentManager(componentManager);
 
 		// 2. create the desired components
-		AasRegistryComponent registry = null;
-		if (service.contains("registry")) {
-			registry = new AasRegistryComponent(aasRegistryConfig);
-			registry.activate(context);
-		}
+		//AasRegistryComponent registry = null;
+		//if (service.contains("registry")) {
+		//	registry = new AasRegistryComponent(aasRegistryConfig);
+		//	registry.activate(context);
+		//}
 
 		AasAggregatorComponent aggregator = null;
 		if (service.contains("aggregator")) {
@@ -211,8 +211,8 @@ public class Main {
 		
 		// 4. activate the component manager --> loads all aas components
 		componentManager.activate(context);		
-		if (registry != null)
-			componentManager.addComponent(registry);
+		//if (registry != null)
+		//	componentManager.addComponent(registry);
 		if (aggregator != null)
 			componentManager.addComponent(aggregator);		
 		if (servletContainer != null)
