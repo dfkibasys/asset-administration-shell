@@ -28,12 +28,12 @@
 		<module>modules/de.dfki.cos.basys.aas.registry.rest.client</module>
 		<module>modules/de.dfki.cos.basys.aas.registry.rest.zookeeper</module>
 		-->
-		<module>modules/de.dfki.cos.basys.aas.event</module>
-		<module>modules/de.dfki.cos.basys.aas.event.mqtt</module>
 		<module>modules/de.dfki.cos.basys.aas.component</module>
-		<module>modules/de.dfki.cos.basys.aas.registry.zookeeper</module>
+		<module>modules/de.dfki.cos.basys.aas.event</module>
+		<module>modules/de.dfki.cos.basys.aas.event.mqtt</module>		
 		<module>modules/de.dfki.cos.basys.aas.services</module>
-		<!--
+		<!--		
+		<module>modules/de.dfki.cos.basys.aas.registry.zookeeper</module>
 		<module>karaf</module>	
 		-->
 	</modules>

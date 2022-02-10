@@ -110,41 +110,43 @@ public class BaseSubmodelComponent extends BaseComponent implements SubmodelComp
 		sm.setModelingKind(ModelingKind.INSTANCE);
 		sm.setSemanticId(new Reference(new Key(KeyElements.CONCEPTDESCRIPTION, false, properties.getProperty("submodel.semanticid"), IdentifierType.CUSTOM)));
 		
-		String[] elements = properties.getProperty("submodel.properties").split("\\s*,\\s*");
-		for (String p : elements) {
-			String value = properties.getProperty(p);
-			String type = properties.getProperty(p+".type");
-			String semanticId = properties.getProperty(p+".semanticid");
-			
-			SubmodelElement smElement = null;
-			
-			if (type.equalsIgnoreCase("file")) {
-				String mimeType = properties.getProperty(p+".mime");
-				smElement = new File(value, mimeType);
-			} else if (type.equalsIgnoreCase("blob")) {
-				String mimeType = properties.getProperty(p+".mime");
-				smElement = new Blob(p, mimeType);
-				smElement.setValue(value);
-			} else if (type.equalsIgnoreCase("property")) {
-				String valueType = properties.getProperty(p+".valuetype", "string");
-				ValueType v = ValueType.String;
-				try {
-					v = ValueType.fromString(valueType);
-				} catch (Exception e) {
-					e.printStackTrace();
+		if (!properties.getProperty("submodel.properties").isBlank()) {
+			String[] elements = properties.getProperty("submodel.properties").split("\\s*,\\s*");
+			for (String p : elements) {
+				String value = properties.getProperty(p);
+				String type = properties.getProperty(p+".type");
+				String semanticId = properties.getProperty(p+".semanticid");
+				
+				SubmodelElement smElement = null;
+				
+				if (type.equalsIgnoreCase("file")) {
+					String mimeType = properties.getProperty(p+".mime");
+					smElement = new File(value, mimeType);
+				} else if (type.equalsIgnoreCase("blob")) {
+					String mimeType = properties.getProperty(p+".mime");
+					smElement = new Blob(p, mimeType);
+					smElement.setValue(value);
+				} else if (type.equalsIgnoreCase("property")) {
+					String valueType = properties.getProperty(p+".valuetype", "string");
+					ValueType v = ValueType.String;
+					try {
+						v = ValueType.fromString(valueType);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					smElement = new Property(p,v);
+					smElement.setValue(value);
+				} 
+				
+				if (semanticId != null) {
+					smElement.setSemanticId(new Reference(new Key(KeyElements.CONCEPTDESCRIPTION, false, semanticId, IdentifierType.CUSTOM)));
 				}
-				smElement = new Property(p,v);
-				smElement.setValue(value);
-			} 
-			
-			if (semanticId != null) {
-				smElement.setSemanticId(new Reference(new Key(KeyElements.CONCEPTDESCRIPTION, false, semanticId, IdentifierType.CUSTOM)));
-			}
-						
-			smElement.setIdShort(p);
-			sm.addSubmodelElement(smElement);
-			
-		}				
+							
+				smElement.setIdShort(p);
+				sm.addSubmodelElement(smElement);
+				
+			}			
+		}
 		
 		return sm;
 	}

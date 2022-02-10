@@ -17,6 +17,9 @@ import org.apache.catalina.startup.Tomcat;
 import org.eclipse.basyx.aas.metamodel.api.parts.asset.IAsset;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
+import org.eclipse.basyx.submodel.metamodel.api.ISubmodel;
+import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
+import org.eclipse.basyx.submodel.metamodel.map.Submodel;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.submodel.restapi.SubmodelProvider;
 import org.eclipse.basyx.vab.exception.provider.ProviderException;
@@ -141,27 +144,10 @@ public class ServletContainerComponent extends BaseComponent {
 //			else 
 			if (component instanceof SubmodelComponent) {
 				SubmodelComponent smComponent = (SubmodelComponent)component;
-				SubmodelDescriptor desc = smComponent.getModelDescriptor(accessibleEndpoint);
-				HttpServlet servlet = new VABHTTPCorsInterface<IModelProvider>(new SubmodelProvider(smComponent.getSubmodel()));
-				
-				// add new servlet and mapping to tomcat environment
-				Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				
-				rootCtx.addServletMappingDecoded("/" + desc.getIdShort() + "/*", String.valueOf(servlet.hashCode()));
-				
 				Identifier aasId = smComponent.getAasId();
-				context.getScheduledExecutorService().schedule(new Runnable() {
-					@Override
-					public void run() {
-						// register submodel delayed
-						try {
-							((AasComponentContext) context).getAasRegistry().register(aasId, desc);
-						} catch (ProviderException e) {
-							LOGGER.error("AAS with id " + aasId.getId() + " not registered");
-							e.printStackTrace();
-						}
-						
-					}
-				}, 5000, TimeUnit.MILLISECONDS);				
+				Submodel sm = smComponent.getSubmodel();
+
+				hostSubmodel(aasId.getId(), sm);
 								
 			} 
 		}
@@ -180,17 +166,71 @@ public class ServletContainerComponent extends BaseComponent {
 //			else 
 				if (component instanceof SubmodelComponent) {
 				SubmodelComponent smComponent = (SubmodelComponent)component;
-				SubmodelDescriptor desc = smComponent.getModelDescriptor(accessibleEndpoint);
+				Identifier aasId = smComponent.getAasId();
+				Submodel sm = smComponent.getSubmodel();				
 				
-				// remove servlet
-				rootCtx.removeServletMapping("/" + desc.getIdShort() + "/*");
-
-				// unregister submodel
-				((AasComponentContext) context).getAasRegistry().delete(smComponent.getAasId(), desc.getIdentifier());		
+				deleteSubmodel(aasId.getId(), sm);
+				
 				
 			}
 		}
 	}
+	
+	public void hostSubmodel(String aasId, Submodel sm)	{
+		hostSubmodel(aasId, sm, 0);
+	}
+	
+	public void hostSubmodel(String aasId, Submodel sm, int delayRegistration) {
+		HttpServlet servlet = new VABHTTPCorsInterface<IModelProvider>(new SubmodelProvider(sm));
+				
+		// add new servlet and mapping to tomcat environment
+		Tomcat.addServlet(rootCtx, String.valueOf(servlet.hashCode()), servlet);				
+		rootCtx.addServletMappingDecoded("/" + sm.getIdShort() + "/*", String.valueOf(servlet.hashCode()));
+		
+		if (delayRegistration > 0) {				
+			context.getScheduledExecutorService().schedule(new Runnable() {
+				@Override
+				public void run() {
+					registerSubmodel(aasId, sm);					
+				}
+			}, delayRegistration, TimeUnit.MILLISECONDS);				
+		} else {
+			registerSubmodel(aasId, sm);
+		}
+	}
+	
+	public void registerSubmodel(String aasId, Submodel sm) {
+		if (((AasComponentContext) context).getAasRegistry() == null) {
+			LOGGER.info("registry is null, skip");
+			return;
+		}
+		
+		// try to delete old submodel first 
+		try {
+			((AasComponentContext) context).getAasRegistry().delete(new Identifier(IdentifierType.CUSTOM, aasId), sm.getIdentification());
+		} catch (ProviderException e) {					
+			//e.printStackTrace();
+		}
+		
+		// register new submodel 
+		try {
+			SubmodelDescriptor smDescriptor =  new SubmodelDescriptor(sm, accessibleEndpoint + "/" + sm.getIdShort() + "/submodel");
+			((AasComponentContext) context).getAasRegistry().register(new Identifier(IdentifierType.CUSTOM, aasId), smDescriptor);
+		} catch (ProviderException e) {
+			LOGGER.error("AAS with id " + aasId + " not registered");
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteSubmodel(String aasId, Submodel sm) {
+		
+		// remove servlet
+		rootCtx.removeServletMapping("/" + sm.getIdShort() + "/*");
+
+		// unregister submodel
+		((AasComponentContext) context).getAasRegistry().delete(new Identifier(IdentifierType.CUSTOM, aasId), sm.getIdentification());		
+		
+	}	
 	
 	public static Properties getDefaultConfig() {
     	Properties defaultConfig = new Properties();
