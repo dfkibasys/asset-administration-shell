@@ -28,9 +28,10 @@
 			<version>${basys-common.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>de.dfki.cos.basys.aas</groupId>
-			<artifactId>event</artifactId>
-			<version>${project.version}</version>
+			<groupId>org.eclipse.basyx</groupId>
+			<artifactId>basyx.sdk</artifactId>
+			<version>[1.0.0,2.0.0)</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

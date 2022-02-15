@@ -25,21 +25,8 @@
 		<dependency>
 			<groupId>org.eclipse.basyx</groupId>
 			<artifactId>basyx.sdk</artifactId>
-			<version>${basyx.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.milo</groupId>
-					<artifactId>sdk-client</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.milo</groupId>
-					<artifactId>sdk-server</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>ch.qos.logback</groupId>
-					<artifactId>logback-classic</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>[1.0.0,2.0.0)</version>
+			<scope>provided</scope>
 		</dependency>
 		<!--
 		<dependency>

@@ -74,7 +74,20 @@
 			<artifactId>component</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-				
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.aas</groupId>
+			<artifactId>event</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.basyx</groupId>
+			<artifactId>basyx.sdk</artifactId>
+			<version>[1.0.0,2.0.0)</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
 		<dependency>
 			<groupId>commons-cli</groupId>

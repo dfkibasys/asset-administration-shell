@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.aas.component.impl;
+package de.dfki.cos.basys.aas.services;
 
 import java.util.Properties;
 import java.util.function.Supplier;
