@@ -20,7 +20,8 @@
 		<module>modules/de.dfki.cos.basys.aas.component</module>
 		<module>modules/de.dfki.cos.basys.aas.event</module>
 		<module>modules/de.dfki.cos.basys.aas.event.mqtt</module>				
-		<module>modules/de.dfki.cos.basys.aas.services</module>		
+		<module>modules/de.dfki.cos.basys.aas.services</module>					
+		<module>modules/server</module>
 	</modules>
 
 	<scm>
