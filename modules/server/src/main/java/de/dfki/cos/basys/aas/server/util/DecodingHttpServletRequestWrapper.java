@@ -1,4 +1,4 @@
-package de.dfki.cos.basys.aas.server;
+package de.dfki.cos.basys.aas.server.util;
 
 import com.google.common.base.Charsets;
 
@@ -14,6 +14,6 @@ public class DecodingHttpServletRequestWrapper extends HttpServletRequestWrapper
 
     @Override
     public String getRequestURI() {
-        return URLDecoder.decode(super.getRequestURI(), Charsets.UTF_8);
+        return "/shells/" + URLDecoder.decode(super.getRequestURI(), Charsets.UTF_8);
     }
 }

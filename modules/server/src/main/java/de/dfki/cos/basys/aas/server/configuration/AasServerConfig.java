@@ -1,6 +1,6 @@
 package de.dfki.cos.basys.aas.server.configuration;
 
-import de.dfki.cos.basys.aas.server.AASAggregatorServlet;
+import de.dfki.cos.basys.aas.server.util.AASAggregatorServlet;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.servlets.DefaultServlet;
 import org.eclipse.basyx.aas.aggregator.AASAggregator;
@@ -25,7 +25,6 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import java.util.Collection;
 import java.util.Set;
@@ -58,20 +57,28 @@ public class AasServerConfig implements DisposableBean {
         descriptors.stream().forEach(aasRegistry::register);
 
         HttpServlet servlet = new AASAggregatorServlet(aasAggregator);
-        ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/*");
+        ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/shells/*");
         bean.setName("aasAggregatorServlet"); // important to avoid overriding, see https://stackoverflow.com/questions/30670327/spring-boot-with-multiple-dispatcherservlet-each-having-their-own-controllers/30686733
         bean.setLoadOnStartup(1);
         return bean;
     }
 
-    @Bean
-    public ServletRegistrationBean fileServlet() {
-        DefaultServlet servlet = new DefaultServlet();
-        ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/files/*");
-        bean.setName("fileServlet"); // important to avoid overriding, see https://stackoverflow.com/questions/30670327/spring-boot-with-multiple-dispatcherservlet-each-having-their-own-controllers/30686733
-        bean.setLoadOnStartup(1);
-        return bean;
-    }
+//    @Bean
+//    public ServletRegistrationBean fileServlet() {
+//        ServletRegistrationBean bean = new ServletRegistrationBean(new DefaultServlet(), "/files/*");
+//        bean.setOrder(1);
+//        bean.setName("fileServlet"); // important to avoid overriding, see https://stackoverflow.com/questions/30670327/spring-boot-with-multiple-dispatcherservlet-each-having-their-own-controllers/30686733
+//        bean.setLoadOnStartup(1);
+//
+//        Properties p = new Properties();
+//        p.setProperty("listings","true");
+//        bean.setInitParameters(p);
+//
+//        return bean;
+//    }
+
+
+
 
 
     /**

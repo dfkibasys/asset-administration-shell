@@ -1,3 +1,8 @@
+spring:
+  web:
+    resources:
+      static-locations:
+        - file:C:/Work/basys/docker/aas/data/aas-server
 logging:
   level:
     org.springframework.boot.autoconfigure: INFO
@@ -10,7 +15,7 @@ basys:
       connectionString: http://aasregistry.dockerhost
   aas-server:
     backend: InMemory
-    source: C:/Work/basys/docker/aas/data/aas-server/mrklab.aasx
+    source: C:///Work/basys/docker/aas/data/aas-server/mrklab.aasx
 #    mqtt:
 #      server: http://dockerhost:1883
     context:
