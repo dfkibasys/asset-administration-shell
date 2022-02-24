@@ -58,7 +58,7 @@ public class AasServerConfig implements DisposableBean {
         descriptors.stream().forEach(aasRegistry::register);
 
         HttpServlet servlet = new AASAggregatorServlet(aasAggregator);
-        ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/shells/*");
+        ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/*");
         bean.setName("aasAggregatorServlet"); // important to avoid overriding, see https://stackoverflow.com/questions/30670327/spring-boot-with-multiple-dispatcherservlet-each-having-their-own-controllers/30686733
         bean.setLoadOnStartup(1);
         return bean;
@@ -66,7 +66,7 @@ public class AasServerConfig implements DisposableBean {
 
     @Bean
     public ServletRegistrationBean fileServlet() {
-        HttpServlet servlet = new DefaultServlet();
+        DefaultServlet servlet = new DefaultServlet();
         ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/files/*");
         bean.setName("fileServlet"); // important to avoid overriding, see https://stackoverflow.com/questions/30670327/spring-boot-with-multiple-dispatcherservlet-each-having-their-own-controllers/30686733
         bean.setLoadOnStartup(1);
