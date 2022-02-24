@@ -13,6 +13,7 @@ stages:
   - build
   - test
   - deploy
+  - publish
 
 build:
   stage: build
@@ -37,6 +38,27 @@ deploy:
     - maven
   script:
     - mvn $MAVEN_CLI_OPTS deploy
+  only:
+    - master
+    - develop
+
+docker:
+  stage: publish
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.12
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.12-dind
+     # explicitly disable tls to avoid docker startup interruption
+     # - command: ["--tls=false"]
+  before_script:
+    - docker info
+  script:
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image
   only:
     - master
     - develop
