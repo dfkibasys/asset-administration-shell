@@ -7,6 +7,7 @@ import org.eclipse.basyx.aas.aggregator.AASAggregator;
 import org.eclipse.basyx.aas.aggregator.api.IAASAggregator;
 import org.eclipse.basyx.aas.aggregator.restapi.AASAggregatorProvider;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
+import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.restapi.api.IAASAPIFactory;
 import org.eclipse.basyx.aas.restapi.vab.VABAASAPIFactory;
@@ -18,6 +19,7 @@ import org.eclipse.basyx.submodel.restapi.api.ISubmodelAPIFactory;
 import org.eclipse.basyx.support.bundle.AASBundle;
 import org.eclipse.basyx.support.bundle.AASBundleDescriptorFactory;
 import org.eclipse.basyx.support.bundle.AASBundleHelper;
+import org.eclipse.basyx.vab.modelprovider.VABPathTools;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.http.HttpServlet;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,8 +56,9 @@ public class AasServerConfig implements DisposableBean {
     @Bean
     public ServletRegistrationBean aasAggregatorServlet(IAASAggregator aasAggregator, Collection<AASBundle> aasBundles) {
 
-        Set<AASDescriptor> descriptors = retrieveDescriptors(aasBundles, contextConfig.toLegacyConfig().getUrl());
         AASBundleHelper.integrate(aasAggregator, aasBundles);
+
+        Set<AASDescriptor> descriptors = retrieveDescriptors(aasBundles, contextConfig.toLegacyConfig().getUrl());
         descriptors.stream().forEach(aasRegistry::register);
 
         HttpServlet servlet = new AASAggregatorServlet(aasAggregator);
@@ -63,25 +68,7 @@ public class AasServerConfig implements DisposableBean {
         return bean;
     }
 
-//    @Bean
-//    public ServletRegistrationBean fileServlet() {
-//        ServletRegistrationBean bean = new ServletRegistrationBean(new DefaultServlet(), "/files/*");
-//        bean.setOrder(1);
-//        bean.setName("fileServlet"); // important to avoid overriding, see https://stackoverflow.com/questions/30670327/spring-boot-with-multiple-dispatcherservlet-each-having-their-own-controllers/30686733
-//        bean.setLoadOnStartup(1);
-//
-//        Properties p = new Properties();
-//        p.setProperty("listings","true");
-//        bean.setInitParameters(p);
-//
-//        return bean;
-//    }
-
-
-
-
-
-    /**
+   /**
      * Loads an aas aggregator with a backend according to the configuration
      *
      * @return
@@ -133,8 +120,28 @@ public class AasServerConfig implements DisposableBean {
         // Base path + aggregator accessor
         final String fullBasePath = hostBasePath + "/" + AASAggregatorProvider.PREFIX;
 
-        return aasBundles.stream().map(b -> AASBundleDescriptorFactory.createAASDescriptor(b, fullBasePath))
+        return aasBundles.stream().map(b -> createAASDescriptor(b, fullBasePath))
                 .collect(Collectors.toSet());
+    }
+
+    public AASDescriptor createAASDescriptor(AASBundle bundle, String hostBasePath) {
+        // Normalize hostBasePath to ensure consistent usage of /
+        String nHostBasePath = VABPathTools.stripSlashes(hostBasePath);
+
+        // Create AASDescriptor
+        String endpointId = encodeId(bundle.getAAS().getIdentification().getId());
+        //endpointId = VABPathTools.encodePathElement(endpointId);
+        String aasBase = VABPathTools.concatenatePaths(nHostBasePath, endpointId, "aas");
+        AASDescriptor desc = new AASDescriptor(bundle.getAAS(), aasBase);
+        bundle.getSubmodels().stream().forEach(s -> {
+            SubmodelDescriptor smDesc = new SubmodelDescriptor(s, VABPathTools.concatenatePaths(aasBase, "submodels", s.getIdShort(), "submodel"));
+            desc.addSubmodelDescriptor(smDesc);
+        });
+        return desc;
+    }
+
+    private String encodeId(String id) {
+        return Base64.getUrlEncoder().encodeToString(id.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
