@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 
 public class DecodingHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-    private final String patternString = "(?<prefix>\\/shells\\/)(?<aasId>.*)(?<postfix>\\/.*)";
-    private Pattern pattern = Pattern.compile(patternString);
+    private static final String patternString = "(?<prefix>\\/shells\\/)(?<aasId>.*)(?<postfix>\\/aas.*)";
+    private static Pattern pattern = Pattern.compile(patternString);
 
     public DecodingHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
