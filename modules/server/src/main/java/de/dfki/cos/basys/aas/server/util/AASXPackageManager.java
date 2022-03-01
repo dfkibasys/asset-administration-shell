@@ -39,6 +39,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -201,14 +202,20 @@ public class AASXPackageManager {
 	 * @throws URISyntaxException
 	 * @throws InvalidFormatException 
 	 */
-	public void unzipRelatedFiles()
+	public void unzipRelatedFiles(Optional<String> targetFolder)
 			throws IOException, ParserConfigurationException, SAXException, URISyntaxException, InvalidFormatException {
 		// load folder which stores the files
 		List<String> files = parseReferencedFilePathsFromAASX();
 		OPCPackage aasxRoot = OPCPackage.open(getInputStream(aasxPath));
+
+		Path targetPath =  Path.of(aasxPath).getParent();
+		if (targetFolder.isPresent()) {
+			targetPath = Path.of(targetFolder.get());
+		}
+
 		for (String filePath : files) {
 			// name of the folder
-			unzipFile(filePath, aasxRoot);
+			unzipFile(filePath, targetPath, aasxRoot);
 		}
 	}
 
@@ -234,7 +241,7 @@ public class AASXPackageManager {
 	 * @throws URISyntaxException
 	 * @throws InvalidFormatException 
 	 */
-	private void unzipFile(String filePath, OPCPackage aasxRoot) throws IOException, URISyntaxException, InvalidFormatException {
+	private void unzipFile(String filePath, Path rootPath, OPCPackage aasxRoot) throws IOException, URISyntaxException, InvalidFormatException {
 		// Create destination directory
 		if (filePath.startsWith("/")) {
 			filePath = filePath.substring(1);
@@ -243,24 +250,23 @@ public class AASXPackageManager {
 			logger.warn("A file with empty path can not be unzipped.");
 			return;
 		}
-		logger.info("Unzipping " + filePath + " to root folder:");
+
 		String relativePath = "files/" + VABPathTools.getParentPath(filePath);
-		//Path rootPath = getRootFolder();
-		Path rootPath = Path.of(aasxPath).getParent();
-		Path destDir = rootPath.resolve(relativePath);
-		logger.info("Unzipping to " + destDir);
-		Files.createDirectories(destDir);
-		
+
+		Path targetPath = rootPath.resolve(filePath);
+
+
+		logger.info("Unzipping " + filePath + " to " + targetPath);
+
+		Files.createDirectories(targetPath.getParent());
 		PackagePart part = aasxRoot.getPart(PackagingURIHelper.createPartName("/" + filePath));
 		
 		if(part == null) {
 			logger.warn("File '" + filePath + "' could not be unzipped. It does not exist in .aasx.");
 			return;
 		}
-		
-		String targetPath = destDir.toString() + "/" + VABPathTools.getLastElement(filePath);
-		InputStream stream = part.getInputStream();
-		FileUtils.copyInputStreamToFile(stream, new File(targetPath));
+
+		FileUtils.copyInputStreamToFile(part.getInputStream(), targetPath.toFile());
 	}
 	
 	private InputStream getInputStream(String aasxFilePath) throws IOException {

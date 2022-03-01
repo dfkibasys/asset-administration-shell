@@ -16,6 +16,7 @@ basys:
   aas-server:
     backend: InMemory
     source: C:///Work/basys/docker/aas/data/aas-server/mrklab.aasx
+#    unzip-folder: C:///Work/basys/docker/data/aas-server
 #    mqtt:
 #      server: http://dockerhost:1883
     context:

@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 @Configuration
@@ -31,8 +32,14 @@ public class AasBundleConfig {
     @Autowired
     private BaSyxContextConfiguration contextConfig;
 
+    @Value("${basys.aas-server.source}")
+    String aasSource;
+
+    @Value("${basys.aas-server.unzip-folder:#{null}}")
+    Optional<String> unzipFolder;
+
     @Bean
-    public Collection<AASBundle> aasBundles(@Value("${basys.aas-server.source}") String aasSource) {
+    public Collection<AASBundle> aasBundles() {
         Collection<AASBundle> result = loadAASFromSource(aasSource);
         modifyFilePaths(result, contextConfig.getHostname(), contextConfig.getPort(), contextConfig.getContextPath());
         return result;
@@ -80,7 +87,8 @@ public class AasBundleConfig {
         AASXPackageManager packageManager = new AASXPackageManager(aasxPath);
 
         // Unpack the files referenced by the aas
-        packageManager.unzipRelatedFiles();
+
+        packageManager.unzipRelatedFiles(unzipFolder);
 
         // Retrieve the aas from the package
         return packageManager.retrieveAASBundles();
