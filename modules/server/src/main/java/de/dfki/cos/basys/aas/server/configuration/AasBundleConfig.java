@@ -1,9 +1,9 @@
 package de.dfki.cos.basys.aas.server.configuration;
 
 import de.dfki.cos.basys.aas.server.util.AASXPackageManager;
+import de.dfki.cos.basys.aas.server.util.SubmodelFileEndpointLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.eclipse.basyx.components.aas.aasx.SubmodelFileEndpointLoader;
 import org.eclipse.basyx.components.configuration.BaSyxConfiguration;
 import org.eclipse.basyx.components.json.JSONAASBundleFactory;
 import org.eclipse.basyx.components.xml.XMLAASBundleFactory;
@@ -109,7 +109,7 @@ public class AasBundleConfig {
      * Fixes the File submodel element value paths according to the given endpoint configuration
      */
     private void modifyFilePaths(Collection<AASBundle> aasBundles, String hostName, int port, String rootPath) {
-        rootPath = rootPath + "/files";
+        //rootPath = rootPath + "/files";
         for (AASBundle bundle : aasBundles) {
             Set<ISubmodel> submodels = bundle.getSubmodels();
             for (ISubmodel sm : submodels) {

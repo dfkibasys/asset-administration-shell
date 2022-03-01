@@ -251,11 +251,7 @@ public class AASXPackageManager {
 			return;
 		}
 
-		String relativePath = "files/" + VABPathTools.getParentPath(filePath);
-
 		Path targetPath = rootPath.resolve(filePath);
-
-
 		logger.info("Unzipping " + filePath + " to " + targetPath);
 
 		Files.createDirectories(targetPath.getParent());
