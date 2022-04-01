@@ -17,10 +17,9 @@
 	<description>BaSys 4.2 AAS Extensions</description>
 
 	<modules>
-		<module>modules/de.dfki.cos.basys.aas.component</module>
-		<module>modules/de.dfki.cos.basys.aas.event</module>
-		<module>modules/de.dfki.cos.basys.aas.event.mqtt</module>				
-		<module>modules/de.dfki.cos.basys.aas.services</module>					
+		<module>modules/event</module>
+		<module>modules/event-mqtt</module>
+<!--		<module>modules/knowledgegraph</module>-->
 		<module>modules/server</module>
 	</modules>
 
