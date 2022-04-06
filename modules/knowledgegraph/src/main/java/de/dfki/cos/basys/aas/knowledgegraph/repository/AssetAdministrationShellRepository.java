@@ -11,6 +11,10 @@ public interface AssetAdministrationShellRepository extends Neo4jRepository<Asse
 
 	List<AssetAdministrationShellNode> findByIdShort(String idShort);
 
+	//@Query("MATCH path=(aas:AssetAdministrationShell {id:{aasId}})-[*]->(n) 
+		// WITH nodes(path) = ns
+		// WHERE NOT ((m1: RelationShipNode)->(n) OR (m1: ReferenceNode)->(n))
+		// DETACH DELETE aas, n")
 	@Query("MATCH (aas:AssetAdministrationShell {id:{aasId}})-[*]->(n) DETACH DELETE aas, n")
 	void deleteByIdCascading(@Param("aasId") String id);
 
