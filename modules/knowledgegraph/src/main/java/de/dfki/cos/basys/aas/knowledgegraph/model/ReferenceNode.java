@@ -12,4 +12,6 @@ public class ReferenceNode extends SubmodelElementNode {
     public ReferenceNode(String idShort, String semanticId) {
         super(idShort, semanticId);
     }
+
+
 }

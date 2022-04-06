@@ -117,7 +117,10 @@ public class KnowledgeGraphManager {
                 aasRepository.deleteByIdCascading(event.getId());
                 break;
             case SUBMODEL_REGISTERED:
-                traverseSubmodel(event.getSubmodelDescriptor());
+                var aasNode = aasRepository.findById(event.getId()).get();
+                var submodelNode = traverseSubmodel(event.getSubmodelDescriptor());
+                aasNode.getSubmodels().add(submodelNode);
+                aasRepository.save(aasNode);
                 break;
             case SUBMODEL_UNREGISTERED:
                 submodelRepository.deleteByIdCascading(event.getSubmodelId());

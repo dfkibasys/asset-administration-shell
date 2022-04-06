@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 public class KnowledgeGraphApplication {
 
-	private static final Logger log = LoggerFactory.getLogger(KnowledgeGraphApplication.class);
-
 	public static void main(String[] args) {
 		SpringApplication.run(KnowledgeGraphApplication.class);
 	}
