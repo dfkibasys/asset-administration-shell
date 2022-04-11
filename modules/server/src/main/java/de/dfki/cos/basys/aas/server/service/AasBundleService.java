@@ -1,8 +1,10 @@
-package de.dfki.cos.basys.aas.server.configuration;
+package de.dfki.cos.basys.aas.server.service;
 
+import de.dfki.cos.basys.aas.server.configuration.BaSyxContextConfiguration;
 import de.dfki.cos.basys.aas.server.util.AASXPackageManager;
 import de.dfki.cos.basys.aas.server.util.SubmodelFileEndpointLoader;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.eclipse.basyx.components.configuration.BaSyxConfiguration;
 import org.eclipse.basyx.components.json.JSONAASBundleFactory;
@@ -13,39 +15,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-@Configuration
+@Service
 @Slf4j
-public class AasBundleConfig {
-
-    @Autowired
-    private BaSyxContextConfiguration contextConfig;
-
-    @Value("${basys.aas-server.source}")
-    String aasSource;
+public class AasBundleService {
 
     @Value("${basys.aas-server.unzip-folder:#{null}}")
     Optional<String> unzipFolder;
 
-    @Bean
-    public Collection<AASBundle> aasBundles() {
-        Collection<AASBundle> result = loadAASFromSource(aasSource);
-        modifyFilePaths(result, contextConfig.getHostname(), contextConfig.getPort(), contextConfig.getContextPath());
-        return result;
-    }
-
-    private Collection<AASBundle> loadAASFromSource(String aasSource) {
+    public Collection<AASBundle> loadAASFromSource(String aasSource) {
         if (aasSource == null || aasSource.isEmpty()) {
             return Collections.emptyList();
         }
@@ -66,6 +56,7 @@ public class AasBundleConfig {
             return Collections.emptyList();
         }
     }
+
 
     private Collection<AASBundle> loadBundleFromXML(String xmlPath) throws IOException, ParserConfigurationException, SAXException {
         log.info("Loading aas from xml \"" + xmlPath + "\"");
@@ -105,16 +96,4 @@ public class AasBundleConfig {
         return content;
     }
 
-    /**
-     * Fixes the File submodel element value paths according to the given endpoint configuration
-     */
-    private void modifyFilePaths(Collection<AASBundle> aasBundles, String hostName, int port, String rootPath) {
-        //rootPath = rootPath + "/files";
-        for (AASBundle bundle : aasBundles) {
-            Set<ISubmodel> submodels = bundle.getSubmodels();
-            for (ISubmodel sm : submodels) {
-                SubmodelFileEndpointLoader.setRelativeFileEndpoints(sm, hostName, port, rootPath);
-            }
-        }
-    }
 }

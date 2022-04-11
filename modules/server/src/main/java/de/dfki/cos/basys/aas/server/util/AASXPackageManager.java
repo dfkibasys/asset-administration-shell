@@ -12,10 +12,7 @@ package de.dfki.cos.basys.aas.server.util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
-import org.apache.poi.openxml4j.opc.PackagingURIHelper;
+import org.apache.poi.openxml4j.opc.*;
 import org.eclipse.basyx.components.configuration.BaSyxConfiguration;
 import org.eclipse.basyx.components.xml.XMLAASBundleFactory;
 import org.eclipse.basyx.submodel.metamodel.api.ISubmodel;
@@ -92,12 +89,15 @@ public class AASXPackageManager {
 			return bundles;
 		}
 		
-		OPCPackage aasxRoot = OPCPackage.open(getInputStream(aasxPath));
+		//OPCPackage aasxRoot = OPCPackage.open(getInputStream(aasxPath));
+		OPCPackage aasxRoot = OPCPackage.open(aasxPath, PackageAccess.READ);
 		
 		bundleFactory = new XMLAASBundleFactory(getXMLResourceString(aasxRoot));
 		
 		bundles = bundleFactory.create();
-		
+
+		aasxRoot.close();
+
 		return bundles;
 	}
 
@@ -206,7 +206,8 @@ public class AASXPackageManager {
 			throws IOException, ParserConfigurationException, SAXException, URISyntaxException, InvalidFormatException {
 		// load folder which stores the files
 		List<String> files = parseReferencedFilePathsFromAASX();
-		OPCPackage aasxRoot = OPCPackage.open(getInputStream(aasxPath));
+		//OPCPackage aasxRoot = OPCPackage.open(getInputStream(aasxPath));
+		OPCPackage aasxRoot = OPCPackage.open(aasxPath, PackageAccess.READ);
 
 		Path targetPath =  Path.of(aasxPath).getParent();
 		if (targetFolder.isPresent()) {
@@ -217,6 +218,7 @@ public class AASXPackageManager {
 			// name of the folder
 			unzipFile(filePath, targetPath, aasxRoot);
 		}
+		aasxRoot.close();
 	}
 
 	/**

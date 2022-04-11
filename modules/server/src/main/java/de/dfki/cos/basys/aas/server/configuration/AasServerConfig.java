@@ -36,10 +36,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 @Slf4j
-public class AasServerConfig implements DisposableBean {
-
-    @Autowired
-    private BaSyxContextConfiguration contextConfig;
+public class AasServerConfig {
 
     @Autowired(required = false)
     private BaSyxMqttConfiguration mqttConfig;
@@ -50,16 +47,13 @@ public class AasServerConfig implements DisposableBean {
     @Autowired
     private IAASRegistry aasRegistry;
 
-    @Autowired
-    private Collection<AASBundle> aasBundles;
-
     @Bean
     public ServletRegistrationBean aasAggregatorServlet(IAASAggregator aasAggregator, Collection<AASBundle> aasBundles) {
 
-        AASBundleHelper.integrate(aasAggregator, aasBundles);
+        //AASBundleHelper.integrate(aasAggregator, aasBundles);
 
-        Set<AASDescriptor> descriptors = retrieveDescriptors(aasBundles, contextConfig.toLegacyConfig().getUrl());
-        descriptors.stream().forEach(aasRegistry::register);
+        //Set<AASDescriptor> descriptors = retrieveDescriptors(aasBundles, contextConfig.toLegacyConfig().getUrl());
+        //descriptors.stream().forEach(aasRegistry::register);
 
         HttpServlet servlet = new AASAggregatorServlet(aasAggregator);
         ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/shells/*");
@@ -108,44 +102,4 @@ public class AasServerConfig implements DisposableBean {
         return aggregator;
     }
 
-    /**
-     * Returns the set of AAS descriptors for the AAS contained in the AASX
-     *
-     * @param hostBasePath
-     *                     the path to the server; helper method for e.g. virtualization
-     *                     environments
-     * @return
-     */
-    private Set<AASDescriptor> retrieveDescriptors(Collection<AASBundle> aasBundles, String hostBasePath) {
-        // Base path + aggregator accessor
-        final String fullBasePath = hostBasePath + "/" + AASAggregatorProvider.PREFIX;
-
-        return aasBundles.stream().map(b -> createAASDescriptor(b, fullBasePath))
-                .collect(Collectors.toSet());
-    }
-
-    public AASDescriptor createAASDescriptor(AASBundle bundle, String hostBasePath) {
-        // Normalize hostBasePath to ensure consistent usage of /
-        String nHostBasePath = VABPathTools.stripSlashes(hostBasePath);
-
-        // Create AASDescriptor
-        String endpointId = encodeId(bundle.getAAS().getIdentification().getId());
-        //endpointId = VABPathTools.encodePathElement(endpointId);
-        String aasBase = VABPathTools.concatenatePaths(nHostBasePath, endpointId, "aas");
-        AASDescriptor desc = new AASDescriptor(bundle.getAAS(), aasBase);
-        bundle.getSubmodels().stream().forEach(s -> {
-            SubmodelDescriptor smDesc = new SubmodelDescriptor(s, VABPathTools.concatenatePaths(aasBase, "submodels", s.getIdShort(), "submodel"));
-            desc.addSubmodelDescriptor(smDesc);
-        });
-        return desc;
-    }
-
-    private String encodeId(String id) {
-        return Base64.getUrlEncoder().encodeToString(id.getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        AASBundleHelper.deregister(aasRegistry, aasBundles);
-    }
 }
