@@ -8,6 +8,11 @@ logging:
     org.springframework.boot.autoconfigure: INFO
 server:
   port: 8088
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,metrics"
 basys:
   aas-registry:
     type: dotaas
