@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<docker.imagename>aas-server:${project.version}</docker.imagename>
+		<docker.image.name>aas-server</docker.image.name>
 	</properties>
 
 	<dependencies>
@@ -27,6 +27,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
 		<dependency>
@@ -65,19 +69,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-<!--				<configuration>-->
-<!--					<image>-->
-<!--						<publish>false</publish>-->
-<!--					</image>-->
-<!--				</configuration>-->
-			</plugin>
-		</plugins>
-	</build>
 
 </project>

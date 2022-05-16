@@ -3,6 +3,8 @@ image: maven:3-eclipse-temurin-11-alpine
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_TARGET_CLASSES: '${CI_PROJECT_DIR}/**/target/classes'
+  MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
 
 cache:
   paths:
@@ -10,40 +12,80 @@ cache:
     - target/
 
 stages:
+  - validate
   - build
   - test
+  - install
   - deploy
-  - publish
 
-build:
+mvn-validate:
+  stage: validate
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn -V $MAVEN_CLI_OPTS validate
+
+mvn-compile:
   stage: build
   tags:
     - basys
     - maven
   script:
-    - mvn -V $MAVEN_CLI_OPTS compile
+    - mvn -V $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
+  artifacts:
+    paths:
+      - $MAVEN_TARGET_CLASSES
+    expire_in: 3 hour   
 
-test:
+mvn-test:
   stage: test
   tags:
     - basys
     - maven
+  dependencies:
+    - mvn-compile
   script:
-    - mvn $MAVEN_CLI_OPTS test
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
 
-deploy:
+mvn-docker-install:
+  stage: install
+  image: dfkibasys/docker-temurin11jdk:20.10.12  
+  variables:
+     DOCKER_DRIVER: overlay2
+  services:
+    - name: docker:20.10.12-dind
+    # explicitly disable tls to avoid docker startup interruption
+      command: ["--tls=false"]
+  tags:
+    - basys
+    - maven
+  script:
+    - chmod 775 ./mvnw
+    - ./mvnw -o $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD install -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true
+  dependencies:
+    - mvn-compile
+  artifacts:
+    paths:
+      - $MAVEN_TARGET_RELEASE_JARS
+    expire_in: 3 hour
+
+mvn-deploy:
   stage: deploy
   tags:
     - basys
     - maven
   script:
-    - mvn $MAVEN_CLI_OPTS deploy
-  only:
-    - master
-    - develop
-
-docker:
-  stage: publish
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true
+  dependencies:
+    - mvn-docker-install
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+    
+docker-publish:
+  stage: deploy
   tags:
     - basys
     - docker
@@ -53,13 +95,15 @@ docker:
   services:
      - name: docker:20.10.12-dind
      # explicitly disable tls to avoid docker startup interruption
-     # - command: ["--tls=false"]
+       command: ["--tls=false"]
   before_script:
     - docker info
+  dependencies:
+     - mvn-compile
   script:
     - chmod 775 ./mvnw
-    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD spring-boot:build-image -pl modules/server
-  only:
-    - master
-    - develop
-
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw -o $MAVEN_CLI_OPTS install -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -pl modules/server 
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
