@@ -1,6 +1,8 @@
 package de.dfki.cos.basys.aas.knowledgegraph.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -12,12 +14,11 @@ import java.util.Set;
 
 
 @Node("Asset")
-@Data
-public class AssetNode {
+@Getter
+@Setter
+public class AssetNode extends IdentifiableNode {
 
-	@Id
-	private final String id;
-
-	private final String idShort;
-
+	public AssetNode(String id, String idShort) {
+		super(id, idShort);
+	}
 }

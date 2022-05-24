@@ -16,18 +16,17 @@ import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
 
 @Node("AssetAdministrationShell")
-@Data
-public class AssetAdministrationShellNode {
+@Getter
+@Setter
+public class AssetAdministrationShellNode extends IdentifiableNode {
 
-	@Id
-	private final String id;
-
-	private final String idShort;
-	
 	@Relationship(type = "hasSubmodel", direction = Direction.OUTGOING)
 	private List<SubmodelNode> submodels = new ArrayList<>();
 
 	@Relationship(type = "hasAsset", direction = Direction.OUTGOING)
 	private AssetNode asset = null;
 
+	public AssetAdministrationShellNode(String id, String idShort) {
+		super(id, idShort);
+	}
 }

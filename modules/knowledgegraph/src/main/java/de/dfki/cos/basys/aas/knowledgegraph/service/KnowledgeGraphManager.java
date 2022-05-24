@@ -5,12 +5,15 @@ import de.dfki.cos.basys.aas.knowledgegraph.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.basyx.aas.manager.api.IAssetAdministrationShellManager;
+import org.eclipse.basyx.aas.metamodel.api.IAssetAdministrationShell;
+import org.eclipse.basyx.aas.metamodel.api.parts.asset.IAsset;
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
 import org.eclipse.basyx.aas.registry.events.RegistryEvent;
 import org.eclipse.basyx.aas.registry.model.*;
 import org.eclipse.basyx.submodel.metamodel.api.ISubmodel;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
+import org.eclipse.basyx.submodel.metamodel.api.reference.IKey;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.ISubmodelElement;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.ISubmodelElementCollection;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.IBlob;
@@ -25,12 +28,16 @@ import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.vab.factory.java.ModelProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.neo4j.core.Neo4jTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.sql.Ref;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 
 @Service
@@ -39,37 +46,19 @@ import java.util.function.Consumer;
 public class KnowledgeGraphManager {
 
     @Autowired
+    Neo4jTemplate neo4jTemplate;
+
+    @Autowired
+    ReferableRepository referableRepository;
+
+    @Autowired
+    IdentifiableRepository identifiableRepository;
+
+    @Autowired
     AssetAdministrationShellRepository aasRepository;
 
     @Autowired
-    SubmodelElementCollectionRepository submodelElementCollectionRepository;
-
-    @Autowired
     SubmodelRepository submodelRepository;
-
-    @Autowired
-    PropertyRepository propertyRepository;
-
-    @Autowired
-    FileRepository fileRepository;
-
-    @Autowired
-    BlobRepository blobRepository;
-
-    @Autowired
-    OperationRepository operationRepository;
-
-    @Autowired
-    EventRepository eventRepository;
-
-    @Autowired
-    ReferenceRepository referenceRepository;
-
-    @Autowired
-    RelationshipRepository relationshipRepository;
-
-    @Autowired
-    UnknownSubmodelElementRepository unknownSubmodelElementRepository;
 
     @Autowired
     IAssetAdministrationShellManager aasManager;
@@ -85,7 +74,7 @@ public class KnowledgeGraphManager {
 
     @PreDestroy
     private void cleanup() {
-        aasRepository.deleteAllCascading();
+        neo4jTemplate.deleteAll(ReferableNode.class);
     }
 
     @PostConstruct
@@ -96,6 +85,7 @@ public class KnowledgeGraphManager {
             for (var aasDescriptor : aasDescriptors) {
                 var aasNode = traverseAAS(aasDescriptor);
             }
+            resolveReferences();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -128,6 +118,8 @@ public class KnowledgeGraphManager {
             default:
                 break;
         }
+
+        resolveReferences();
     }
 
 
@@ -138,14 +130,27 @@ public class KnowledgeGraphManager {
 
         AssetAdministrationShellNode aasNode = new AssetAdministrationShellNode(id, idShort);
 
+        try {
+            IAssetAdministrationShell aas = aasManager.retrieveAAS(new Identifier(IdentifierType.CUSTOM, aasDescriptor.getIdentification()));
+            AssetNode assetNode = traverseAsset(aas.getAsset());
+            aasNode.setAsset(assetNode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         aasDescriptor.getSubmodelDescriptors().stream().forEach(smDescriptor -> {
             SubmodelNode submodelNode = traverseSubmodel(smDescriptor);
             aasNode.getSubmodels().add(submodelNode);
         });
 
-        return aasRepository.save(aasNode);
+        return neo4jTemplate.save(aasNode);
     }
 
+    private AssetNode traverseAsset(IAsset asset) {
+        AssetNode assetNode = new AssetNode(asset.getIdentification().getId(), asset.getIdShort());
+        // TODO: map more properties
+        return neo4jTemplate.save(assetNode);
+    }
 
     private SubmodelNode traverseSubmodel(SubmodelDescriptor smDescriptor) {
         log.info("traverseSubmodel {}", smDescriptor.getIdShort());
@@ -174,7 +179,7 @@ public class KnowledgeGraphManager {
             }
         });
 
-        return submodelRepository.save(node);
+        return neo4jTemplate.save(node);
     }
 
 
@@ -222,7 +227,7 @@ public class KnowledgeGraphManager {
             }
         });
 
-        return submodelElementCollectionRepository.save(node);
+        return neo4jTemplate.save(node);
     }
 
     private PropertyNode handleProperty(IProperty submodelElement) {
@@ -237,7 +242,7 @@ public class KnowledgeGraphManager {
         node.setValueType(submodelElement.getValueType());
         node.setValue(submodelElement.getValue());
 
-        return propertyRepository.save(node);
+        return neo4jTemplate.save(node);
     }
 
     private FileNode handleFile(IFile submodelElement) {
@@ -252,7 +257,7 @@ public class KnowledgeGraphManager {
         node.setMimeType(submodelElement.getMimeType());
         node.setValue(submodelElement.getValue());
 
-        return fileRepository.save(node);
+        return neo4jTemplate.save(node);
     }
 
     private BlobNode handleBlob(IBlob submodelElement) {
@@ -265,7 +270,7 @@ public class KnowledgeGraphManager {
 
         var node = new BlobNode(idShort, semanticId);
 
-        return blobRepository.save(node);
+        return neo4jTemplate.save(node);
     }
 
     private OperationNode handleOperation(IOperation submodelElement) {
@@ -278,7 +283,7 @@ public class KnowledgeGraphManager {
 
         var node = new OperationNode(idShort, semanticId);
 
-        return operationRepository.save(node);
+        return neo4jTemplate.save(node);
     }
 
     private EventNode handleEvent(IEvent submodelElement) {
@@ -291,7 +296,7 @@ public class KnowledgeGraphManager {
 
         var node = new EventNode(idShort, semanticId);
 
-        return eventRepository.save(node);
+        return neo4jTemplate.save(node);
     }
 
     private ReferenceNode handleReference(IReferenceElement submodelElement) {
@@ -304,7 +309,15 @@ public class KnowledgeGraphManager {
 
         var node = new ReferenceNode(idShort, semanticId);
 
-        return referenceRepository.save(node);
+        if (submodelElement.getValue() != null && submodelElement.getValue().getKeys().size() > 0) {
+            var pathToNode = submodelElement.getValue().getKeys();
+            for (var key: pathToNode) {
+                node.getPathToNode().add(key.getValue());
+            }
+            log.debug(node.getPathToNode().toString());
+        }
+
+        return neo4jTemplate.save(node);
     }
 
     private RelationshipNode handleRelationship(IRelationshipElement submodelElement) {
@@ -316,8 +329,7 @@ public class KnowledgeGraphManager {
         }
 
         var node = new RelationshipNode(idShort, semanticId);
-
-        return relationshipRepository.save(node);
+        return neo4jTemplate.save(node);
     }
 
     private UnknownSubmodelElementNode handleUnknownElement(ISubmodelElement submodelElement) {
@@ -330,6 +342,54 @@ public class KnowledgeGraphManager {
 
         var node = new UnknownSubmodelElementNode(idShort, semanticId);
 
-        return unknownSubmodelElementRepository.save(node);
+        return neo4jTemplate.save(node);
     }
+
+    private void resolveReferences() {
+        List<ReferenceNode> referenceNodes = neo4jTemplate.findAll(ReferenceNode.class);
+        for (ReferenceNode referenceNode: referenceNodes) {
+            if (referenceNode.getTarget() == null) {
+                List<String> pathToNode = referenceNode.getPathToNode();
+                // Assumption: first element in path list is an IdentifiableNode
+                var identifiableOpt = identifiableRepository.findById(pathToNode.get(0));
+                if (identifiableOpt.isEmpty()) {
+                    continue;
+                }
+
+                ReferableNode targetNode = identifiableOpt.get();
+                boolean targetFound = false;
+                if (pathToNode.size() > 1) {
+                    for (int i = 1; i < pathToNode.size(); i++) {
+                        //FIXME: this line does not work; submodel elements of child are deleted for some reason. query wrong?
+                        //var childOptional = referableRepository.findChildByIdShort(targetNode.getNeo4jId(), pathToNode.get(i));
+                        //workaround: retrieve ID of child and then use findById(ID)
+                        var idOpt = referableRepository.findSubmodelElementId(targetNode.getNeo4jId(), pathToNode.get(i));
+                        if (idOpt.isEmpty()) {
+                            targetFound = false;
+                            break;
+                        }
+
+                        var childOptional = neo4jTemplate.findById(idOpt.get(),ReferableNode.class);
+                        targetNode = childOptional.get();
+                        targetFound = true;
+
+                    }
+                } else {
+                    log.debug("path <= 1");
+                    targetFound = true;
+                }
+                if (targetFound) {
+                    referenceNode.setTarget(targetNode);
+                    neo4jTemplate.save(referenceNode);
+                    var t = neo4jTemplate.findById(targetNode.getNeo4jId(), ReferableNode.class);
+                    log.debug("check");
+                } else {
+                    log.debug("target not found");
+                }
+            } else {
+                log.debug("target already set");
+            }
+        }
+    }
+
 }

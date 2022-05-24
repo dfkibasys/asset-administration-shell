@@ -48,6 +48,13 @@
 			<artifactId>gson</artifactId>
 		</dependency>
 
+		<!-- needed because milo (stack-core) has been excluded from basyx.sdk -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>26.0-jre</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.basyx</groupId>
 			<artifactId>basyx.sdk</artifactId>

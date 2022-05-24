@@ -13,15 +13,13 @@ import java.util.Set;
 
 @Node("SubmodelElement")
 @Getter
-public abstract class SubmodelElementNode {
+@Setter
+public abstract class SubmodelElementNode extends ReferableNode {
 
-	@Id @GeneratedValue
-	private Long id;
-	private final String idShort;
 	private final String semanticId;
 
 	public SubmodelElementNode(String idShort, String semanticId) {
-		this.idShort = idShort;
+		super(idShort);
 		this.semanticId = semanticId;
 	}
 

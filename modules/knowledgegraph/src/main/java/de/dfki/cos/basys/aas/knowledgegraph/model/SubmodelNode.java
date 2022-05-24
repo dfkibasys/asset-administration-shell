@@ -5,10 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -17,15 +14,17 @@ import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 
 
 @Node("Submodel")
-@Data
-public class SubmodelNode  {
+@Getter
+@Setter
+public class SubmodelNode extends IdentifiableNode  {
 
-	@Id
-	private final String id;
-	private final String idShort;
 	private final String semanticId;
 
 	@Relationship(type = "hasSubmodelElement", direction = Direction.OUTGOING)
 	private List<SubmodelElementNode> submodelElements = new ArrayList<>();
 
+	public SubmodelNode(String id, String idShort, String semanticId) {
+		super(id, idShort);
+		this.semanticId = semanticId;
+	}
 }
