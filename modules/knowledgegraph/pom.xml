@@ -17,9 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<spring-cloud.version>2020.0.4</spring-cloud.version>
-		<docker.imagename>aas-knowledgegraph</docker.imagename>
-		<docker.repository.prefix>dfkibasys</docker.repository.prefix>
-		<docker.pull.registry>docker.io</docker.pull.registry>
+		<docker.image.name>aas-knowledgegraph</docker.image.name>
 	</properties>
 
 	<dependencies>
