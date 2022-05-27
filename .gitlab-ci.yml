@@ -103,7 +103,7 @@ docker-publish:
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS install -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -pl modules/server 
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
