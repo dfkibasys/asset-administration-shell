@@ -16,6 +16,7 @@ public abstract class ReferableNode {
     private Long neo4jId;
 
     private final String idShort;
+    private String sourceUrl;
 
     public ReferableNode(String idShort) {
         this.idShort = idShort;
