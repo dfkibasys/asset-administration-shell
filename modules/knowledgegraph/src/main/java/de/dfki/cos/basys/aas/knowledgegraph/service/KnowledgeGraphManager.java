@@ -22,6 +22,7 @@ import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.IPro
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.IReferenceElement;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.event.IEvent;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.operation.IOperation;
+import org.eclipse.basyx.submodel.metamodel.api.submodelelement.operation.IOperationVariable;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.relationship.IRelationshipElement;
 import org.eclipse.basyx.submodel.metamodel.connected.ConnectedSubmodel;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
@@ -204,7 +205,7 @@ public class KnowledgeGraphManager {
                 node = handleBlob((IBlob) submodelElement);
                 break;
             case "Operation":
-                node = handleOperation((IOperation) submodelElement);
+                node = traverseOperation((IOperation) submodelElement);
                 break;
             case "BasicEvent":
                 node = handleEvent((IEvent) submodelElement);
@@ -226,7 +227,8 @@ public class KnowledgeGraphManager {
         return neo4jTemplate.save(node);
     }
 
-    private SubmodelElementCollectionNode traverseSubmodelElementCollection(ISubmodelElementCollection submodelElement, String sourceUrl) {
+
+	private SubmodelElementCollectionNode traverseSubmodelElementCollection(ISubmodelElementCollection submodelElement, String sourceUrl) {
         log.info("traverseSubmodelElementCollection {}", submodelElement.getIdShort());
         String idShort = submodelElement.getIdShort();
         String semanticId = null;
@@ -290,18 +292,53 @@ public class KnowledgeGraphManager {
         return node;
     }
 
-    private OperationNode handleOperation(IOperation submodelElement) {
+    private OperationNode traverseOperation(IOperation submodelElement) {
         log.info("handleOperation {}", submodelElement.getIdShort());
         String idShort = submodelElement.getIdShort();
         String semanticId = null;
         if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
             semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
         }
-
+        
         var node = new OperationNode(idShort, semanticId);
-
+        
+        submodelElement.getInputVariables().stream().forEach(iv -> {
+            if (iv == null) {
+                log.warn("input variable is null");
+            } else {
+                OperationVariableNode operationVariableNode = handleOperationVariable(iv);
+                node.getInputVariables().add(operationVariableNode);
+            }
+        });
+        
+        submodelElement.getOutputVariables().stream().forEach(ov -> {
+            if (ov == null) {
+                log.warn("output variable is null");
+            } else {
+                OperationVariableNode operationVariableNode = handleOperationVariable(ov);
+                node.getOutputVariables().add(operationVariableNode);
+            }
+        });
+        
+        submodelElement.getInOutputVariables().stream().forEach(iov -> {
+            if (iov == null) {
+                log.warn("inoutput variable is null");
+            } else {
+                OperationVariableNode operationVariableNode = handleOperationVariable(iov);
+                node.getInoutputVariables().add(operationVariableNode);
+            }
+        });
+        
         return node;
     }
+    
+    private OperationVariableNode handleOperationVariable(IOperationVariable iOperationVariable) {
+    	log.info("handleOperationVariable");
+    	
+    	var node = new OperationVariableNode(iOperationVariable.getValue());
+    	
+    	return neo4jTemplate.save(node);
+   	}
 
     private EventNode handleEvent(IEvent submodelElement) {
         log.info("handleEvent {}", submodelElement.getIdShort());
