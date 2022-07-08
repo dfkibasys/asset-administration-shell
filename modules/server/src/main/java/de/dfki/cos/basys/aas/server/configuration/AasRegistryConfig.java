@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Properties;
+import de.dfki.cos.basys.aas.server.util.RetryableAasRegistryDecorator;
 
 @Configuration
 public class AasRegistryConfig {
@@ -17,7 +17,7 @@ public class AasRegistryConfig {
 
     @Value("${basys.aas-registry.service.connectionString:http://localhost:4000}")
     private String arServiceConnectionString;
-
+    
     @Bean
     public IAASRegistry aasRegistry() {
         IAASRegistry aasRegistry = null;
@@ -26,9 +26,18 @@ public class AasRegistryConfig {
         } else if ("basyx".equals(aasRegistryType)) {
             aasRegistry = new AASRegistryProxy(arServiceConnectionString);
         } else { // defaulting to none
-            //FIXME: returning null lets the bean creation fail!
+           throw new IllegalRegistryTypeException(aasRegistryType);
         }
-        return aasRegistry;
+        return new RetryableAasRegistryDecorator(aasRegistry);
+    }
+    
+    private static final class IllegalRegistryTypeException extends IllegalArgumentException {
+
+		private static final long serialVersionUID = 1L;
+
+		public IllegalRegistryTypeException(String aasRegistryType) {
+			super("Illegal registry type " + aasRegistryType + "!");
+		}
     }
 
 }
