@@ -8,11 +8,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.eclipse.basyx.aas.aggregator.api.IAASAggregator;
 import org.eclipse.basyx.aas.aggregator.restapi.AASAggregatorProvider;
+import org.eclipse.basyx.aas.metamodel.api.IAssetAdministrationShell;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.submodel.metamodel.api.ISubmodel;
+import org.eclipse.basyx.submodel.metamodel.api.identifier.IIdentifier;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
+import org.eclipse.basyx.submodel.metamodel.api.qualifier.IIdentifiable;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.support.bundle.AASBundle;
 import org.eclipse.basyx.support.bundle.AASBundleHelper;
@@ -175,13 +178,13 @@ public class DeploymentService {
         var bundles = aasBundleService.loadAASFromSource(filePath);
         modifyFilePaths(bundles, context.getHostname(), context.getPort(), context.getContextPath());
 
-        bundles.stream().forEach(aasBundle -> ids.add(aasBundle.getAAS().getIdentification().getId()));
+        bundles.stream().map(AASBundle::getAAS).map(IAssetAdministrationShell::getIdentification).map(IIdentifier::getId).forEach(ids::add);
         fileToIdMap.put(filePath, ids);
 
         AASBundleHelper.integrate(aasAggregator, bundles);
 
         Set<AASDescriptor> descriptors = retrieveDescriptors(bundles, context.toLegacyConfig().getUrl());
-        descriptors.stream().forEach(aasRegistry::register);
+        descriptors.forEach(aasRegistry::register);
 
     }
 
