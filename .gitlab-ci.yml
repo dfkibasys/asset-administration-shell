@@ -5,6 +5,9 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_TARGET_CLASSES: '${CI_PROJECT_DIR}/**/target/classes'
   MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
+  DOCKER_HOST: "tcp://docker:2375" 
+  DOCKER_TLS_CERTDIR: ""
+
 
 cache:
   paths:
@@ -77,7 +80,6 @@ mvn-deploy:
     - maven
   script:
     - chmod 775 ./mvnw
-    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true
   dependencies:
     - mvn-docker-install
@@ -103,7 +105,6 @@ docker-publish:
      - mvn-compile
   script:
     - chmod 775 ./mvnw
-    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
     - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   rules:
