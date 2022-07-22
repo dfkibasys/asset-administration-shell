@@ -5,6 +5,9 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   MAVEN_TARGET_CLASSES: '${CI_PROJECT_DIR}/**/target/classes'
   MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
+  DOCKER_HOST: "tcp://docker:2375" 
+  DOCKER_TLS_CERTDIR: ""
+
 
 cache:
   paths:
@@ -50,11 +53,11 @@ mvn-test:
 
 mvn-docker-install:
   stage: install
-  image: dfkibasys/docker-temurin11jdk:20.10.12  
+  image: dfkibasys/docker-temurin11jdk:20.10.17
   variables:
      DOCKER_DRIVER: overlay2
   services:
-    - name: docker:20.10.12-dind
+    - name: docker:20.10.17-dind
     # explicitly disable tls to avoid docker startup interruption
       command: ["--tls=false"]
   tags:
@@ -89,11 +92,11 @@ docker-publish:
   tags:
     - basys
     - docker
-  image: dfkibasys/docker-temurin11jdk:20.10.12
+  image: dfkibasys/docker-temurin11jdk:20.10.17
   variables:
     DOCKER_DRIVER: overlay2
   services:
-     - name: docker:20.10.12-dind
+     - name: docker:20.10.17-dind
      # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   before_script:
