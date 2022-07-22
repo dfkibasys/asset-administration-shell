@@ -77,6 +77,8 @@ mvn-deploy:
     - maven
   script:
     - chmod 775 ./mvnw
+    - docker context create buildx-ctx
+    - docker buildx create buildx-ctx --use
     - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true
   dependencies:
     - mvn-docker-install
@@ -102,6 +104,8 @@ docker-publish:
      - mvn-compile
   script:
     - chmod 775 ./mvnw
+    - docker context create buildx-ctx
+    - docker buildx create buildx-ctx --use
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
     - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
   rules:
