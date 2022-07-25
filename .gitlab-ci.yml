@@ -68,24 +68,6 @@ mvn-docker-install:
     - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD install -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true
   dependencies:
     - mvn-compile
-  # artifacts:
-  #   paths:
-  #     - $MAVEN_TARGET_RELEASE_JARS
-  #   expire_in: 3 hour
-
-# mvn-deploy:
-#   stage: deploy
-#   tags:
-#     - basys
-#     - maven
-#   script:
-#     - chmod 775 ./mvnw
-#     - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true
-#   dependencies:
-#     - mvn-docker-install
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == 'master'
-#     - if: $CI_COMMIT_BRANCH == 'develop'
     
 docker-publish:
   stage: deploy
