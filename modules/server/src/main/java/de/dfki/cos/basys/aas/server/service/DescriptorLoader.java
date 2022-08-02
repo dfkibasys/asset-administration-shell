@@ -21,7 +21,7 @@ public class DescriptorLoader {
 
 	public AASDescriptor retrieveDescriptor(AASBundle aasBundle) {
 		// Base path + aggregator accessor
-		final String fullBasePath = context.getContextPath() + "/" + AASAggregatorProvider.PREFIX;
+		final String fullBasePath = context.toLegacyConfig().getUrl() + "/" + AASAggregatorProvider.PREFIX;
 		return createAASDescriptor(aasBundle, fullBasePath);
 	}
 
