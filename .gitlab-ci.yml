@@ -1,8 +1,13 @@
 image: maven:3-eclipse-temurin-11-alpine
 
 variables:
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode -Pgitlab"
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_TARGET_CLASSES: '${CI_PROJECT_DIR}/**/target/classes'
+  MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
+  DOCKER_HOST: "tcp://docker:2375" 
+  DOCKER_TLS_CERTDIR: ""
+
 
 cache:
   paths:
@@ -10,34 +15,80 @@ cache:
     - target/
 
 stages:
+  - validate
   - build
   - test
+  - install
   - deploy
 
-build:
+mvn-validate:
+  stage: validate
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn -V $MAVEN_CLI_OPTS validate
+
+mvn-compile:
   stage: build
   tags:
     - basys
     - maven
   script:
-    - mvn -V $MAVEN_CLI_OPTS compile
+    - mvn -V $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
+  artifacts:
+    paths:
+      - $MAVEN_TARGET_CLASSES
+    expire_in: 3 hour   
 
-test:
+mvn-test:
   stage: test
   tags:
     - basys
     - maven
+  dependencies:
+    - mvn-compile
   script:
-    - mvn $MAVEN_CLI_OPTS test
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
 
-deploy:
-  stage: deploy
+mvn-docker-install:
+  stage: install
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+     DOCKER_DRIVER: overlay2
+  services:
+    - name: docker:20.10.17-dind
+    # explicitly disable tls to avoid docker startup interruption
+      command: ["--tls=false"]
   tags:
     - basys
     - maven
   script:
-    - mvn $MAVEN_CLI_OPTS deploy
-  only:
-    - master
-    - develop
-
+    - chmod 775 ./mvnw
+    - ./mvnw $MAVEN_CLI_OPTS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD install -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true
+  dependencies:
+    - mvn-compile
+    
+docker-publish:
+  stage: deploy
+  tags:
+    - basys
+    - docker
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+     # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - docker info
+  dependencies:
+     - mvn-compile
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'

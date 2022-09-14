@@ -43,3 +43,6 @@ buildNumber.properties
 .project
 MANIFEST.MF
 build.properties
+
+# Mac specific
+.DS_Store

@@ -1,0 +1,38 @@
+spring:
+  web:
+    resources:
+      static-locations:
+        - file:C:/Work/basys/docker/aas/data/aas-server
+logging:
+  level:
+    org.springframework.boot.autoconfigure: INFO
+server:
+  port: 8088
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,metrics"
+basys:
+  aas-registry:
+    type: dotaas
+    service:
+      connectionString: http://aasregistry.dockerhost
+      retry:
+        maxAttemps: 15
+        delay: 2000
+  aas-server:
+    backend: InMemory
+    source: C:///Work/basys/docker/aas/data/aas-server
+    #source: C:///Work/basys/docker/aas/data/aas-server/mrklab.aasx
+    file-suffixes: .aasx
+    recursive: true
+    watch: true
+#    unzip-folder: C:///Work/basys/docker/data/aas-server
+#    mqtt:
+#      server: http://dockerhost:1883
+    context:
+      context-path: /
+      doc-base:
+      hostname: localhost
+      port: 8088

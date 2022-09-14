@@ -1,13 +1,12 @@
 # Asset Administration Shell #
 
 This repository contains AAS-related models, software modules and docker images. In particular:
- - an EMF-based AAS model and tree-style Eclipse editor according to [Details of the Asset Administration Shell Part 1, Version 2](https://www.plattform-i40.de/PI40/Redaktion/DE/Downloads/Publikation/Details-of-the-Asset-Administration-Shell-Part1.html)
- - an [Apache Zookeeper](https://zookeeper.apache.org/)-backed [AAS Registry](https://wiki.eclipse.org/BaSyx_/_Documentation_/_API_/_Registry) based on the [BaSyx Java-SDK](https://wiki.eclipse.org/BaSyx_/_Download)
- - an AAS services bundle as Java application consisting of 
-   - the Zookeeper-backed AAS Registry, 
-   - an [AAS Aggregator service](https://wiki.eclipse.org/BaSyx_/_Documentation_/_API_/_AssetAdministrationShell) for remote hosting of asset administration shells and submodels via HTTP/REST
-   - a local and dynamic hosting service for AAS and submodels based on DFKI's lightweight [component model](https://github.com/BaSys-PC1/common)
-  
-## Usage ##
-
-The AAS services can be used via [Docker](https://hub.docker.com/r/dfkibasys/aas-services) and are already included in DFKI's back-end [runtime Docker stack](https://github.com/BaSys-PC1/docker).
+ - an [extended AAS event model](/modules/event) with an [implementation for MQTT](/modules/event-mqtt)
+ - a [micro-service for creating and maintaining a knowledge graph of AAS contents](/modules/knowledgegraph) based on AAS Registry updates. As knowledge graph back-end, we use [Neo4J](https://neo4j.com/) in our [(AAS) docker-compose stack](https://github.com/BaSys-PC1/docker). The implementation is in an early alpha stage. Thus, the service itself is not yet included in the docker-compose stack.
+ - an [enhanced AAS Server](/modules/server) based on the [Eclipse BaSyx Java Components](https://github.com/eclipse-basyx/basyx-java-components) featuring
+   - integration with the [AAS Registry (DotAAS)](https://github.com/BaSys-PC1/aas-registry) according to the "Details of the Asset Administration Shell, Part 2" spec
+   - integration in the [(AAS) docker-compose stack](https://github.com/BaSys-PC1/docker)
+   - Base64URL-encoded AAS/submodel identifiers
+   - rich configuration options
+   - loading of multiple aasx/json/xml files on start-up
+   - hot deployment of aasx/json/xml files while running

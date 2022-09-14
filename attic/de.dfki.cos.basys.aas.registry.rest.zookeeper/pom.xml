@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<relativePath>../../poms/compiled/</relativePath>
+		<groupId>de.dfki.cos.basys.aas</groupId>
+		<artifactId>compiled-bundle-settings</artifactId>
+		<version>0.2.7-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<bundle.symbolicName>de.dfki.cos.basys.aas.registry.rest.zookeeper</bundle.symbolicName>
+		<bundle.namespace>de.dfki.cos.basys.aas.registry.rest.zookeeper</bundle.namespace>
+	</properties>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>de.dfki.cos.basys.aas.registry.rest.zookeeper</artifactId>
+
+	<name>BaSys 4.2 AAS Registry JAX-RS REST service</name>
+
+	<packaging>war</packaging>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>de.dfki.cos.basys.aas</groupId>
+			<artifactId>de.dfki.cos.basys.aas.registry.rest.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<version>${curator.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-common</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>basys-aas-registry</finalName>
+
+		<plugins>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
+			<!-- https://www.eclipse.org/jetty/documentation/9.4.x/jetty-maven-plugin.html -->
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.22.v20191022</version>
+				<configuration>
+				    <!-- https://stackoverflow.com/questions/25644036/how-to-set-server-port-with-org-eclipse-jettyjetty-maven-plugin -->
+					<httpConnector>
+						<!--host>localhost</host -->
+						<port>4999</port>
+					</httpConnector>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

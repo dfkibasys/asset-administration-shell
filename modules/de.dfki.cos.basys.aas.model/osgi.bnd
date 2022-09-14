@@ -1,6 +1,0 @@
-#-----------------------------------------------------------------
-# Use this file to add customized Bnd instructions for the bundle
-#-----------------------------------------------------------------
-
-Bundle-SymbolicName: ${bundle.symbolicName};singleton:=true
-#Require-Bundle: org.eclipse.core.runtime;resolution:=optional, org.eclipse.emf.ecore;visibility:=reexport

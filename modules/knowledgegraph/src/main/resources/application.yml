@@ -1,0 +1,42 @@
+debug: false
+#server:
+#  port: 8082
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,metrics"
+spring:
+  cloud:
+    function:
+      definition: aasRegistryUpdates
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKER_ENDPOINT}
+      bindings:
+        aasRegistryUpdates-in-0:
+          destination: aas-registry
+          content-type: application/json
+          binder: kafka-json
+      binders:
+        kafka-json:
+          type: kafka
+  data:
+    neo4j:
+      username: neo4j
+      password: demo
+      #password: secret
+  neo4j:
+    uri: ${NEO4J_ENDPOINT}
+    #uri: neo4j://lns-90200.sb.dfki.de:7687
+    #uri: bolt://localhost:7687
+
+basys:
+  aasRegistry:
+    type: dotaas
+    service:
+      connectionString: ${AAS_REGISTRY_ENDPOINT}
+  #semanticIds:
+  #  ccinstanceSubmodel: https://wiki.eclipse.org/BaSyx_/_Submodels#Control_Component_Instance
+

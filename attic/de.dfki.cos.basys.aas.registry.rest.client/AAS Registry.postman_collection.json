@@ -1,0 +1,295 @@
+{
+	"info": {
+		"_postman_id": "274e3187-fa2c-49c7-ae9e-c38c59a4b75f",
+		"name": "AAS Registry",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Registry",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{hostname}}:{{port}}{{apiVersion}}/registry",
+					"protocol": "http",
+					"host": [
+						"{{hostname}}"
+					],
+					"port": "{{port}}{{apiVersion}}",
+					"path": [
+						"registry"
+					]
+				},
+				"description": "Get Registry"
+			},
+			"response": []
+		},
+		{
+			"name": "Register AAS",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"idShort\": \"{{aasId}}\",\n    \"identification\": {\n        \"idType\": \"custom\",\n        \"id\": \"{{aasId}}Long\"\n    },\n    \"endpoints\": [\n        {\n            \"type\": \"http\",\n            \"address\": \"http://localhost\"\n        }\n    ],\n    \"submodels\": [\n        {\n            \"idShort\": \"{{submodelId}}\",\n            \"identification\": {\n                \"idType\": \"custom\",\n                \"id\": \"{{submodelId}}Long\"\n            },\n            \"endpoints\": [\n                {\n                    \"type\": \"http\",\n                    \"address\": \"http://localhost/sm\"\n                }\n            ]\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://{{hostname}}:{{port}}{{apiVersion}}/registry",
+					"protocol": "http",
+					"host": [
+						"{{hostname}}"
+					],
+					"port": "{{port}}{{apiVersion}}",
+					"path": [
+						"registry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Submodel",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7b475ba0-d2fd-49e3-a4b2-9cbb97321bd0",
+						"exec": [
+							"var uuid = require(\"uuid\");\r",
+							"var submodelUUID = uuid.v4();\r",
+							"pm.environment.set(\"submodelUUID\", submodelUUID);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"idShort\": \"{{submodelUUID}}\",\n    \"identification\": {\n        \"idType\": \"custom\",\n        \"id\": \"{{submodelUUID}}-Long\"\n    },\n    \"endpoints\": [\n        {\n            \"type\": \"http\",\n            \"address\": \"http://localhost/sm\"\n        }\n    ]\n}\n"
+				},
+				"url": {
+					"raw": "http://{{hostname}}:{{port}}{{apiVersion}}/registry/{{aasId}}/submodels",
+					"protocol": "http",
+					"host": [
+						"{{hostname}}"
+					],
+					"port": "{{port}}{{apiVersion}}",
+					"path": [
+						"registry",
+						"{{aasId}}",
+						"submodels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get AAS",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{hostname}}:{{port}}{{apiVersion}}/registry/myaas",
+					"protocol": "http",
+					"host": [
+						"{{hostname}}"
+					],
+					"port": "{{port}}{{apiVersion}}",
+					"path": [
+						"registry",
+						"myaas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Submodels",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{hostname}}:{{port}}{{apiVersion}}/registry/myaas",
+					"protocol": "http",
+					"host": [
+						"{{hostname}}"
+					],
+					"port": "{{port}}{{apiVersion}}",
+					"path": [
+						"registry",
+						"myaas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete AAS",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{hostname}}:{{port}}{{apiVersion}}/registry/{{aasId}}",
+					"protocol": "http",
+					"host": [
+						"{{hostname}}"
+					],
+					"port": "{{port}}{{apiVersion}}",
+					"path": [
+						"registry",
+						"{{aasId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Submodel",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{hostname}}:{{port}}{{apiVersion}}/registry/{{aasId}}/submodels/{{submodelId}}",
+					"protocol": "http",
+					"host": [
+						"{{hostname}}"
+					],
+					"port": "{{port}}{{apiVersion}}",
+					"path": [
+						"registry",
+						"{{aasId}}",
+						"submodels",
+						"{{submodelId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f9f6d048-bcc3-4fed-8179-93419a6fbb41",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ad3ca583-71f6-4464-87a1-9be2d5247036",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "facde6e6-4371-4983-a3e4-eb0c231386c1",
+			"key": "hostname",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"id": "0a6d67ab-f8ad-461f-bba1-fa7cbea14fe4",
+			"key": "port",
+			"value": "8080",
+			"type": "string"
+		},
+		{
+			"id": "af0ae3cf-2f90-4a2c-b91f-e3b2cb15f4d1",
+			"key": "apiVersion",
+			"value": "/api/v1",
+			"type": "string"
+		},
+		{
+			"id": "eafa06cf-4bab-4ab0-9540-36bbcad85cff",
+			"key": "aasId",
+			"value": "exampleAasId",
+			"type": "string"
+		},
+		{
+			"id": "e0f1846d-bd42-4a86-9fe0-74453216efe5",
+			"key": "submodelId",
+			"value": "exampleSubmodelId",
+			"type": "string"
+		}
+	]
+}
