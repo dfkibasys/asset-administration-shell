@@ -23,9 +23,8 @@
 	</modules>
 
 	<scm>
-		<url>https://github.com/BaSys-PC1</url>
+		<url>https://github.com/dfkibasys</url>
 		<connection>${gitUrl}/asset-administation-shell.git</connection>
 		<developerConnection>${gitUrl}/asset-administation-shell.git</developerConnection>
-		<tag>v0.2.5</tag>
 	</scm>
 </project>
