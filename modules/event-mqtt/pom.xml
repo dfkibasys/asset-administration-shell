@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.dfki.cos.basys.pom</groupId>
 		<artifactId>starter-parent</artifactId>
-		<version>0.4.2</version>
+		<version>0.4.3-SNAPSHOT</version>
 		<relativePath />
 	</parent>
 
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>de.dfki.cos.basys.common</groupId>
 			<artifactId>component</artifactId>
-			<version>0.4.2</version>
+			<version>0.4.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>de.dfki.cos.basys.aas</groupId>
@@ -41,9 +41,4 @@
 			<version>${paho.version}</version>
 		</dependency>	
 	</dependencies>
-
-
-  <scm>
-    <tag>v0.4.2</tag>
-  </scm>
 </project>
