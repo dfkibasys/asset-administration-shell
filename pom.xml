@@ -18,8 +18,10 @@
 	<modules>
 		<module>modules/event</module>
 		<module>modules/event-mqtt</module>
+		<!--
 		<module>modules/knowledgegraph</module>
 		<module>modules/server</module>
+		-->
 	</modules>
 
 	<scm>

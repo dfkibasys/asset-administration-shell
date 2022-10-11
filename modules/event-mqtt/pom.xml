@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>de.dfki.cos.basys.common</groupId>
 			<artifactId>component</artifactId>
-			<version>${basys-common.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.dfki.cos.basys.aas</groupId>
@@ -35,7 +35,7 @@
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
-		    <version>${jackson.version}</version>
+		    <version>${jackson-bom.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.eclipse.paho</groupId>
