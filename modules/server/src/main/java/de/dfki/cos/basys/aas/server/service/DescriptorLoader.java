@@ -6,7 +6,7 @@ import java.util.Base64;
 import org.eclipse.basyx.aas.aggregator.restapi.AASAggregatorProvider;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.AASDescriptor;
 import org.eclipse.basyx.aas.metamodel.map.descriptor.SubmodelDescriptor;
-import org.eclipse.basyx.support.bundle.AASBundle;
+import org.eclipse.basyx.aas.bundle.AASBundle;
 import org.eclipse.basyx.vab.modelprovider.VABPathTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

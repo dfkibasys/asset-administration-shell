@@ -23,7 +23,7 @@ basys:
         delay: 2000
   aas-server:
     backend: InMemory
-    source: C:///Work/basys/docker/aas/data/aas-server
+    source: C:///Repos/basys/docker/data/aasx
     #source: C:///Work/basys/docker/aas/data/aas-server/mrklab.aasx
     file-suffixes: .aasx
     recursive: true
