@@ -1,8 +1,7 @@
 package de.dfki.cos.basys.aas.knowledgegraph.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.eclipse.basyx.aas.metamodel.api.parts.asset.IAsset;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -16,9 +15,10 @@ import java.util.Set;
 @Node("Asset")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AssetNode extends IdentifiableNode {
 
-	public AssetNode(String id, String idShort) {
-		super(id, idShort);
+	public AssetNode(IAsset asset) {
+		super(asset);
 	}
 }

@@ -25,10 +25,12 @@ import org.eclipse.basyx.submodel.metamodel.api.submodelelement.operation.IOpera
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.operation.IOperationVariable;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.relationship.IRelationshipElement;
 import org.eclipse.basyx.submodel.metamodel.connected.ConnectedSubmodel;
+import org.eclipse.basyx.submodel.metamodel.map.Submodel;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.vab.factory.java.ModelProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.neo4j.core.Neo4jOperations;
 import org.springframework.data.neo4j.core.Neo4jTemplate;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +53,9 @@ public class KnowledgeGraphManager {
 
     @Autowired
     ReferableRepository referableRepository;
+
+    @Autowired
+    ReferenceRepository referenceRepository;
 
     @Autowired
     IdentifiableRepository identifiableRepository;
@@ -130,15 +135,19 @@ public class KnowledgeGraphManager {
         String idShort = aasDescriptor.getIdShort();
         String endpoint = aasDescriptor.getEndpoints().get(0).getProtocolInformation().getEndpointAddress();
 
-        AssetAdministrationShellNode aasNode = new AssetAdministrationShellNode(id, idShort);
+        IAssetAdministrationShell aas = null;
 
         try {
-            IAssetAdministrationShell aas = aasManager.retrieveAAS(new Identifier(IdentifierType.CUSTOM, aasDescriptor.getIdentification()));
-            AssetNode assetNode = traverseAsset(aas.getAsset());
-            aasNode.setAsset(assetNode);
+            aas = aasManager.retrieveAAS(new Identifier(IdentifierType.CUSTOM, aasDescriptor.getIdentification()));
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
+        AssetAdministrationShellNode aasNode = new AssetAdministrationShellNode(aas);
+        AssetNode assetNode = traverseAsset(aas.getAsset());
+        aasNode.setAsset(assetNode);
+
 
         aasDescriptor.getSubmodelDescriptors().stream().forEach(smDescriptor -> {
             SubmodelNode submodelNode = traverseSubmodel(smDescriptor);
@@ -150,34 +159,23 @@ public class KnowledgeGraphManager {
     }
 
     private AssetNode traverseAsset(IAsset asset) {
-        AssetNode assetNode = new AssetNode(asset.getIdentification().getId(), asset.getIdShort());
+        AssetNode assetNode = new AssetNode(asset);
         // TODO: map more properties
         return neo4jTemplate.save(assetNode);
     }
 
     private SubmodelNode traverseSubmodel(SubmodelDescriptor smDescriptor) {
         log.info("traverseSubmodel {}", smDescriptor.getIdShort());
-        String id = smDescriptor.getIdentification();
-        String idShort = smDescriptor.getIdShort();
-        String semanticId = null;
+
         String endpoint = smDescriptor.getEndpoints().get(0).getProtocolInformation().getEndpointAddress();
+        ConnectedSubmodel submodel = new ConnectedSubmodel(modelProxyFactory.createProxy(endpoint));
+        SubmodelNode node = new SubmodelNode(submodel.getLocalCopy());
 
-        if (smDescriptor.getSemanticId() != null) {
-            ModelReference modelReference = ((ModelReference) smDescriptor.getSemanticId());
-            if (modelReference.getKeys() != null && !modelReference.getKeys().isEmpty()) {
-                semanticId = modelReference.getKeys().get(0).getValue();
-            }
-        }
-
-        SubmodelNode node = new SubmodelNode(id, idShort, semanticId);
-
-        ISubmodel submodel = new ConnectedSubmodel(modelProxyFactory.createProxy(endpoint));
-
-        submodel.getSubmodelElements().values().stream().forEach(se -> {
+        submodel.getLocalCopy().getSubmodelElements().values().stream().forEach(se -> {
             if (se == null) {
                 log.warn("submodel element is null");
             } else {
-                SubmodelElementNode submodelElementNode = traverseSubmodelElement(se, endpoint + "/submodelElements");
+                SubmodelElementNode submodelElementNode = traverseSubmodelElement(se.getLocalCopy(), endpoint + "/submodelElements");
                 node.getSubmodelElements().add(submodelElementNode);
                 node.setSourceUrl(endpoint);
             }
@@ -196,31 +194,31 @@ public class KnowledgeGraphManager {
 
         switch (type) {
             case "Property":
-                node = handleProperty((IProperty) submodelElement);
+                node = handleProperty((IProperty) submodelElement.getLocalCopy());
                 break;
             case "File":
-                node = handleFile((IFile) submodelElement);
+                node = handleFile((IFile) submodelElement.getLocalCopy());
                 break;
             case "Blob":
-                node = handleBlob((IBlob) submodelElement);
+                node = handleBlob((IBlob) submodelElement.getLocalCopy());
                 break;
             case "Operation":
-                node = traverseOperation((IOperation) submodelElement);
+                node = traverseOperation((IOperation) submodelElement.getLocalCopy());
                 break;
             case "BasicEvent":
-                node = handleEvent((IEvent) submodelElement);
+                node = handleEvent((IEvent) submodelElement.getLocalCopy());
                 break;
             case "ReferenceElement":
-                node = handleReference((IReferenceElement) submodelElement);
+                node = handleReference((IReferenceElement) submodelElement.getLocalCopy());
                 break;
             case "RelationshipElement":
-                node = handleRelationship((IRelationshipElement) submodelElement);
+                node = handleRelationship((IRelationshipElement) submodelElement.getLocalCopy());
                 break;
             case "SubmodelElementCollection":
-                node = traverseSubmodelElementCollection((ISubmodelElementCollection) submodelElement, sourceUrl);
+                node = traverseSubmodelElementCollection((ISubmodelElementCollection) submodelElement.getLocalCopy(), sourceUrl);
                 break;
             default:
-                node = handleUnknownElement(submodelElement);
+                node = handleUnknownElement(submodelElement.getLocalCopy());
         }
 
         node.setSourceUrl(sourceUrl);
@@ -230,13 +228,8 @@ public class KnowledgeGraphManager {
 
 	private SubmodelElementCollectionNode traverseSubmodelElementCollection(ISubmodelElementCollection submodelElement, String sourceUrl) {
         log.info("traverseSubmodelElementCollection {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
 
-        var node = new SubmodelElementCollectionNode(idShort, semanticId);
+        var node = new SubmodelElementCollectionNode(submodelElement);
         submodelElement.getSubmodelElements().values().stream().forEach(se -> {
             if (se == null) {
                 log.warn("submodel element is null");
@@ -251,56 +244,26 @@ public class KnowledgeGraphManager {
 
     private PropertyNode handleProperty(IProperty submodelElement) {
         log.info("handleProperty {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
-
-        var node = new PropertyNode(idShort, semanticId);
-        node.setValueType(submodelElement.getValueType());
-        node.setValue(submodelElement.getValue());
-
+        var node = new PropertyNode(submodelElement);
         return node;
     }
 
     private FileNode handleFile(IFile submodelElement) {
         log.info("handleFile {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
-
-        var node = new FileNode(idShort, semanticId);
-        node.setMimeType(submodelElement.getMimeType());
-        node.setValue(submodelElement.getValue());
-
+        var node = new FileNode(submodelElement);
         return node;
     }
 
     private BlobNode handleBlob(IBlob submodelElement) {
         log.info("handleBlob {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
-
-        var node = new BlobNode(idShort, semanticId);
-
+        var node = new BlobNode(submodelElement);
         return node;
     }
 
     private OperationNode traverseOperation(IOperation submodelElement) {
         log.info("handleOperation {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
-        
-        var node = new OperationNode(idShort, semanticId);
+
+        var node = new OperationNode(submodelElement);
         
         submodelElement.getInputVariables().stream().forEach(iv -> {
             if (iv == null) {
@@ -332,75 +295,40 @@ public class KnowledgeGraphManager {
         return node;
     }
     
-    private OperationVariableNode handleOperationVariable(IOperationVariable iOperationVariable) {
+    private OperationVariableNode handleOperationVariable(IOperationVariable operationVariable) {
     	log.info("handleOperationVariable");
-    	
-    	var node = new OperationVariableNode(iOperationVariable.getValue());
-    	
+    	var node = new OperationVariableNode(operationVariable);
     	return neo4jTemplate.save(node);
    	}
 
     private EventNode handleEvent(IEvent submodelElement) {
         log.info("handleEvent {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
-
-        var node = new EventNode(idShort, semanticId);
-
+        var node = new EventNode(submodelElement);
         return node;
     }
 
     private ReferenceNode handleReference(IReferenceElement submodelElement) {
         log.info("handleReference {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
-
-        var node = new ReferenceNode(idShort, semanticId);
-
-        if (submodelElement.getValue() != null && submodelElement.getValue().getKeys().size() > 0) {
-            var pathToNode = submodelElement.getValue().getKeys();
-            for (var key : pathToNode) {
-                node.getPathToNode().add(key.getValue());
-            }
-            log.debug(node.getPathToNode().toString());
-        }
-
+        var node = new ReferenceNode(submodelElement);
         return node;
     }
 
     private RelationshipNode handleRelationship(IRelationshipElement submodelElement) {
         log.info("handleRelationship {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
-
-        var node = new RelationshipNode(idShort, semanticId);
+        var node = new RelationshipNode(submodelElement);
         return node;
     }
 
     private UnknownSubmodelElementNode handleUnknownElement(ISubmodelElement submodelElement) {
         log.info("handleUnknownElement {}", submodelElement.getIdShort());
-        String idShort = submodelElement.getIdShort();
-        String semanticId = null;
-        if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
-            semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-        }
-
-        var node = new UnknownSubmodelElementNode(idShort, semanticId);
-
+        var node = new UnknownSubmodelElementNode(submodelElement);
         return node;
     }
 
     private void resolveReferences() {
+        log.info("resolveReferences");
         List<ReferenceNode> referenceNodes = neo4jTemplate.findAll(ReferenceNode.class);
+
         for (ReferenceNode referenceNode : referenceNodes) {
             if (referenceNode.getTarget() == null) {
                 List<String> pathToNode = referenceNode.getPathToNode();
@@ -444,6 +372,7 @@ public class KnowledgeGraphManager {
                 log.debug("target already set");
             }
         }
+        log.info("resolveReferences - finished");
     }
 
 }
