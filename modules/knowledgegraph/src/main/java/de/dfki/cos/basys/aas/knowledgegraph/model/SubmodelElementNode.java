@@ -1,17 +1,11 @@
 package de.dfki.cos.basys.aas.knowledgegraph.model;
 
-import lombok.*;
-import org.eclipse.basyx.submodel.metamodel.api.qualifier.IReferable;
-import org.eclipse.basyx.submodel.metamodel.api.reference.IReference;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.ISubmodelElement;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
-import org.springframework.data.neo4j.core.schema.Relationship.Direction;
-
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Node("SubmodelElement")

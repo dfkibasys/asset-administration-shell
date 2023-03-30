@@ -2,14 +2,11 @@ package de.dfki.cos.basys.aas.knowledgegraph.util;
 
 import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.value.DateTimeValue;
-import org.neo4j.driver.internal.value.LocalDateTimeValue;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 import java.util.HashSet;

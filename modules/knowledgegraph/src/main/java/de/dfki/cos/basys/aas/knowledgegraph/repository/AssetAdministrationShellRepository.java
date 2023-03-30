@@ -1,13 +1,12 @@
 package de.dfki.cos.basys.aas.knowledgegraph.repository;
 
-import java.util.List;
-import java.util.Optional;
-
 import de.dfki.cos.basys.aas.knowledgegraph.model.AssetAdministrationShellNode;
-import de.dfki.cos.basys.aas.knowledgegraph.model.ReferableNode;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface AssetAdministrationShellRepository extends Neo4jRepository<AssetAdministrationShellNode, Long> {
 

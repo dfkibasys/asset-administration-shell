@@ -4,14 +4,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.operation.IOperation;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Node("Operation")
 @Getter

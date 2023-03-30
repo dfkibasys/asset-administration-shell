@@ -1,9 +1,10 @@
 package de.dfki.cos.basys.aas.knowledgegraph.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.IFile;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
 @Node("File")
