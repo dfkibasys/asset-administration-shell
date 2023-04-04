@@ -22,9 +22,15 @@ public class PropertyNode extends SubmodelElementNode {
 		super(property);
 		setValueType(property.getValueType());
 
+
 		if (property.getValue() != null) {
 			try {
-				setValue(property.getValue());
+				if (getValueType() == ValueType.Float)		{
+					var val = property.getValue();
+					setValue(Double.valueOf((float)val));
+				} else {
+					setValue(property.getValue());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
