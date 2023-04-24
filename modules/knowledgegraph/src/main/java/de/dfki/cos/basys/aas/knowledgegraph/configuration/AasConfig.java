@@ -43,10 +43,10 @@ public class AasConfig {
     }
 
     @Bean
-    public IConnectorFactory connectorFactory() { return new HTTPConnectorFactory(); };
+    public IConnectorFactory connectorFactory() { return new HTTPConnectorFactory(); }
 
     @Bean
-    public ModelProxyFactory proxyFactory(IConnectorFactory connectorFactory) { return  new ModelProxyFactory(connectorFactory); };
+    public ModelProxyFactory proxyFactory(IConnectorFactory connectorFactory) { return  new ModelProxyFactory(connectorFactory); }
 
     @Bean
     public IAssetAdministrationShellManager aasManager(IConnectorFactory connectorFactory) {

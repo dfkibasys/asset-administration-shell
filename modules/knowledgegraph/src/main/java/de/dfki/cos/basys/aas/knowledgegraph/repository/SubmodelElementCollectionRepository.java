@@ -1,7 +1,6 @@
 package de.dfki.cos.basys.aas.knowledgegraph.repository;
 
 import de.dfki.cos.basys.aas.knowledgegraph.model.SubmodelElementCollectionNode;
-import de.dfki.cos.basys.aas.knowledgegraph.model.SubmodelNode;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 import java.util.List;
