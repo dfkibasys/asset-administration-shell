@@ -24,8 +24,8 @@ spring:
           type: kafka
   data:
     neo4j:
-      username: neo4j
-      password: demo
+      username: ${NEO4J_USERNAME}
+      password: ${NEO4J_PASSWORD}
       #password: secret
   neo4j:
     uri: ${NEO4J_ENDPOINT}
