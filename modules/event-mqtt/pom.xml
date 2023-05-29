@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.dfki.cos.basys.pom</groupId>
 		<artifactId>starter-parent</artifactId>
-		<version>0.4.3-SNAPSHOT</version>
+		<version>0.5.0-SNAPSHOT</version>
 		<relativePath />
 	</parent>
 
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>de.dfki.cos.basys.common</groupId>
 			<artifactId>component</artifactId>
-			<version>0.4.3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.dfki.cos.basys.aas</groupId>
@@ -33,12 +33,10 @@
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
-		    <version>${jackson-bom.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.eclipse.paho</groupId>
 			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-			<version>${paho.version}</version>
 		</dependency>	
 	</dependencies>
 </project>

@@ -2,7 +2,7 @@ package de.dfki.cos.basys.aas.server.configuration;
 
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.registration.proxy.AASRegistryProxy;
-import org.eclipse.basyx.aas.registry.compatibility.DotAASRegistryProxy;
+import de.dfki.cos.basys.aas.registry.compatibility.DotAASRegistryProxy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

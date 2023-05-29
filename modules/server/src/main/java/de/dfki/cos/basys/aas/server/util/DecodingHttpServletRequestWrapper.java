@@ -4,7 +4,6 @@ import com.google.common.base.Charsets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.regex.Matcher;

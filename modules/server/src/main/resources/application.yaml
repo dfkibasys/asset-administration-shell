@@ -17,7 +17,7 @@ basys:
   aas-registry:
     type: dotaas
     service:
-      connectionString: http://aasregistry.dockerhost
+      connectionString: http://aasregistry.dockerhost/registry
       retry:
         maxAttemps: 15
         delay: 2000
