@@ -4,29 +4,28 @@ include:
       ref: main
 
 variables:
-  DOCKER_HOST: "tcp://docker:2375" 
-  DOCKER_TLS_CERTDIR: ""
-  MAVEN_DEPLOY_ENABLED: "true"
   MVN_FORBID_SNAPSHOT_DEPENDENCIES_DISABLED : "true"
   MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED: "true"
+  MAVEN_DEPLOY_ENABLED: "true"
 
-
-docker-publish:
+.docker-publish-module:
   extends: .mvn-base
   stage: publish
   image: dfkibasys/docker-temurin11jdk:20.10.17
   variables:
+    DOCKER_HOST: "tcp://docker:2375" 
+    DOCKER_TLS_CERTDIR: ""
     DOCKER_DRIVER: overlay2
   services:
      - name: docker:20.10.17-dind
-     # explicitly disable tls to avoid docker startup interruption
+       # explicitly disable tls to avoid docker startup interruption
        command: ["--tls=false"]
   before_script:
     - docker info
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS deploy -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true
+    - ./mvnw $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true -Dmaven.compile.skip=true -Dmaven.test.skip=true -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/$MODULE_NAME
   rules:
     # on tags: never
     - if: $CI_COMMIT_TAG
@@ -36,3 +35,16 @@ docker-publish:
       when: never
     # else: if $MAVEN_DEPLOY_ENABLED is set
     - if: '$MAVEN_DEPLOY_ENABLED == "true"'
+      changes:
+        - modules/$MODULE_NAME/**/*
+
+docker-publish-aas-server:
+  extends: .docker-publish-module
+  variables:
+    MODULE_NAME: server
+
+docker-publish-knowledgegraph-service:
+  extends: .docker-publish-module
+  variables:
+    MODULE_NAME: knowledgegraph
+
