@@ -37,6 +37,8 @@ basys:
     type: dotaas
     service:
       connectionString: ${AAS_REGISTRY_ENDPOINT}
+  knowledgeGraph:
+    resolveReferences: false
   #semanticIds:
   #  ccinstanceSubmodel: https://wiki.eclipse.org/BaSyx_/_Submodels#Control_Component_Instance
 

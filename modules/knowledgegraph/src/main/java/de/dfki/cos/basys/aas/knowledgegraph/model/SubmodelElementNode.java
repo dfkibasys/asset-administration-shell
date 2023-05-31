@@ -29,14 +29,17 @@ public abstract class SubmodelElementNode extends ReferableNode {
 		super(submodelElement);
 		if (submodelElement.getSemanticId() != null && submodelElement.getSemanticId().getKeys().size() > 0) {
 			this.semanticId = submodelElement.getSemanticId().getKeys().get(0).getValue();
-			this.getDynamicLabels().add(getLabel(getSemanticId()));
+			String label = getLabel(getSemanticId());
+			if (label != null) {
+				this.getDynamicLabels().add(label);
+			}
 		} else {
 			this.semanticId = "null";
 		}
 	}
 
 	private String getLabel(String semanticId) {
-		String patternString =  "(?<protocol>wss?):\\/\\/(?<host>.*):(?<port>\\d*)";
+		//String patternString =  "(?<protocol>wss?):\\/\\/(?<host>.*):(?<port>\\d*)";
 		Pattern pattern = Pattern.compile(".*idta\\/(?<label>.*)\\/\\d\\/\\d");
 		Matcher matcher = pattern.matcher(semanticId);
 
@@ -45,7 +48,7 @@ public abstract class SubmodelElementNode extends ReferableNode {
 			String g = matcher.group("label");
 			return g.replaceAll("/", "_");
 		} else {
-			return "UNKNOWN";
+			return null;
 		}
 	}
 }

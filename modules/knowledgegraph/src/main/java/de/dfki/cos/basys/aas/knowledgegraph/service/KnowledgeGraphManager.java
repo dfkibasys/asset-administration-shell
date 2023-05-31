@@ -2,31 +2,32 @@ package de.dfki.cos.basys.aas.knowledgegraph.service;
 
 import de.dfki.cos.basys.aas.knowledgegraph.model.*;
 import de.dfki.cos.basys.aas.knowledgegraph.repository.*;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
+import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
+import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.basyx.aas.manager.api.IAssetAdministrationShellManager;
 import org.eclipse.basyx.aas.metamodel.api.IAssetAdministrationShell;
 import org.eclipse.basyx.aas.metamodel.api.parts.asset.IAsset;
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
-import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
-import de.dfki.cos.basys.aas.registry.events.RegistryEvent;
-import de.dfki.cos.basys.aas.registry.model.AssetAdministrationShellDescriptor;
-import de.dfki.cos.basys.aas.registry.model.SubmodelDescriptor;
 import org.eclipse.basyx.submodel.metamodel.api.identifier.IdentifierType;
+import org.eclipse.basyx.submodel.metamodel.api.submodelelement.ICapability;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.ISubmodelElement;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.ISubmodelElementCollection;
-import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.IBlob;
-import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.IFile;
-import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.IProperty;
-import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.IReferenceElement;
+import org.eclipse.basyx.submodel.metamodel.api.submodelelement.dataelement.*;
+import org.eclipse.basyx.submodel.metamodel.api.submodelelement.entity.IEntity;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.event.IEvent;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.operation.IOperation;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.operation.IOperationVariable;
+import org.eclipse.basyx.submodel.metamodel.api.submodelelement.relationship.IAnnotatedRelationshipElement;
 import org.eclipse.basyx.submodel.metamodel.api.submodelelement.relationship.IRelationshipElement;
 import org.eclipse.basyx.submodel.metamodel.connected.ConnectedSubmodel;
 import org.eclipse.basyx.submodel.metamodel.map.identifier.Identifier;
 import org.eclipse.basyx.vab.factory.java.ModelProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.neo4j.core.Neo4jTemplate;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,9 @@ import java.util.function.Consumer;
 @Slf4j
 @RequiredArgsConstructor
 public class KnowledgeGraphManager {
+
+    @Value("${basys.knowledgeGraph.resolveReferences:false}")
+    private boolean resolveReferences;
 
     @Autowired
     Neo4jTemplate neo4jTemplate;
@@ -124,8 +128,8 @@ public class KnowledgeGraphManager {
 
     private AssetAdministrationShellNode traverseAAS(AssetAdministrationShellDescriptor aasDescriptor) {
         log.info("traverseAAS {}", aasDescriptor.getIdShort());
-        String id = aasDescriptor.getIdentification();
-        String idShort = aasDescriptor.getIdShort();
+//        String id = aasDescriptor.getIdentification();
+//        String idShort = aasDescriptor.getIdShort();
         String endpoint = aasDescriptor.getEndpoints().get(0).getProtocolInformation().getEndpointAddress();
 
         IAssetAdministrationShell aas = null;
@@ -140,12 +144,11 @@ public class KnowledgeGraphManager {
         AssetAdministrationShellNode aasNode = new AssetAdministrationShellNode(aas);
         AssetNode assetNode = traverseAsset(aas.getAsset());
         aasNode.setAsset(assetNode);
-
+        aasNode.setSourceUrl(endpoint);
 
         aasDescriptor.getSubmodelDescriptors().stream().forEach(smDescriptor -> {
             SubmodelNode submodelNode = traverseSubmodel(smDescriptor);
             aasNode.getSubmodels().add(submodelNode);
-            aasNode.setSourceUrl(endpoint);
         });
 
         return neo4jTemplate.save(aasNode);
@@ -154,7 +157,8 @@ public class KnowledgeGraphManager {
     private AssetNode traverseAsset(IAsset asset) {
         AssetNode assetNode = new AssetNode(asset);
         // TODO: map more properties
-        return neo4jTemplate.save(assetNode);
+        //return neo4jTemplate.save(assetNode);
+        return assetNode;
     }
 
     private SubmodelNode traverseSubmodel(SubmodelDescriptor smDescriptor) {
@@ -189,6 +193,9 @@ public class KnowledgeGraphManager {
             case "Property":
                 node = handleProperty((IProperty) submodelElement.getLocalCopy());
                 break;
+            case "MultiLanguageProperty":
+                node = handleMultiLanguageProperty((IMultiLanguageProperty) submodelElement.getLocalCopy());
+                break;
             case "File":
                 node = handleFile((IFile) submodelElement.getLocalCopy());
                 break;
@@ -207,6 +214,15 @@ public class KnowledgeGraphManager {
             case "RelationshipElement":
                 node = handleRelationship((IRelationshipElement) submodelElement.getLocalCopy());
                 break;
+            case "AnnotatedRelationshipElement":
+                node = handleAnnotatedRelationship((IAnnotatedRelationshipElement) submodelElement.getLocalCopy());
+                break;
+            case "Entity":
+                node = handleEntity((IEntity) submodelElement.getLocalCopy());
+                break;
+            case "Capability":
+                node = handleCapability((ICapability) submodelElement.getLocalCopy());
+                break;
             case "SubmodelElementCollection":
                 node = traverseSubmodelElementCollection((ISubmodelElementCollection) submodelElement.getLocalCopy(), sourceUrl);
                 break;
@@ -215,7 +231,8 @@ public class KnowledgeGraphManager {
         }
 
         node.setSourceUrl(sourceUrl);
-        return neo4jTemplate.save(node);
+        return node;
+        //return neo4jTemplate.save(node);
     }
 
 
@@ -238,6 +255,12 @@ public class KnowledgeGraphManager {
     private PropertyNode handleProperty(IProperty submodelElement) {
         log.info("handleProperty {}", submodelElement.getIdShort());
         var node = new PropertyNode(submodelElement);
+        return node;
+    }
+
+    private MultiLanguagePropertyNode handleMultiLanguageProperty(IMultiLanguageProperty submodelElement) {
+        log.info("handleMultiLanguageProperty {}", submodelElement.getIdShort());
+        var node = new MultiLanguagePropertyNode(submodelElement);
         return node;
     }
 
@@ -312,6 +335,24 @@ public class KnowledgeGraphManager {
         return node;
     }
 
+    private RelationshipNode handleAnnotatedRelationship(IAnnotatedRelationshipElement submodelElement) {
+        log.info("handleAnnotatedRelationship {}", submodelElement.getIdShort());
+        var node = new AnnotatedRelationshipNode(submodelElement);
+        return node;
+    }
+
+    private EntityNode handleEntity(IEntity submodelElement) {
+        log.info("handleEntity {}", submodelElement.getIdShort());
+        var node = new EntityNode(submodelElement);
+        return node;
+    }
+
+    private CapabilityNode handleCapability(ICapability submodelElement) {
+        log.info("handleCapability {}", submodelElement.getIdShort());
+        var node = new CapabilityNode(submodelElement);
+        return node;
+    }
+
     private UnknownSubmodelElementNode handleUnknownElement(ISubmodelElement submodelElement) {
         log.info("handleUnknownElement {}", submodelElement.getIdShort());
         var node = new UnknownSubmodelElementNode(submodelElement);
@@ -320,14 +361,30 @@ public class KnowledgeGraphManager {
 
     private void resolveReferences() {
         log.info("resolveReferences");
-        List<ReferenceNode> referenceNodes = neo4jTemplate.findAll(ReferenceNode.class);
 
+        if (!resolveReferences)
+        {
+            log.info("skip");
+            return;
+        }
+
+        //List<ReferenceNode> referenceNodes = neo4jTemplate.findAll(ReferenceNode.class);
+        List<ReferenceNode> referenceNodes = referenceRepository.findUnresolvedReferences();
+        log.info("found {} unresolved references", referenceNodes.size());
         for (ReferenceNode referenceNode : referenceNodes) {
-            if (referenceNode.getTarget() == null) {
+            //if (referenceNode.getTarget() == null) {
+            log.debug("ReferenceNode IdShort {}, NodeId {}", referenceNode.getIdShort(), referenceNode.getNeo4jId());
                 List<String> pathToNode = referenceNode.getPathToNode();
+
+                if (pathToNode.isEmpty()) {
+                    log.debug("pathToNode is empty, skip");
+                    continue;
+                }
+
                 // Assumption: first element in path list is an IdentifiableNode
                 var identifiableOpt = identifiableRepository.findById(pathToNode.get(0));
                 if (identifiableOpt.isEmpty()) {
+                    log.debug("Identifiable {} not found, skip", pathToNode.get(0));
                     continue;
                 }
 
@@ -361,9 +418,9 @@ public class KnowledgeGraphManager {
                 } else {
                     log.debug("target not found");
                 }
-            } else {
-                log.debug("target already set");
-            }
+            //} else {
+            //    log.debug("target already set");
+            //}
         }
         log.info("resolveReferences - finished");
     }
