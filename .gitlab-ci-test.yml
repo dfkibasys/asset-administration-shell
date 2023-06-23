@@ -1,0 +1,601 @@
+# =========================================================================================
+# Copyright (C) 2021 Orange & contributors
+#
+# This program is free software; you can redistribute it and/or modify it under the terms 
+# of the GNU Lesser General Public License as published by the Free Software Foundation; 
+# either version 3 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with this 
+# program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth 
+# Floor, Boston, MA  02110-1301, USA.
+# =========================================================================================
+# default workflow rules: Merge Request pipelines
+workflow:
+  rules:
+    # prevent branch pipeline when an MR is open (prefer MR pipeline)
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - when: always
+
+# test job prototype: implement adaptive pipeline rules
+.test-policy:
+  rules:
+    # on tag: auto & failing
+    - if: $CI_COMMIT_TAG
+    # on ADAPTIVE_PIPELINE_DISABLED: auto & failing
+    - if: '$ADAPTIVE_PIPELINE_DISABLED == "true"'
+    # on production or integration branch(es): auto & failing
+    - if: '$CI_COMMIT_REF_NAME =~ $PROD_REF || $CI_COMMIT_REF_NAME =~ $INTEG_REF'
+    # early stage (dev branch, no MR): manual & non-failing
+    - if: '$CI_MERGE_REQUEST_ID == null && $CI_OPEN_MERGE_REQUESTS == null'
+      when: manual
+      allow_failure: true
+    # Draft MR: auto & non-failing
+    - if: '$CI_MERGE_REQUEST_TITLE =~ /^Draft:.*/'
+      allow_failure: true
+    # else (Ready MR): auto & failing
+    - when: on_success
+
+variables:
+  # variabilized tracking image
+  #TBC_TRACKING_IMAGE: "$CI_REGISTRY/to-be-continuous/tools/tracking:master"
+
+  # Default Maven project root directory
+  MAVEN_PROJECT_DIR: .
+
+  # Maven image (can be overridden)
+  #MAVEN_IMAGE: "registry.hub.docker.com/library/maven:latest"
+  MAVEN_IMAGE: "registry.hub.docker.com/library/maven:3-eclipse-temurin-11"
+
+  # default production ref name (pattern)
+  PROD_REF: '/^(master|main)$/'
+  # default integration ref name (pattern)
+  INTEG_REF: '/^develop$/'
+
+  # default configuration directory
+  MAVEN_CFG_DIR: ".m2"
+  # default settings.xml file path
+  MAVEN_SETTINGS_FILE: "$MAVEN_CFG_DIR/settings.xml"
+
+  # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
+  MAVEN_OPTS: >-
+    -Dhttps.protocols=TLSv1.2
+    -Dmaven.repo.local=${MAVEN_CFG_DIR}/repository
+    -Dorg.slf4j.simpleLogger.showDateTime=true
+    -Djava.awt.headless=true
+
+  # As of Maven 3.3.0 instead of this you may define these options in `.mvn/maven.config` so the same config is used
+  # when running from the command line.
+  # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
+  MAVEN_CLI_OPTS: >-
+    --no-transfer-progress
+    --batch-mode
+    --errors
+    --fail-at-end
+    --show-version
+    -DinstallAtEnd=true
+    -DdeployAtEnd=true
+
+  # Maven build arguments
+  MAVEN_BUILD_ARGS: "org.jacoco:jacoco-maven-plugin:prepare-agent verify org.jacoco:jacoco-maven-plugin:report"
+
+  # Sonar base analysis default args
+  # see: https://docs.sonarqube.org/latest/analysis/analysis-parameters/
+  # default uses branch analysis: https://docs.sonarqube.org/latest/branches/overview/
+  SONAR_BASE_ARGS: >-
+    sonar:sonar
+    -Dsonar.links.homepage=${CI_PROJECT_URL}
+    -Dsonar.links.ci=${CI_PROJECT_URL}/-/pipelines
+    -Dsonar.links.issue=${CI_PROJECT_URL}/-/issues
+
+  # Dependency Check arguments
+  MAVEN_DEPENDENCY_CHECK_ARGS: >-
+    org.owasp:dependency-check-maven:aggregate
+    -DretireJsAnalyzerEnabled=false
+    -DassemblyAnalyzerEnabled=false
+    -Dformats=HTML,JSON,XML
+  
+  # SBOM genenration arguments
+  MAVEN_SBOM_GEN_ARGS: org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom
+
+  # Maven deploy arguments
+  MAVEN_DEPLOY_ARGS: "deploy -Dmaven.test.skip=true"
+
+  # Maven release arguments
+  MAVEN_RELEASE_ARGS: "release:prepare release:perform -Darguments=-Dmaven.test.skip=true"
+  MAVEN_RELEASE_SCM_COMMENT_PREFIX: "[ci skip][maven-release-plugin]"
+  
+  DOCKER_HOST: "tcp://docker:2375" 
+  DOCKER_TLS_CERTDIR: ""
+  
+stages:
+  - build
+  - test
+  - publish
+
+.mvn-scripts: &mvn-scripts |
+  # BEGSCRIPT
+  set -e
+
+  function log_info() {
+      echo -e "[\\e[1;94mINFO\\e[0m] $*"
+  }
+
+  function log_warn() {
+      echo -e "[\\e[1;93mWARN\\e[0m] $*"
+  }
+
+  function log_error() {
+      echo -e "[\\e[1;91mERROR\\e[0m] $*"
+  }
+
+  function output_coverage() {
+    jacoco_reports=$(find . -name "${JACOCO_CSV_REPORT:-jacoco.csv}")
+
+    if [[ -n "$jacoco_reports" ]]
+    then
+      log_info "--- \\e[32mJaCoCo report(s) found\\e[0m (\\e[33;1m${jacoco_reports}\\e[0m): output"
+      # shellcheck disable=SC2046,SC2086
+      awk -F',' '{ instructions += $4 + $5; covered += $5 } END { print covered"/"instructions " instructions covered"; print 100*covered/instructions "% covered" }' $(find . -name "${JACOCO_CSV_REPORT:-jacoco.csv}")
+    else
+      log_info "--- \\e[32mJaCoCo report(s) not found\\e[0m: skip"
+    fi
+  }
+
+  function maybe_set_version_from_git() {
+    if [[ -n "$MAVEN_RELEASE_VERSION_FROM_GIT" ]]; then
+      # compute version as timestamp of latest commit
+      cur_version="$(date -d "$(git log -n 1 --pretty=format:%ci)" "+%Y.%m.%d.%H%M%S")"
+
+      log_info "--- setting project version from latest git commit: \\e[33;1m${cur_version}\\e[0m"
+
+      # change version in pom
+      # shellcheck disable=SC2086
+      mvn versions:set $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args -DgenerateBackupPoms=false -DnewVersion="$cur_version-SNAPSHOT"
+
+      # git commit change
+      git commit -am "[ci skip] Prepare release with $cur_version version"
+    fi
+  }
+
+  function configure_scm_auth() {
+    # shellcheck disable=SC2086
+    scm_url=$(mvn $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.scm.developerConnection -q -DforceStdout | tail -n 1)
+    if [[ $scm_url == "scm:git:https"* ]]; then
+      if [[ -n "${GIT_USERNAME}" ]] && [[ -n "${GIT_PASSWORD}" ]]; then
+        log_info "--- using SCM credentials from env (\$GIT_USERNAME and \$GIT_PASSWORD)..."
+        export scm_auth_args="-Dusername=${GIT_USERNAME} -Dpassword=${GIT_PASSWORD}"
+      else
+        log_error "--- project scm.developerConnection is using HTTPS protocol but no Git credentials are configured."
+        log_error "--- Please specify the \$GIT_USERNAME and \$GIT_PASSWORD variables or change to SSH protocol with a SSH key."
+      fi
+    else
+      # assume project is using SSH protocol
+      if [[ -n "${GIT_PRIVATE_KEY}" ]]; then
+        log_info "--- using Git SSH key from env (\$GIT_PRIVATE_KEY)..."
+        mkdir -m 700 "${HOME}/.ssh"
+        ssh-keyscan -H "${CI_SERVER_HOST}" >> ~/.ssh/known_hosts
+        eval "$(ssh-agent -s)"
+        # Handle file variable
+        if [[ -f "${GIT_PRIVATE_KEY}" ]]; then
+          tr -d '\r' < "${GIT_PRIVATE_KEY}" | ssh-add -
+        else
+          echo "${GIT_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
+        fi
+        git config --global user.email "${GITLAB_USER_EMAIL}"
+        git config --global user.name "${GITLAB_USER_LOGIN}"
+      else
+        log_error "--- project scm.developerConnection is using SSH protocol but no SSH key configured."
+        log_error "--- Please either specify the \$GIT_PRIVATE_KEY variable or change to https protocol with username/password credentials."
+      fi
+    fi
+  }
+
+  function install_ca_certs() {
+    certs=$1
+    if [[ -z "$certs" ]]
+    then
+      return
+    fi
+
+    # import in system
+    if echo "$certs" >> /etc/ssl/certs/ca-certificates.crt
+    then
+      log_info "CA certificates imported in \\e[33;1m/etc/ssl/certs/ca-certificates.crt\\e[0m"
+    fi
+    if echo "$certs" >> /etc/ssl/cert.pem
+    then
+      log_info "CA certificates imported in \\e[33;1m/etc/ssl/cert.pem\\e[0m"
+    fi
+
+    # import in Java keystore (if keytool command found)
+    if command -v keytool > /dev/null
+    then
+      # shellcheck disable=SC2046
+      javahome=${JAVA_HOME:-$(dirname $(readlink -f $(command -v java)))/..}
+      # shellcheck disable=SC2086
+      keystore=${JAVA_KEYSTORE_PATH:-$(ls -1 $javahome/jre/lib/security/cacerts 2>/dev/null || ls -1 $javahome/lib/security/cacerts 2>/dev/null || echo "")}
+      if [[ -f "$keystore" ]]
+      then
+        storepass=${JAVA_KEYSTORE_PASSWORD:-changeit}
+        nb_certs=$(echo "$certs" | grep -c 'END CERTIFICATE')
+        log_info "importing $nb_certs certificates in Java keystore \\e[33;1m$keystore\\e[0m..."
+        for idx in $(seq 0 $((nb_certs - 1)))
+        do
+          # TODO: use keytool option -trustcacerts ?
+          if echo "$certs" | awk "n==$idx { print }; /END CERTIFICATE/ { n++ }" | keytool -noprompt -import -alias "imported CA Cert $idx" -keystore "$keystore" -storepass "$storepass"
+          then
+            log_info "... CA certificate [$idx] successfully imported"
+          else
+            log_warn "... Failed importing CA certificate [$idx]: abort"
+            return
+          fi
+        done
+      else
+        log_warn "Java keystore \\e[33;1m$keystore\\e[0m not found: could not import CA certificates"
+      fi
+    fi
+  }
+
+  function unscope_variables() {
+    _scoped_vars=$(env | awk -F '=' "/^scoped__[a-zA-Z0-9_]+=/ {print \$1}" | sort)
+    if [[ -z "$_scoped_vars" ]]; then return; fi
+    log_info "Processing scoped variables..."
+    for _scoped_var in $_scoped_vars
+    do
+      _fields=${_scoped_var//__/:}
+      _condition=$(echo "$_fields" | cut -d: -f3)
+      case "$_condition" in
+      if) _not="";;
+      ifnot) _not=1;;
+      *)
+        log_warn "... unrecognized condition \\e[1;91m$_condition\\e[0m in \\e[33;1m${_scoped_var}\\e[0m"
+        continue
+      ;;
+      esac
+      _target_var=$(echo "$_fields" | cut -d: -f2)
+      _cond_var=$(echo "$_fields" | cut -d: -f4)
+      _cond_val=$(eval echo "\$${_cond_var}")
+      _test_op=$(echo "$_fields" | cut -d: -f5)
+      case "$_test_op" in
+      defined)
+        if [[ -z "$_not" ]] && [[ -z "$_cond_val" ]]; then continue; 
+        elif [[ "$_not" ]] && [[ "$_cond_val" ]]; then continue; 
+        fi
+        ;;
+      equals|startswith|endswith|contains|in|equals_ic|startswith_ic|endswith_ic|contains_ic|in_ic)
+        # comparison operator
+        # sluggify actual value
+        _cond_val=$(echo "$_cond_val" | tr '[:punct:]' '_')
+        # retrieve comparison value
+        _cmp_val_prefix="scoped__${_target_var}__${_condition}__${_cond_var}__${_test_op}__"
+        _cmp_val=${_scoped_var#"$_cmp_val_prefix"}
+        # manage 'ignore case'
+        if [[ "$_test_op" == *_ic ]]
+        then
+          # lowercase everything
+          _cond_val=$(echo "$_cond_val" | tr '[:upper:]' '[:lower:]')
+          _cmp_val=$(echo "$_cmp_val" | tr '[:upper:]' '[:lower:]')
+        fi
+        case "$_test_op" in
+        equals*)
+          if [[ -z "$_not" ]] && [[ "$_cond_val" != "$_cmp_val" ]]; then continue; 
+          elif [[ "$_not" ]] && [[ "$_cond_val" == "$_cmp_val" ]]; then continue; 
+          fi
+          ;;
+        startswith*)
+          if [[ -z "$_not" ]] && [[ "$_cond_val" != "$_cmp_val"* ]]; then continue; 
+          elif [[ "$_not" ]] && [[ "$_cond_val" == "$_cmp_val"* ]]; then continue; 
+          fi
+          ;;
+        endswith*)
+          if [[ -z "$_not" ]] && [[ "$_cond_val" != *"$_cmp_val" ]]; then continue; 
+          elif [[ "$_not" ]] && [[ "$_cond_val" == *"$_cmp_val" ]]; then continue; 
+          fi
+          ;;
+        contains*)
+          if [[ -z "$_not" ]] && [[ "$_cond_val" != *"$_cmp_val"* ]]; then continue; 
+          elif [[ "$_not" ]] && [[ "$_cond_val" == *"$_cmp_val"* ]]; then continue; 
+          fi
+          ;;
+        in*)
+          if [[ -z "$_not" ]] && [[ "__${_cmp_val}__" != *"__${_cond_val}__"* ]]; then continue; 
+          elif [[ "$_not" ]] && [[ "__${_cmp_val}__" == *"__${_cond_val}__"* ]]; then continue; 
+          fi
+          ;;
+        esac
+        ;;
+      *)
+        log_warn "... unrecognized test operator \\e[1;91m${_test_op}\\e[0m in \\e[33;1m${_scoped_var}\\e[0m"
+        continue
+        ;;
+      esac
+      # matches
+      _val=$(eval echo "\$${_target_var}")
+      log_info "... apply \\e[32m${_target_var}\\e[0m from \\e[32m\$${_scoped_var}\\e[0m${_val:+ (\\e[33;1moverwrite\\e[0m)}"
+      _val=$(eval echo "\$${_scoped_var}")
+      export "${_target_var}"="${_val}"
+    done
+    log_info "... done"
+  }
+
+  # builds the Java proxy options from Linux env (http_proxy, https_proxy, ftp_proxy and no_proxy)
+  function eval_java_proxy_args() {
+    # transform no_proxy into Java stype nonProxyHosts
+    nph=$(echo "${no_proxy:-$NO_PROXY}" | sed -e 's/\s*//g' -e 's/^\./*./' -e 's/,\./,*./g' -e 's/,/|/g')
+    java_proxy_args="$(java_proto_proxy_args http "${http_proxy:-$HTTP_PROXY}" "$nph") $(java_proto_proxy_args https "${https_proxy:-$HTTPS_PROXY}" "$nph") $(java_proto_proxy_args ftp "${ftp_proxy:-$FTP_PROXY}" "$nph")"
+    export java_proxy_args
+    if [[ "$java_proxy_args" ]]
+    then
+      log_info "Using Java proxy options (from env):  \\e[33;1m$java_proxy_args\\e[0m"
+    fi
+  }
+
+  function java_proto_proxy_args() {
+    proto=$1
+    proxy=$2
+    non_proxy_hosts=$3
+    if [[ "$proxy" ]]
+    then
+      host_port=$(echo "$proxy" | cut -d'/' -f3)
+      host=$(echo "$host_port" | cut -d':' -f1)
+      port=$(echo "$host_port" | cut -s -d':' -f2)
+      proto_proxy_args="-D$proto.proxyHost=$host -D$proto.proxyPort=${port:-80}"
+      if [[ "$non_proxy_hosts" ]]; then proto_proxy_args="$proto_proxy_args -D$proto.nonProxyHosts=$non_proxy_hosts"; fi
+      echo "$proto_proxy_args"
+    fi
+  }
+
+  # autodetects any Maven settings file in and builds the Java CLI option accordingly
+  function eval_mvn_settings_opt() {
+    if [[ -f "$MAVEN_SETTINGS_FILE" ]]
+    then
+      log_info "Maven settings file found: \\e[33;1m$MAVEN_SETTINGS_FILE\\e[0m"
+      mvn_settings_opt="-s $MAVEN_SETTINGS_FILE"
+    fi
+  }
+
+  function perform_snapshot() {
+    # shellcheck disable=SC2086
+    pom_version=$(mvn $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout | tail -n 1)
+    case $pom_version in
+        *-SNAPSHOT)
+            log_info "Snapshot version for pom (\\e[33;1m${pom_version}\\e[0m): deploy"
+            # shellcheck disable=SC2086
+            mvn ${TRACE+-X} $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_DEPLOY_ARGS
+            ;;
+        *)
+            log_info "Not snapshot version for pom (\\e[33;1m${pom_version}\\e[0m): skip"
+            ;;
+    esac
+  }
+
+  unscope_variables
+
+  # ENDSCRIPT
+
+# Generic maven job
+.mvn-base:
+  image: $MAVEN_IMAGE
+  tags:
+    - basys
+    - maven 
+  #services:
+  #  - name: "$TBC_TRACKING_IMAGE"
+  #    command: ["--service", "maven", "3.3.1" ]
+  before_script:
+    - *mvn-scripts
+    - install_ca_certs "${CUSTOM_CA_CERTS:-$DEFAULT_CA_CERTS}"
+    - eval_java_proxy_args
+    - eval_mvn_settings_opt
+    - cd ${MAVEN_PROJECT_DIR}
+  # Cache downloaded dependencies and plugins between builds.
+  # To keep cache across branches add 'key: "$CI_JOB_NAME"'
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-maven"
+    paths:
+      - "${MAVEN_PROJECT_DIR}/${MAVEN_CFG_DIR}/repository"
+
+mvn-build:
+  extends: .mvn-base
+  stage: build
+  services:
+    - name: docker:20.10.17-dind
+      # explicitly disable tls to avoid docker startup interruption
+      command: ["--tls=false"]
+  script:
+    - mvn ${TRACE+-X} $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_BUILD_ARGS
+    - output_coverage
+  # code coverage RegEx
+  coverage: '/^(\d+\.?\d*\%) covered$/'
+  # keep build artifacts and JUnit reports
+  artifacts:
+    name: "$CI_JOB_NAME artifacts from $CI_PROJECT_NAME on $CI_COMMIT_REF_SLUG"
+    expire_in: 1 day
+    when: always
+    reports:
+      junit:
+        - "${MAVEN_PROJECT_DIR}/**/target/*-reports/TEST-*.xml"
+    paths:
+      - "${MAVEN_PROJECT_DIR}/**/target"
+
+# Sonar job
+mvn-sonar:
+  stage: test
+  extends: .mvn-base
+  variables:
+    # see: https://docs.sonarqube.org/latest/analysis/gitlab-integration/#header-4
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/${MAVEN_PROJECT_DIR}/.sonar" # Defines the location of the analysis task cache
+    GIT_DEPTH: 0 # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-maven-sonar"
+    paths:
+      - "${MAVEN_PROJECT_DIR}/${MAVEN_CFG_DIR}/repository"
+      - "${MAVEN_PROJECT_DIR}/.sonar/cache"
+  script:
+    - |
+      if [[ "$SONAR_URL" ]] && [[ -z "$SONAR_HOST_URL" ]]
+      then 
+        log_warn '$SONAR_URL variable defined: use $SONAR_HOST_URL instead (see doc)'
+        export SONAR_HOST_URL="$SONAR_URL"
+      fi
+    - |
+      if [[ "$SONAR_AUTH_TOKEN" ]] && [[ -z "$SONAR_TOKEN" ]]
+      then 
+        log_warn '$SONAR_AUTH_TOKEN variable defined: use $SONAR_TOKEN instead (see doc)'
+        export SONAR_TOKEN="$SONAR_AUTH_TOKEN"
+      fi
+    - >-
+      mvn ${TRACE+-Dsonar.verbose=true} $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args
+      ${SONAR_LOGIN+-Dsonar.login=$SONAR_LOGIN}
+      ${SONAR_PASSWORD+-Dsonar.password=$SONAR_PASSWORD}
+      ${SONAR_QUALITY_GATE_ENABLED+-Dsonar.qualitygate.wait=$SONAR_QUALITY_GATE_ENABLED}
+      $SONAR_BASE_ARGS
+  rules:
+    # exclude if $SONAR_URL and $SONAR_HOST_URL not set
+    - if: '($SONAR_HOST_URL == null || $SONAR_HOST_URL == "") && ($SONAR_URL == null || $SONAR_URL == "")'
+      when: never
+    - !reference [.test-policy, rules]
+
+mvn-dependency-check:
+  extends: .mvn-base
+  stage: test
+  # force no dependency
+  dependencies: []
+  script:
+    - mvn ${TRACE+-X} $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_DEPENDENCY_CHECK_ARGS
+  artifacts:
+    name: "$CI_JOB_NAME artifacts from $CI_PROJECT_NAME on $CI_COMMIT_REF_SLUG"
+    expire_in: 1 day
+    when: always
+    paths:
+      - "${MAVEN_PROJECT_DIR}/**/target/dependency-check-report.*"
+  rules:
+    # exclude if disable
+    - if: '$MAVEN_DEPENDENCY_CHECK_DISABLED == "true"'
+      when: never
+    # on schedule: auto
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      allow_failure: true
+      when: always
+    # all other cases: manual & non-blocking
+    - when: manual
+      allow_failure: true
+
+mvn-no-snapshot-deps:
+  extends: .mvn-base
+  stage: test
+  needs: []
+  script:
+    - mvn ${TRACE+-X} $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args org.apache.maven.plugins:maven-enforcer-plugin:3.0.0:enforce -Drules=requireReleaseDeps
+  rules:
+    # exclude if disabled
+    - if: '$MVN_FORBID_SNAPSHOT_DEPENDENCIES_DISABLED == "true"'
+      when: never
+    - !reference [.test-policy, rules]
+
+# commented out, available in Gitlab 15.3
+#mvn-sbom:
+#  extends: .mvn-base
+#  stage: test
+#  # force no dependency
+#  dependencies: []
+#  script:
+#    - mvn ${TRACE+-X} $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_SBOM_GEN_ARGS -DoutputName=mvn-sbom.cyclonedx -DoutputFormat=json
+#    - chmod a+r target/mvn-sbom.cyclonedx.json
+#  artifacts:
+#    name: "SBOM for Maven from $CI_PROJECT_NAME on $CI_COMMIT_REF_SLUG"
+#    expire_in: 1 week
+#    when: always
+#    paths:
+#      - "${MAVEN_PROJECT_DIR}/target/mvn-sbom.cyclonedx.json"
+#    reports:
+#      cyclonedx: 
+#        - "${MAVEN_PROJECT_DIR}/target/mvn-sbom.cyclonedx.json"
+#  rules:
+#    # exclude if disabled
+#    - if: '$MAVEN_SBOM_DISABLED == "true"'
+#      when: never
+#    - !reference [.test-policy, rules]
+
+mvn-snapshot:
+  extends: .mvn-base
+  stage: publish
+  script:
+    - perform_snapshot
+  rules:
+    # exclude unprotected ref if specified
+    - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true" && $CI_COMMIT_REF_PROTECTED != "true"'
+      when: never
+    # else: if $MAVEN_DEPLOY_ENABLED is set
+    - if: '$MAVEN_DEPLOY_ENABLED == "true"'
+
+mvn-release:
+  extends: .mvn-base
+  stage: publish
+  before_script:
+    - !reference [ .mvn-base, before_script ]
+    - log_info "Preparing Git repository for release..."
+    - git config --global user.name $GITLAB_USER_ID
+    - git config --global user.email $GITLAB_USER_EMAIL
+    - git checkout -B "$CI_COMMIT_REF_NAME"
+  script:
+    - configure_scm_auth
+    - maybe_set_version_from_git
+    - |
+      if [ "${SEMREL_INFO_ON}" ] && [ "${MVN_SEMREL_RELEASE_DISABLED}" != "true" ]
+      then
+        if [ -z "${SEMREL_INFO_NEXT_VERSION}" ]
+        then
+          log_info "no new version to release"
+          exit 0
+        else
+          log_info "semantic-release info is activated, using computed next version for release \\e[1;94m${SEMREL_INFO_NEXT_VERSION}\\e[0m"
+          semrel_args="-DreleaseVersion=${SEMREL_INFO_NEXT_VERSION}"
+        fi
+      fi
+    - mvn ${TRACE+-X} $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $scm_auth_args ${MAVEN_RELEASE_ARGS} ${semrel_args} -DscmCommentPrefix="$MAVEN_RELEASE_SCM_COMMENT_PREFIX"
+  rules:
+    # on production branch(es): manual & non-blocking if $MAVEN_DEPLOY_ENABLED is set
+    - if: '$MAVEN_DEPLOY_ENABLED == "true" && $CI_COMMIT_REF_NAME =~ $PROD_REF'
+      when: manual
+      allow_failure: true
+    # on integration branch(es): manual & non-blocking if $MAVEN_DEPLOY_ENABLED is set
+    - if: '$MAVEN_DEPLOY_ENABLED == "true" && $CI_COMMIT_REF_NAME =~ $INTEG_REF'
+      when: manual
+      allow_failure: true
+
+.docker-publish-module:
+  extends: .mvn-base
+  stage: publish
+  image: dfkibasys/docker-temurin11jdk:20.10.17
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+     - name: docker:20.10.17-dind
+       # explicitly disable tls to avoid docker startup interruption
+       command: ["--tls=false"]
+  before_script:
+    - !reference [ .mvn-base, before_script ]
+    - docker info
+    - if [[ -v CI_COMMIT_TAG ]]; then export IMAGE_NAME_PROPERTY="-Ddocker.image.name=$CI_COMMIT_TAG"; else export IMAGE_NAME_PROPERTY=""; fi
+  script:
+    - chmod 775 ./mvnw
+    # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
+    - ./mvnw $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_DEPLOY_ARGS $IMAGE_NAME_PROPERTY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/$MODULE_NAME
+  rules:
+    # on tags: never
+    # exclude unprotected ref if specified
+    - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true" && $CI_COMMIT_REF_PROTECTED != "true"'
+      when: never
+    # else: if $MAVEN_DEPLOY_ENABLED is set
+    - if: '$MAVEN_DEPLOY_ENABLED == "true"'
+      changes:
+        - modules/$MODULE_NAME/**/*
+    - if: '$MAVEN_DEPLOY_ENABLED == "true"'
+      when: manual
+      allow_failure: true
