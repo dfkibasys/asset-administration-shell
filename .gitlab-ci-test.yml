@@ -583,7 +583,7 @@ mvn-release:
   before_script:
     - !reference [ .mvn-base, before_script ]
     - docker info
-    - echo "version prop:  ${OVERRIDDEN_IMAGE_VERSION_PROP}"
+    - echo  $OVERRIDDEN_IMAGE_VERSION_PROP
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
