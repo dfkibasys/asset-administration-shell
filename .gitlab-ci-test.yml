@@ -582,7 +582,7 @@ mvn-release:
   before_script:
     - !reference [ .mvn-base, before_script ]
     - docker info
-    - if [[ -z ${CI_COMMIT_TAG+x} ]]; then export OVERRIDDEN_IMAGE_VERSION_PROP="-Ddocker.image.version=$CI_COMMIT_TAG"; else export OVERRIDDEN_IMAGE_VERSION_PROP="-Dunknown=test"; fi
+    - if [[ -z ${CI_COMMIT_TAG+x} ]]; then export OVERRIDDEN_IMAGE_VERSION_PROP=""; else export OVERRIDDEN_IMAGE_VERSION_PROP="-Ddocker.image.version=$CI_COMMIT_TAG"; fi
     - echo  $OVERRIDDEN_IMAGE_VERSION_PROP
   script:
     - chmod 775 ./mvnw
