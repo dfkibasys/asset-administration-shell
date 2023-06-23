@@ -575,7 +575,6 @@ mvn-release:
   image: dfkibasys/docker-temurin11jdk:20.10.17
   variables:
     DOCKER_DRIVER: overlay2
-    OVERRIDDEN_IMAGE_VERSION_PROP: if [[ -v CI_COMMIT_TAG ]]; then "-Ddocker.image.version=$CI_COMMIT_TAG"; else ""; fi
   services:
      - name: docker:20.10.17-dind
        # explicitly disable tls to avoid docker startup interruption
@@ -583,9 +582,11 @@ mvn-release:
   before_script:
     - !reference [ .mvn-base, before_script ]
     - docker info
+    - if [[ -v CI_COMMIT_TAG ]]; then export OVERRIDDEN_IMAGE_VERSION_PROP="-Ddocker.image.version=$CI_COMMIT_TAG"; else export OVERRIDDEN_IMAGE_VERSION_PROP=""; fi
     - echo  $OVERRIDDEN_IMAGE_VERSION_PROP
   script:
     - chmod 775 ./mvnw
+    - echo  $OVERRIDDEN_IMAGE_VERSION_PROP
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
     # - ./mvnw $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_DEPLOY_ARGS $OVERRIDDEN_IMAGE_VERSION_PROP -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/$MODULE_NAME
   # rules:
