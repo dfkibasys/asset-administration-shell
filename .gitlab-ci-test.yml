@@ -591,7 +591,7 @@ mvn-release:
     - ./mvnw $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_DEPLOY_ARGS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/$MODULE_NAME
   rules:
     # exclude unprotected ref if specified
-    - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true" && $CI_COMMIT_REF_PROTECTED != "true"'
+    - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true"
       when: never
     # else: if $MAVEN_DEPLOY_ENABLED is set
     - if: '$MAVEN_DEPLOY_ENABLED == "true"'
