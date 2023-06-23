@@ -16,8 +16,8 @@ docker-publish-aas-server:
   variables:
     MODULE_NAME: server
 
-docker-publish-knowledgegraph-service:
-  extends: .docker-publish-module
-  variables:
-    MODULE_NAME: knowledgegraph
+# docker-publish-knowledgegraph-service:
+#   extends: .docker-publish-module
+#   variables:
+#     MODULE_NAME: knowledgegraph
 
