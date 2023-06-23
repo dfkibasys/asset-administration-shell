@@ -590,7 +590,8 @@ mvn-release:
   rules:
     # on tags: never
     # exclude unprotected ref if specified
-    - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true" && $CI_COMMIT_REF_PROTECTED != "true"'
+    - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true" 
+    # && $CI_COMMIT_REF_PROTECTED != "true"'
       when: never
     # else: if $MAVEN_DEPLOY_ENABLED is set
     - if: '$MAVEN_DEPLOY_ENABLED == "true"'
