@@ -528,6 +528,9 @@ mvn-snapshot:
   script:
     - perform_snapshot
   rules:
+    # on tags: never
+    - if: $CI_COMMIT_TAG
+      when: never
     # exclude unprotected ref if specified
     - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true" && $CI_COMMIT_REF_PROTECTED != "true"'
       when: never
@@ -575,7 +578,6 @@ mvn-release:
   image: dfkibasys/docker-temurin11jdk:20.10.17
   variables:
     DOCKER_DRIVER: overlay2
-    IMAGE_NAME_PROPERTY: "-Ddocker.image.name=test"
   services:
      - name: docker:20.10.17-dind
        # explicitly disable tls to avoid docker startup interruption
@@ -583,16 +585,16 @@ mvn-release:
   before_script:
     - !reference [ .mvn-base, before_script ]
     - docker info
-    #- if [[ -v CI_COMMIT_TAG ]]; then export IMAGE_NAME_PROPERTY="-Ddocker.image.name=$CI_COMMIT_TAG"; fi
   script:
     - chmod 775 ./mvnw
     # we need the package phase: https://github.com/fabric8io/docker-maven-plugin/issues/121
-    - ./mvnw $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_DEPLOY_ARGS $IMAGE_NAME_PROPERTY -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/$MODULE_NAME
+    - ./mvnw $MAVEN_CLI_OPTS $mvn_settings_opt $java_proxy_args $MAVEN_DEPLOY_ARGS -Ddocker.username=$DOCKER_REGISTRY_USER -Ddocker.password=$DOCKER_REGISTRY_PASSWORD -pl modules/$MODULE_NAME
   rules:
     # on tags: never
+    - if: $CI_COMMIT_TAG
+      when: never
     # exclude unprotected ref if specified
-    - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true" 
-    # && $CI_COMMIT_REF_PROTECTED != "true"'
+    - if: '$MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED == "true" && $CI_COMMIT_REF_PROTECTED != "true"'
       when: never
     # else: if $MAVEN_DEPLOY_ENABLED is set
     - if: '$MAVEN_DEPLOY_ENABLED == "true"'
