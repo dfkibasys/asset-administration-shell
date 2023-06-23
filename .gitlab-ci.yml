@@ -2,7 +2,9 @@ include:
     #- project: i40/administration
     #  file: gitlab-ci-maven.yml
     #  ref: main
-    - file: .gitlab-ci-test.yml
+    - project: i40/basys/asset-administration-shell
+      file: .gitlab-ci-test.yml
+      ref: 202-build-on-tag
 
 variables:
   MVN_FORBID_SNAPSHOT_DEPENDENCIES_DISABLED : "true"
