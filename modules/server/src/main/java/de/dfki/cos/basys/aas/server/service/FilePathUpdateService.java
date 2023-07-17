@@ -22,11 +22,8 @@ public class FilePathUpdateService {
 	 */
 	public void modifyFilePaths(AASBundle bundle) {
 		Set<ISubmodel> submodels = bundle.getSubmodels();
-		String hostName = context.getHostname();
-		int port = context.getPort();
-		String rootPath = context.getContextPath();
 		for (ISubmodel sm : submodels) {
-			SubmodelFileEndpointLoader.setRelativeFileEndpoints(sm, hostName, port, rootPath);
+			SubmodelFileEndpointLoader.setRelativeFileEndpoints(sm, context);
 		}
 	}
 
