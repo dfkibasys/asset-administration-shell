@@ -36,3 +36,9 @@ basys:
       doc-base:
       hostname: localhost
       port: 8088
+      protocol: http
+#      extra-locations:
+#      - hostname: aasserver.dockerhost 
+#        port: 443
+#        protocol: https
+#        context-path: /

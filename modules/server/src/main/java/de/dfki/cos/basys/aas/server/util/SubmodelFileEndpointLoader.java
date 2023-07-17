@@ -1,8 +1,5 @@
 package de.dfki.cos.basys.aas.server.util;
 
-
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 
 import org.eclipse.basyx.submodel.metamodel.api.ISubmodel;
@@ -11,6 +8,9 @@ import org.eclipse.basyx.submodel.metamodel.api.submodelelement.ISubmodelElement
 import org.eclipse.basyx.submodel.metamodel.map.submodelelement.SubmodelElementCollection;
 import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.File;
 
+import de.dfki.cos.basys.aas.server.configuration.BaSyxContextConfiguration;
+import de.dfki.cos.basys.aas.server.configuration.BaSyxContextConfiguration.ServerLocation;
+
 /**
  * A utility class for configuring file endpoints in submodels
  *
@@ -18,14 +18,26 @@ import org.eclipse.basyx.submodel.metamodel.map.submodelelement.dataelement.File
  *
  */
 public class SubmodelFileEndpointLoader {
+
+
+
+
+    public static void setRelativeFileEndpoints(ISubmodel submodel, BaSyxContextConfiguration context) {
+
+        Map<String, ISubmodelElement> elements = submodel.getSubmodelElements();
+        setMapEndpoints(elements, context);
+    }
+    
     /**
-     * Sets all file and blob submodelElements inside of the submodel to an endpoint at a given host relative
+     * Sets all file and blob submodelElements inside of the submodel to an endpoint
+     * at a given host relative
      * to its original path.
      *
      * @param submodel
      * @param host     e.g. localhost
      * @param port     port for the host
-     * @param path     path at which the files are hosted on the host (e.g. "/files")
+     * @param path     path at which the files are hosted on the host (e.g.
+     *                 "/files")
      */
     public static void setRelativeFileEndpoints(ISubmodel submodel, String host, int port, String path) {
         String fileRoot = "http://" + host + ":" + port + path;
@@ -33,11 +45,13 @@ public class SubmodelFileEndpointLoader {
     }
 
     /**
-     * Sets all file and blob submodelElements inside of the submodel to an endpoint at a given host relative
+     * Sets all file and blob submodelElements inside of the submodel to an endpoint
+     * at a given host relative
      * to its original path.
      *
      * @param submodel
-     * @param fileRoot the full root path for the files (e.g. "http://localhost:1234/myFiles")
+     * @param fileRoot the full root path for the files (e.g.
+     *                 "http://localhost:1234/myFiles")
      */
     public static void setRelativeFileEndpoints(ISubmodel submodel, String fileRoot) {
         Map<String, ISubmodelElement> elements = submodel.getSubmodelElements();
@@ -45,7 +59,8 @@ public class SubmodelFileEndpointLoader {
     }
 
     /**
-     * Fixes endpoints in a Map of submodel elements (applicable for Submodels and SubmodelElementCollections)
+     * Fixes endpoints in a Map of submodel elements (applicable for Submodels and
+     * SubmodelElementCollections)
      *
      * @param elements
      * @param fileRoot
@@ -61,9 +76,34 @@ public class SubmodelFileEndpointLoader {
             }
         });
     }
+    
+    private static void setMapEndpoints(Map<String, ISubmodelElement> elements,  BaSyxContextConfiguration config) {
+        for (ISubmodelElement eachElement : elements.values()) {
+            setMapEndpoints(eachElement, config);
+        }
+    }
+    
+
+    private static void setMapEndpoints(ISubmodelElement element, BaSyxContextConfiguration config) {
+        for (ServerLocation eachLocation : config.getAllLocations()) {
+            String fileRoot = eachLocation.getUrl();
+            setMapEndpoint(element, fileRoot);    
+        }
+    }
+    
+    private static void setMapEndpoint(ISubmodelElement element, String fileRoot) {
+        if (element instanceof File) {
+            File file = (File) element;
+            setFileEndpoint(file, fileRoot);
+        } else if (element instanceof ISubmodelElementCollection) {
+            SubmodelElementCollection col = (SubmodelElementCollection) element;
+            setMapEndpoints(col.getSubmodelElements(), fileRoot);
+        }    
+    }
 
     /**
-     * Modifies the file value endpoint in a single given file according to a new file root path
+     * Modifies the file value endpoint in a single given file according to a new
+     * file root path
      *
      * @param file
      * @param fileRoot
@@ -99,4 +139,3 @@ public class SubmodelFileEndpointLoader {
 
     }
 }
-
