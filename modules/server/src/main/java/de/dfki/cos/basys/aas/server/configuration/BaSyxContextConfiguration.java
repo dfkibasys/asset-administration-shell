@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "basys.aas-server.context")
 public class BaSyxContextConfiguration {
+    
     private String contextPath = org.eclipse.basyx.components.configuration.BaSyxContextConfiguration.DEFAULT_CONTEXTPATH;
     private String docBase = org.eclipse.basyx.components.configuration.BaSyxContextConfiguration.DEFAULT_DOCBASE;
     private String hostname = org.eclipse.basyx.components.configuration.BaSyxContextConfiguration.DEFAULT_HOSTNAME;

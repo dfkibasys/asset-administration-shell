@@ -27,10 +27,9 @@ public class SubmodelFileEndpointLoader {
         Map<String, ISubmodelElement> elements = submodel.getSubmodelElements();
         setMapEndpoints(elements, context);
     }
-    
+
     /**
-     * Sets all file and blob submodelElements inside of the submodel to an endpoint
-     * at a given host relative
+     * Sets all file and blob submodelElements inside of the submodel to an endpoint at a given host relative
      * to its original path.
      *
      * @param submodel
