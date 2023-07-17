@@ -23,6 +23,22 @@ public class SubmodelFileEndpointLoader {
      * to its original path.
      *
      * @param submodel
+     * @param tlsEnabled if https should be used
+     * @param host     e.g. localhost
+     * @param port     port for the host
+     * @param path     path at which the files are hosted on the host (e.g. "/files")
+     */
+    public static void setRelativeFileEndpoints(ISubmodel submodel, boolean tlsEnabled, String host, int port, String path) {
+        String protocol = tlsEnabled ? "https" : "http";
+        String fileRoot = protocol + "://" + host + ":" + port + path;
+        setRelativeFileEndpoints(submodel, fileRoot);
+    }
+    
+    /**
+     * Sets all file and blob submodelElements inside of the submodel to an endpoint at a given host relative
+     * to its original path.
+     *
+     * @param submodel
      * @param host     e.g. localhost
      * @param port     port for the host
      * @param path     path at which the files are hosted on the host (e.g. "/files")

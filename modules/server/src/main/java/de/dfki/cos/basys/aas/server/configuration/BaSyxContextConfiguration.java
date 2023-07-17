@@ -14,6 +14,8 @@ public class BaSyxContextConfiguration {
     public String docBase = org.eclipse.basyx.components.configuration.BaSyxContextConfiguration.DEFAULT_DOCBASE;
     public String hostname = org.eclipse.basyx.components.configuration.BaSyxContextConfiguration.DEFAULT_HOSTNAME;
     public int port = org.eclipse.basyx.components.configuration.BaSyxContextConfiguration.DEFAULT_PORT;
+    public boolean tlsEnabled = false;
+    
 
     public org.eclipse.basyx.components.configuration.BaSyxContextConfiguration toLegacyConfig() {
         return new org.eclipse.basyx.components.configuration.BaSyxContextConfiguration(contextPath, docBase, hostname, port);

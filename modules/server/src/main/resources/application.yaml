@@ -36,3 +36,4 @@ basys:
       doc-base:
       hostname: localhost
       port: 8088
+      tls-enabled: false

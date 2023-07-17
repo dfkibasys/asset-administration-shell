@@ -16,32 +16,36 @@ import de.dfki.cos.basys.aas.server.configuration.BaSyxContextConfiguration;
 @Service
 public class DescriptorLoader {
 
-	@Autowired
-	private BaSyxContextConfiguration context;
+    @Autowired
+    private BaSyxContextConfiguration context;
 
-	public AASDescriptor retrieveDescriptor(AASBundle aasBundle) {
-		// Base path + aggregator accessor
-		final String fullBasePath = context.toLegacyConfig().getUrl() + "/" + AASAggregatorProvider.PREFIX;
-		return createAASDescriptor(aasBundle, fullBasePath);
-	}
+    public AASDescriptor retrieveDescriptor(AASBundle aasBundle) {
+        // Base path + aggregator accessor
+        String fullBasePath = context.toLegacyConfig().getUrl() + "/" + AASAggregatorProvider.PREFIX;
+        if (context.isTlsEnabled() && fullBasePath.startsWith("http://")) {
+            fullBasePath = "https" + fullBasePath.substring(4);
+        }
+        return createAASDescriptor(aasBundle, fullBasePath);
+    }
 
-	public AASDescriptor createAASDescriptor(AASBundle bundle, String hostBasePath) {
-		// Normalize hostBasePath to ensure consistent usage of /
-		String nHostBasePath = VABPathTools.stripSlashes(hostBasePath);
+    public AASDescriptor createAASDescriptor(AASBundle bundle, String hostBasePath) {
+        // Normalize hostBasePath to ensure consistent usage of /
+        String nHostBasePath = VABPathTools.stripSlashes(hostBasePath);
 
-		// Create AASDescriptor
-		String endpointId = encodeId(bundle.getAAS().getIdentification().getId());
-		// endpointId = VABPathTools.encodePathElement(endpointId);
-		String aasBase = VABPathTools.concatenatePaths(nHostBasePath, endpointId, "aas");
-		AASDescriptor desc = new AASDescriptor(bundle.getAAS(), aasBase);
-		bundle.getSubmodels().stream().forEach(s -> {
-			SubmodelDescriptor smDesc = new SubmodelDescriptor(s, VABPathTools.concatenatePaths(aasBase, "submodels", s.getIdShort(), "submodel"));
-			desc.addSubmodelDescriptor(smDesc);
-		});
-		return desc;
-	}
+        // Create AASDescriptor
+        String endpointId = encodeId(bundle.getAAS().getIdentification().getId());
+        // endpointId = VABPathTools.encodePathElement(endpointId);
+        String aasBase = VABPathTools.concatenatePaths(nHostBasePath, endpointId, "aas");
+        AASDescriptor desc = new AASDescriptor(bundle.getAAS(), aasBase);
+        bundle.getSubmodels().stream().forEach(s -> {
+            SubmodelDescriptor smDesc = new SubmodelDescriptor(s,
+                    VABPathTools.concatenatePaths(aasBase, "submodels", s.getIdShort(), "submodel"));
+            desc.addSubmodelDescriptor(smDesc);
+        });
+        return desc;
+    }
 
-	private String encodeId(String id) {
-		return Base64.getUrlEncoder().encodeToString(id.getBytes(StandardCharsets.UTF_8));
-	}
+    private String encodeId(String id) {
+        return Base64.getUrlEncoder().encodeToString(id.getBytes(StandardCharsets.UTF_8));
+    }
 }

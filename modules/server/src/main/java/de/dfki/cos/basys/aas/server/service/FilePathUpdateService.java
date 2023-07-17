@@ -25,8 +25,9 @@ public class FilePathUpdateService {
 		String hostName = context.getHostname();
 		int port = context.getPort();
 		String rootPath = context.getContextPath();
+		boolean tlsEnabled = context.isTlsEnabled();
 		for (ISubmodel sm : submodels) {
-			SubmodelFileEndpointLoader.setRelativeFileEndpoints(sm, hostName, port, rootPath);
+			SubmodelFileEndpointLoader.setRelativeFileEndpoints(sm, tlsEnabled,hostName, port, rootPath);
 		}
 	}
 
