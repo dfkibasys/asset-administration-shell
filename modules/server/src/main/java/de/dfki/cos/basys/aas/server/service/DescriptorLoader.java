@@ -42,6 +42,7 @@ public class DescriptorLoader {
         for (ISubmodel eachSubmodel : aasBundle.getSubmodels()) {
             SubmodelDescriptor smDesc = new SubmodelDescriptor(eachSubmodel, "");
             smEpAssigner.assignEndpoints(smDesc);
+            descr.addSubmodelDescriptor(smDesc);
         }
         return descr;
     }
