@@ -3,25 +3,28 @@ List of third-party dependencies grouped by their license type.
 
     Apache-2.0:
 
-        * jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.13.1 - http://github.com/FasterXML/jackson)
-        * Gson (com.google.code.gson:gson:2.8.9 - https://github.com/google/gson/gson)
+        * jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.13.5 - http://github.com/FasterXML/jackson)
+        * Gson (com.google.code.gson:gson:2.9.1 - https://github.com/google/gson/gson)
         * Guava: Google Core Libraries for Java (com.google.guava:guava:26.0-jre - https://github.com/google/guava/guava)
-        * aas-registry-client (org.eclipse.basyx.aas.registry:aas-registry-client:0.1.0-20220506.133935-37 - https://spring.io/projects/spring-boot/aas-registry/aas-registry-client)
-        * aas-registry-compatibility (org.eclipse.basyx.aas.registry:aas-registry-compatibility:0.1.0-20220506.133944-32 - https://spring.io/projects/spring-boot/aas-registry/aas-registry-compatibility)
-        * Spring Aspects (org.springframework:spring-aspects:5.3.15 - https://github.com/spring-projects/spring-framework)
-        * spring-boot-starter-actuator (org.springframework.boot:spring-boot-starter-actuator:2.6.3 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-data-neo4j (org.springframework.boot:spring-boot-starter-data-neo4j:2.6.3 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-data-rest (org.springframework.boot:spring-boot-starter-data-rest:2.6.3 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-logging (org.springframework.boot:spring-boot-starter-logging:2.6.3 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-security (org.springframework.boot:spring-boot-starter-security:2.6.3 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-test (org.springframework.boot:spring-boot-starter-test:2.6.3 - https://spring.io/projects/spring-boot)
-        * spring-boot-starter-web (org.springframework.boot:spring-boot-starter-web:2.6.3 - https://spring.io/projects/spring-boot)
+        * aas-registry-client (de.dfki.cos.basys.aas.registry:aas-registry-client:0.4.2-20230424.142457-2 - https://spring.io/projects/spring-boot/aas-registry/aas-registry-client)
+        * aas-registry-compatibility (de.dfki.cos.basys.aas.registry:aas-registry-compatibility:0.4.2-20230510.194623-5 - https://spring.io/projects/spring-boot/aas-registry/aas-registry-compatibility)
+        * aas-registry-events (de.dfki.cos.basys.aas.registry:aas-registry-events:0.4.2-20230424.142501-2 - https://spring.io/projects/spring-boot/aas-registry/aas-registry-events)
+        * aas-registry-paths (de.dfki.cos.basys.aas.registry:aas-registry-paths:0.4.2-20230424.142502-2 - https://spring.io/projects/spring-boot/aas-registry/aas-registry-paths)
+        * Netty/Codec/HTTP (io.netty:netty-codec-http:4.1.92.Final - https://netty.io/netty-codec-http/)
+        * Spring Aspects (org.springframework:spring-aspects:5.3.27 - https://github.com/spring-projects/spring-framework)
+        * spring-boot-starter-actuator (org.springframework.boot:spring-boot-starter-actuator:2.7.12 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-data-neo4j (org.springframework.boot:spring-boot-starter-data-neo4j:2.7.12 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-data-rest (org.springframework.boot:spring-boot-starter-data-rest:2.7.12 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-logging (org.springframework.boot:spring-boot-starter-logging:2.7.12 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-security (org.springframework.boot:spring-boot-starter-security:2.7.12 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-test (org.springframework.boot:spring-boot-starter-test:2.7.12 - https://spring.io/projects/spring-boot)
+        * spring-boot-starter-web (org.springframework.boot:spring-boot-starter-web:2.7.12 - https://spring.io/projects/spring-boot)
         * spring-cloud-stream (org.springframework.cloud:spring-cloud-stream:3.1.4 - https://spring.io/spring-cloud/spring-cloud-stream-parent/spring-cloud-stream)
         * spring-cloud-stream-binder-kafka (org.springframework.cloud:spring-cloud-stream-binder-kafka:3.1.4 - https://spring.io/spring-cloud/spring-cloud-stream-binder-kafka-parent/spring-cloud-stream-binder-kafka)
-        * Spring Integration Core (org.springframework.integration:spring-integration-core:5.5.8 - https://github.com/spring-projects/spring-integration)
-        * Spring Integration File Support (org.springframework.integration:spring-integration-file:5.5.8 - https://github.com/spring-projects/spring-integration)
-        * Spring Kafka Support (org.springframework.kafka:spring-kafka:2.8.2 - https://github.com/spring-projects/spring-kafka)
-        * Spring Retry (org.springframework.retry:spring-retry:1.3.1 - https://www.springsource.org)
+        * Spring Integration Core (org.springframework.integration:spring-integration-core:5.5.18 - https://github.com/spring-projects/spring-integration)
+        * Spring Integration File Support (org.springframework.integration:spring-integration-file:5.5.18 - https://github.com/spring-projects/spring-integration)
+        * Spring Kafka Support (org.springframework.kafka:spring-kafka:2.8.11 - https://github.com/spring-projects/spring-kafka)
+        * Spring Retry (org.springframework.retry:spring-retry:1.3.4 - https://www.springsource.org)
 
     EPL-1.0:
 
@@ -29,12 +32,12 @@ List of third-party dependencies grouped by their license type.
 
     EPL-2.0:
 
-        * BaSys 4.2 AAS Extended Event Model (de.dfki.cos.basys.aas:event:0.3.0-20220802.104851-54 - https://www.basys40.de/starter-parent/event/)
-        * de.dfki.cos.basys.common.component (de.dfki.cos.basys.common:component:0.3.0-SNAPSHOT - https://www.basys40.de/starter-parent/component/)
-        * AAS Server (org.eclipse.basyx:basyx.components.AASServer:1.0.2 - https://www.eclipse.org/basyx/basyx.components.docker/basyx.components.AASServer/)
         * org.eclipse.paho.client.mqttv3 (org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5 - http://www.eclipse.org/paho/org.eclipse.paho.client.mqttv3)
 
     MIT:
 
-        * BaSyx SDK (org.eclipse.basyx:basyx.sdk:1.2.0 - https://www.eclipse.org/basyx/)
-        * Project Lombok (org.projectlombok:lombok:1.18.22 - https://projectlombok.org)
+        * BaSys 4.2 AAS Extended Event Model (de.dfki.cos.basys.aas:event:0.5.0-20230720.113514-14 - https://www.basys40.de/starter-parent/event/)
+        * de.dfki.cos.basys.common.component (de.dfki.cos.basys.common:component:0.5.0-SNAPSHOT - https://www.basys40.de/starter-parent/component/)
+        * AAS Server (org.eclipse.basyx:basyx.components.AASServer:1.3.0 - https://www.eclipse.org/basyx/basyx.components.docker/basyx.components.AASServer/)
+        * BaSyx SDK (org.eclipse.basyx:basyx.sdk:1.4.0 - https://www.eclipse.org/basyx/)
+        * Project Lombok (org.projectlombok:lombok:1.18.26 - https://projectlombok.org)
