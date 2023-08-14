@@ -15,12 +15,25 @@
 	<name>BaSys 4.2 AAS Extensions</name>
 	<description>BaSys 4.2 AAS Extensions</description>
 
-	<modules>
-		<module>modules/event</module>
-		<module>modules/event-mqtt</module>
-		<module>modules/knowledgegraph</module>
-		<module>modules/server</module>
-	</modules>
+	<profiles>
+		<profile>
+			<id>sonatype-oss-release</id>
+			<modules>
+				<module>modules/event</module>
+				<module>modules/event-mqtt</module>
+			</modules>
+		</profile>
+
+		<profile>
+			<id>default</id>
+			<modules>
+				<module>modules/event</module>
+				<module>modules/event-mqtt</module>
+				<module>modules/knowledgegraph</module>
+				<module>modules/server</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<scm>
 		<url>https://github.com/dfkibasys</url>
