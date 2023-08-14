@@ -17,13 +17,13 @@ basys:
   aas-registry:
     type: dotaas
     service:
-      connectionString: http://aasregistry.dockerhost
+      connectionString: http://aasregistry.dockerhost/registry
       retry:
         maxAttemps: 15
         delay: 2000
   aas-server:
     backend: InMemory
-    source: C:///Work/basys/docker/aas/data/aas-server
+    source: C:///Repos/basys/docker/data/aasx
     #source: C:///Work/basys/docker/aas/data/aas-server/mrklab.aasx
     file-suffixes: .aasx
     recursive: true
@@ -36,3 +36,9 @@ basys:
       doc-base:
       hostname: localhost
       port: 8088
+      protocol: http
+#      extra-locations:
+#      - hostname: aasserver.dockerhost 
+#        port: 443
+#        protocol: https
+#        context-path: /

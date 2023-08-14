@@ -3,7 +3,7 @@ package de.dfki.cos.basys.aas.server.service;
 import java.util.Set;
 
 import org.eclipse.basyx.submodel.metamodel.api.ISubmodel;
-import org.eclipse.basyx.support.bundle.AASBundle;
+import org.eclipse.basyx.aas.bundle.AASBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +22,8 @@ public class FilePathUpdateService {
 	 */
 	public void modifyFilePaths(AASBundle bundle) {
 		Set<ISubmodel> submodels = bundle.getSubmodels();
-		String hostName = context.getHostname();
-		int port = context.getPort();
-		String rootPath = context.getContextPath();
 		for (ISubmodel sm : submodels) {
-			SubmodelFileEndpointLoader.setRelativeFileEndpoints(sm, hostName, port, rootPath);
+			SubmodelFileEndpointLoader.setRelativeFileEndpoints(sm, context);
 		}
 	}
 

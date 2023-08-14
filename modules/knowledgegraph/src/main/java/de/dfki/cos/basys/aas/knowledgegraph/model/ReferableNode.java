@@ -1,25 +1,30 @@
 package de.dfki.cos.basys.aas.knowledgegraph.model;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.eclipse.basyx.submodel.metamodel.api.qualifier.IReferable;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
-
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.Node;
 
 @Node("Referable")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ReferableNode {
 
-    @Id @GeneratedValue
-    private Long neo4jId;
+    @Id
+    @GeneratedValue
+    protected Long neo4jId;
 
-    private final String idShort;
+    private String idShort;
     private String sourceUrl;
 
-    public ReferableNode(String idShort) {
-        this.idShort = idShort;
+    public ReferableNode(IReferable referable) {
+        this.idShort = referable.getIdShort();
     }
+
 }
 

@@ -4,8 +4,8 @@ import org.eclipse.basyx.aas.manager.ConnectedAssetAdministrationShellManager;
 import org.eclipse.basyx.aas.manager.api.IAssetAdministrationShellManager;
 import org.eclipse.basyx.aas.registration.api.IAASRegistry;
 import org.eclipse.basyx.aas.registration.proxy.AASRegistryProxy;
-import org.eclipse.basyx.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
-import org.eclipse.basyx.aas.registry.compatibility.DotAASRegistryProxy;
+import de.dfki.cos.basys.aas.registry.client.api.RegistryAndDiscoveryInterfaceApi;
+import de.dfki.cos.basys.aas.registry.compatibility.DotAASRegistryProxy;
 import org.eclipse.basyx.vab.factory.java.ModelProxyFactory;
 import org.eclipse.basyx.vab.protocol.api.IConnectorFactory;
 import org.eclipse.basyx.vab.protocol.http.connector.HTTPConnectorFactory;
@@ -43,10 +43,10 @@ public class AasConfig {
     }
 
     @Bean
-    public IConnectorFactory connectorFactory() { return new HTTPConnectorFactory(); };
+    public IConnectorFactory connectorFactory() { return new HTTPConnectorFactory(); }
 
     @Bean
-    public ModelProxyFactory proxyFactory(IConnectorFactory connectorFactory) { return  new ModelProxyFactory(connectorFactory); };
+    public ModelProxyFactory proxyFactory(IConnectorFactory connectorFactory) { return  new ModelProxyFactory(connectorFactory); }
 
     @Bean
     public IAssetAdministrationShellManager aasManager(IConnectorFactory connectorFactory) {

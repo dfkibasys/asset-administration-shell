@@ -1,13 +1,11 @@
 package de.dfki.cos.basys.aas.knowledgegraph.repository;
 
-import java.util.Optional;
-
+import de.dfki.cos.basys.aas.knowledgegraph.model.ReferableNode;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
-import de.dfki.cos.basys.aas.knowledgegraph.model.IdentifiableNode;
-import de.dfki.cos.basys.aas.knowledgegraph.model.ReferableNode;
+import java.util.Optional;
 
 public interface ReferableRepository extends Neo4jRepository<ReferableNode, Long>{
 
