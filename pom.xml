@@ -37,7 +37,7 @@
 
 	<scm>
 		<url>https://github.com/dfkibasys</url>
-		<connection>${gitUrl}/asset-administation-shell.git</connection>
-		<developerConnection>${gitUrl}/asset-administation-shell.git</developerConnection>
+		<connection>${gitUrl}/asset-administration-shell.git</connection>
+		<developerConnection>${gitUrl}/asset-administration-shell.git</developerConnection>
 	</scm>
 </project>
