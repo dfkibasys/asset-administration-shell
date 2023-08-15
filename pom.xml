@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>de.dfki.cos.basys</groupId>
 		<artifactId>pom</artifactId>
-		<version>0.5.0-20230622.140703-12</version>
+		<version>0.5.1</version>
 		<relativePath />
 	</parent>
 	
 	<artifactId>aas</artifactId>
-  <version>0.5.1-SNAPSHOT</version>
+  	<version>0.5.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>BaSys 4.2 AAS Extensions</name>
@@ -27,6 +27,9 @@
 
 		<profile>
 			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<modules>
 				<module>modules/event</module>
 				<module>modules/event-mqtt</module>
