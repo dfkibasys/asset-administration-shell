@@ -16,7 +16,7 @@
 
 	<groupId>de.dfki.cos.basys.aas</groupId>
 	<artifactId>event</artifactId>
-  	<version>0.5.1-SNAPSHOT</version>
+  	<version>0.5.1</version>
 	<name>BaSys 4.2 AAS Extended Event Model</name>
 	<packaging>bundle</packaging>
 	
